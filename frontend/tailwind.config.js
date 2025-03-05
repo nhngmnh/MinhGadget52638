@@ -5,7 +5,14 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+     extend: {
+      colors:{
+        'primary':'#0782f5'
+      },
+      gridTemplateColumns:{
+        'auto':'repeat(auto-fill,minmax(200px, 1fr))'
+      }
+    },
   },
   plugins: [],
 }

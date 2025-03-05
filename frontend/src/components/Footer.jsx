@@ -5,11 +5,13 @@ const Footer = () => {
     const navigate=useNavigate();
   return (
     <div className='md:mx-10'>
-    <div className='flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] gap-14 my-10 mt-40 text-sm'>
+    <div className='flex flex-col sm:grid grid-cols-[4fr_1fr_2fr] gap-14 my-10 mt-40 text-sm'>
         {/*left*/}
         <div>
             <img className='mb-5 w-56' src={assets.logo} alt=''/>
-            <p className='w-full md:2/3 text-gray-600 leading-6'>Online Doctor Appointment Booking System (ODABS) is an online platform that allows patients to easily schedule appointments by selecting doctors, times, and desired services with just a few simple steps. Designed specifically for small clinics, the system provides an efficient solution for managing appointments, patient records, and enhancing the overall healthcare experience.</p>
+            <p className='w-full md:2/3 text-gray-600 leading-6'>
+            MinhGadget52638 Company specializes in providing the latest technology devices at market prices. Our quality sales and warranty system makes us the top choice for online shopping of technology devices.
+            </p>
         </div>
          {/*center*/}
          <div>
@@ -35,7 +37,7 @@ const Footer = () => {
     </div>
     <div>
             <hr/>
-            <p className='py-5 text-sm text-center'>Copyright © 2024</p>
+            <p className='py-5 text-sm text-center'>Copyright © 2025</p>
         </div>
 </div>
   )
