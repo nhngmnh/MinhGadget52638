@@ -9,12 +9,14 @@ import Login from './pages/Login'
 import MyProfile from './pages/MyProfile'
 import Footer from './components/Footer'
 import SearchEngine from './components/SearchEngine'
+import Banner from './components/Banner'
 const App = () => {
   return (
     <div className='mx-4 sm:mx-[5%]'>
       <Navbar/>
       <div className='flex flex-col sm:grid grid-cols-[1.5fr_4fr]'>
       <SearchEngine />
+      <Banner />
       <Routes>
         <Route path="/" element={<Home/>} />
         <Route path="/about" element={<About />} />
