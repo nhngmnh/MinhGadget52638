@@ -96,6 +96,74 @@ export const assets = {
     cross_icon
 }
 
+export const typeOfProductData = [
+    {
+        type: 'Laptop',
+        image: menu_icon
+    },
+    {
+        type: 'Smartphone',
+        image: menu_icon
+    },
+    {
+        type: 'Accessory',
+        image: menu_icon
+    },
+    {
+        type: 'PC, Printer',
+        image: menu_icon
+    },
+    {
+        type: 'Smartwatch',
+        image: menu_icon
+    },
+    {
+        type: 'Tablet',
+        image: menu_icon
+    },
+]
+export const branch = [
+    {
+        name: 'Apple',
+        image: menu_icon
+    },
+    {
+        name: 'Samsung',
+        image: menu_icon
+    },
+    {
+        name: 'DELL',
+        image: menu_icon
+    },
+    {
+        name: 'Lenovo',
+        image: menu_icon
+    },
+    {
+        name: 'Oppo',
+        image: menu_icon
+    },
+    {
+        name: 'Xiaomi',
+        image: menu_icon
+    },
+    {
+        name: 'realme',
+        image: menu_icon
+    },
+    {
+        name: 'Vivo',
+        image: menu_icon
+    },
+    {
+        name: 'ASUS',
+        image: menu_icon
+    },
+    {
+        name: 'ACER',
+        image: menu_icon
+    },
+]
 export const products = [
     {
         _id: "aaaaa",
