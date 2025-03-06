@@ -13,10 +13,10 @@ import Banner from './components/Banner'
 const App = () => {
   return (
     <div className='mx-4 sm:mx-[5%]'>
-      <Navbar/>
-      <div className='flex flex-col sm:grid grid-cols-[1.5fr_4fr]'>
-      <SearchEngine />
-      <Banner />
+      <Navbar className='z-50'/>
+      <div className='flex flex-col'>
+      
+      
       <Routes>
         <Route path="/" element={<Home/>} />
         <Route path="/about" element={<About />} />
