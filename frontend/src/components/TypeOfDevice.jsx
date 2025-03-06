@@ -9,7 +9,7 @@ const TypeOfDevice = () => {
        <div className='flex sm:justify-center gap-4 pt-5 w-full overflow-scroll'>
          {
            typeOfProductData.map((item,index)=>(
-             <Link onClick={()=>scrollTo(0,0)} class='flex flex-col items-center text-xs cursor-pointer flex-shrink-0 hover:translate-y-[-10px] transition-all duration-500' key={index} to={`/doctors/${item.type}`}>
+             <Link onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} class='flex flex-col items-center text-xs cursor-pointer flex-shrink-0 hover:translate-y-[-10px] transition-all duration-500' key={index} to={`/products/${item.type}`}>
                <img className='w-16 sm:w-24 mb-2' src={item.image} alt=''/>
                <p className='text-center'>{item.type}</p>
              </Link>

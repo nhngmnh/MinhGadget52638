@@ -23,6 +23,7 @@ const Footer = () => {
                 <li className='hover:cursor-pointer hover:underline' onClick={()=>navigate('/about')}>About us</li>
                 <li className='hover:cursor-pointer hover:underline' onClick={()=>navigate('/contact')}>Contact us</li>
                 <li className='hover:cursor-pointer hover:underline' onClick={()=>navigate('/privacy')}>Privacy policy</li>
+                <li className='hover:cursor-pointer hover:underline' onClick={()=>navigate('/jobs')}>Explore jobs</li>
             </ul>
         </div>
          {/*right*/}

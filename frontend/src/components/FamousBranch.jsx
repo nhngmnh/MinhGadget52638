@@ -10,7 +10,7 @@ const FamousBranch = () => {
 
          {
            branch.map((item,index)=>(
-             <Link onClick={()=>scrollTo(0,0)} class='r flex flex-col items-center text-xs cursor-pointer flex-shrink-0 hover:translate-y-[-10px] transition-all duration-500' key={index} to={`/doctors/${item.name}`}>
+             <Link onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} class='r flex flex-col items-center text-xs cursor-pointer flex-shrink-0 hover:translate-y-[-10px] transition-all duration-500' key={index} to={`/products/${item.name}`}>
                <img className='w-16 sm:w-24 mb-2 mt-5' src={item.image} alt=''/>
                <p className='text-center'>{item.name}</p>
              </Link>
