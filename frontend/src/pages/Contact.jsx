@@ -18,7 +18,7 @@ const Contact = () => {
         <p  className='flex flex-col justify-center font-semibold'>Our OFFICE</p>
         <p className='text-gray-600'>1 Dai Co Viet, Hai Ba Trung<br/> 
         Hanoi, Vietnam</p>
-        <p className='text-gray-600'>Tel: (84) 862613118<br/>Email: nhungocminh2004@gmail.com</p>
+        <p className='text-gray-600'>Tel: (84) 862613118<br/>Email: <a href="mailto:nhungocminh2004@gmail.com" class="text-primary hover:underline">nhungocminh2004@gmail.com</a></p>
         <p  className='flex flex-col justify-center font-semibold'>Careers at our shop</p>
         <p className='text-gray-600'>Learn more about our teams and job openings.</p>
         <button onClick={()=>navigate('/jobs')} className="bg-gray-200 text-gray-800 border-1 px-4 py-2 rounded transition-transform duration-300 hover:bg-primary hover:text-white hover:scale-110">
