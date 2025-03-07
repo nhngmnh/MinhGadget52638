@@ -2,7 +2,7 @@ import { createContext, useEffect,useState } from "react";
 import axios from 'axios'
 import {toast} from "react-toastify"
 export const AppContext=createContext()
-
+import { products } from "../assets/assets";
 const AppContextProvider=(props)=>{
     const currencySymbol=' VNĐ'
     
@@ -17,7 +17,6 @@ const AppContextProvider=(props)=>{
 
     }
 //    const [userData,setUserData]=useState(false)
-    
     const getUsersData= ()=>{
         setUser(user1);
     }

@@ -38,7 +38,7 @@ const Navbar = () => {
                 <div className='absolute top-0 right-0 pt-14 text-base font-medium text-gray-600 hidden group-hover:block'>
                     <div className='min-w-48 round flex flex-col gap-2 p-4 bg-gray-50 font-bold text-black'>
                     <p onClick={()=>navigate('/my-profile')}  className='group cursor-pointer hover:bg-blue-400  hover:text-white px-2 py-2'>My Profile</p>
-                    <p  className='group cursor-pointer hover:bg-blue-400  hover:text-white px-2 py-2'>My Cart</p>
+                    <p onClick={()=>navigate('/mycart')} className='group cursor-pointer hover:bg-blue-400  hover:text-white px-2 py-2'>My Cart</p>
                     <p  className='group cursor-pointer hover:bg-blue-400  hover:text-white px-2 py-2'>Log out</p>
                     </div>
                 </div>

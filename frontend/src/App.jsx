@@ -12,6 +12,7 @@ import SearchEngine from './components/SearchEngine'
 import Banner from './components/Banner'
 import Privacy from './pages/Privacy'
 import Jobs from './pages/Jobs'
+import Cart from './pages/Cart'
 const App = () => {
   return (
     <div className='mx-4 sm:mx-[5%]'>
@@ -25,8 +26,9 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/products" element={<Product/>} />
         <Route path="/contact" element={<Contact/>} />
-        <Route path="/products/:type" element={<Product/>} />
+        <Route path="/products/:category" element={<Product/>} />
         <Route path="/login" element={<Login/>} />
+        <Route path="/mycart" element={<Cart/>} />
         <Route path="/my-profile" element={<MyProfile/>} />  
         <Route path="/privacy" element={<Privacy/>} />
         <Route path="/jobs" element={<Jobs/>} />
