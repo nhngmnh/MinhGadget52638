@@ -24,7 +24,7 @@ const Jobs = () => {
               <p className="text-gray-600">{job.location}</p></div>
               <div className='mt-2'>Number: {job.number}</div>
             </div>
-          ))}
+          ))},/;
         </div>
       </div>
       <div className='flex justify-center'><button onClick={()=>navigate('/contact')} className='flex justify-center p-5 m-5 bg-white text-black hover:bg-primary hover:text-white rounded-lg transition-transform duration-300 hover:scale-110'>Contact for jobs</button></div>

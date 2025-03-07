@@ -6,7 +6,7 @@ import Product from './pages/Product'
 import Navbar from './components/Navbar'
 import Contact from './pages/Contact'
 import Login from './pages/Login'
-// import MyProfile from './pages/MyProfile'
+import MyProfile from './pages/MyProfile'
 import Footer from './components/Footer'
 import SearchEngine from './components/SearchEngine'
 import Banner from './components/Banner'
@@ -27,7 +27,7 @@ const App = () => {
         <Route path="/contact" element={<Contact/>} />
         <Route path="/products/:type" element={<Product/>} />
         <Route path="/login" element={<Login/>} />
-        {/* <Route path="/my-profile" element={<MyProfile/>} /> */}
+        <Route path="/my-profile" element={<MyProfile/>} />  
         <Route path="/privacy" element={<Privacy/>} />
         <Route path="/jobs" element={<Jobs/>} />
       </Routes>
