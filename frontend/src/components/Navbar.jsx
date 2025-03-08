@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {assets} from '../assets/assets'
 import { NavLink, useNavigate } from 'react-router-dom'
 import SearchEngine from './SearchEngine'
 const Navbar = () => {
     const navigate= useNavigate();
+    const [token,setToken]=useState('token');
+    const deleteToken=()=>{
+        setToken(null);
+    }
   return (
     <div className='flex items-center justify-between text-sm py-4 mb-5 border-b border-b-gray-400 relative z-50'>
     <img onClick={()=>navigate('/')} className='w-40 cursor-pointer' src={assets.logo} alt="Our logo"/>
@@ -32,6 +36,9 @@ const Navbar = () => {
         </ul>    
         <SearchEngine />
         <div className='flex items-center gap-4'>
+        {
+            token 
+            ?
         <div className='flex items-center gap-2 cursor-pointer group relative'>
                 <img className='w-10 rounded-full' src={assets.avatar} alt=''/>
                 <img className='w-2.5' src='' alt=''/>
@@ -39,11 +46,16 @@ const Navbar = () => {
                     <div className='min-w-48 round flex flex-col gap-2 p-4 bg-gray-50 font-bold text-black'>
                     <p onClick={()=>navigate('/my-profile')}  className='group cursor-pointer hover:bg-blue-400  hover:text-white px-2 py-2'>My Profile</p>
                     <p onClick={()=>navigate('/mycart')} className='group cursor-pointer hover:bg-blue-400  hover:text-white px-2 py-2'>My Cart</p>
-                    <p  className='group cursor-pointer hover:bg-blue-400  hover:text-white px-2 py-2'>Log out</p>
+                    <p onClick={deleteToken} className='group cursor-pointer hover:bg-blue-400  hover:text-white px-2 py-2'>Log out</p>
                     </div>
                 </div>
                 
             </div>
+             :<div>
+                <button onClick={()=>navigate('/login')} className='bg-primary text-white px-8 py-3 rounded-full font-bold hidden md:block'>Login</button>
+                
+             </div>
+            }
         </div>
     </div>
   )
