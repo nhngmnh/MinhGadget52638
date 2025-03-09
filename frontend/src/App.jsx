@@ -14,6 +14,7 @@ import Privacy from './pages/Privacy'
 import Jobs from './pages/Jobs'
 import Cart from './pages/Cart'
 import DetailProduct from './pages/DetailProduct'
+import CheckoutAddToCart from './pages/CheckoutAddToCart'
 const App = () => {
   return (
     <div className='mx-4 sm:mx-[5%]'>
@@ -34,6 +35,7 @@ const App = () => {
         <Route path="/privacy" element={<Privacy/>} />
         <Route path="/jobs" element={<Jobs/>} />
         <Route path="/detail/:prID" element={<DetailProduct/>} />
+        <Route path="/checkout" element={<CheckoutAddToCart/>} />
       </Routes>
       </div>
       <Footer/>

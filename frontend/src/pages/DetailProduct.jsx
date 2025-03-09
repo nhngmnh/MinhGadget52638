@@ -2,9 +2,10 @@ import React, { useEffect } from 'react'
 import { AppContext } from '../context/AppContext'
 import { products } from '../assets/assets'
 import { assets } from '../assets/assets'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useState } from 'react'
 const DetailProduct = () => {
+   const navigate=useNavigate();
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState('red');
   const [selectedSize, setSelectedSize] = useState('M');
@@ -23,7 +24,12 @@ const DetailProduct = () => {
   const handleQuantityChange = (e) => {
     setQuantity(e.target.value);
   };
-
+  const handleAddToCart = () => {
+    // Chuyển hướng đến trang xác nhận
+    const cartData = { prID, quantity, selectedColor, selectedSize };
+    localStorage.setItem('cartData', JSON.stringify(cartData));
+    navigate('/checkout', { state: cartData });
+  };
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg w-auto mt-8">
       <div className="flex">
@@ -74,7 +80,7 @@ const DetailProduct = () => {
             />
           </div>
 
-          <button className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">
+          <button onClick={handleAddToCart} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">
             Thêm vào giỏ hàng
           </button>
         </div>
