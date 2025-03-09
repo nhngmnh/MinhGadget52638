@@ -4,11 +4,13 @@ import { products } from '../assets/assets'
 import { assets } from '../assets/assets'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useState } from 'react'
+import RelatedProducts from '../components/RelatedProducts'
 const DetailProduct = () => {
    const navigate=useNavigate();
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState('red');
   const [selectedSize, setSelectedSize] = useState('M');
+  const [category, setCategory] = useState('');
   const {prID}=useParams();
     const [pr,setPr]=useState();
     const applyFilter=()=>{
@@ -16,6 +18,7 @@ const DetailProduct = () => {
             console.log(prID);
             const prInfo= products.find(p=>p._id===prID);
             setPr(prInfo);
+            setCategory(prInfo.category);
         }
     }
     useEffect(()=>{
@@ -31,6 +34,7 @@ const DetailProduct = () => {
     navigate('/checkout', { state: cartData });
   };
   return (
+    <div>
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg w-auto mt-8">
       <div className="flex">
       <img
@@ -102,7 +106,11 @@ const DetailProduct = () => {
         <h2 className="text-xl font-semibold">Delivery information</h2>
         <p className="text-gray-600 mt-2">Giao hàng miễn phí trong vòng 3-5 ngày làm việc.</p>
       </div>
+     
     </div>
+      
+      <RelatedProducts prid={prID} category={category}/>
+     </div>
   );
 }
 
