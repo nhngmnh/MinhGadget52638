@@ -171,12 +171,13 @@ export const products = [
         name: "Women Round Neck Cotton Top",
         description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
         price: 100,
-        image: [p_img1],
+        image: [p_img1,p_img10,p_img22,p_img30],
         category: "Laptop",
         branch:"ASUS",
         number: 20,
         date: 1716634345448,
-        bestseller: true
+        bestseller: true,
+        discount: 25
     },
     {
         _id: "aaaab",
@@ -188,54 +189,59 @@ export const products = [
         branch:"ACER",
         number: 20,
         date: 1716621345448,
-        bestseller: true
+        bestseller: true,
+        discount: 25
     },
     {
         _id: "aaaac",
         name: "Girls Round Neck Cotton Top",
         description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
         price: 220,
-        image: [p_img3],
+        image: [p_img3,p_img17,p_img16,p_img15],
         category: "Smartphone",
         branch:"Oppo",
         number: 20,
         date: 1716234545448,
-        bestseller: true
+        bestseller: true,
+        discount: 25
     },
     {
         _id: "aaaad",
         name: "Men Round Neck Pure Cotton T-shirt",
         description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
         price: 110,
-        image: [p_img4],
+        image: [p_img4,p_img17,p_img14,p_img1],
         category: "PC, Printer",
         branch:"ASUS",
         number: 2,
         date: 1716621345448,
-        bestseller: true
+        bestseller: false,
+        discount: 0
     },
     {
         _id: "aaaae",
         name: "Women Round Neck Cotton Top",
         description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
         price: 130,
-        image: [p_img5],
+        image: [p_img5,p_img12,p_img18,p_img19],
         category: "Tablet",
         branch:"ASUS",
         number: 10,
         date: 1716622345448,
-        bestseller: true
+        bestseller: true,
+        discount: 20
     },
     {
         _id: "aaaaf",
         name: "Women Round Neck Cotton Top",
         description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
         price: 130,
-        image: [p_img5],
+        image: [p_img5,p_img10,p_img15,p_img26],
         category: "Laptop",
         branch:"DELL",
         number: 10,
         date: 1716622345448,
-        bestseller: true
+        bestseller: false,
+        discount: 5
     },
 ]

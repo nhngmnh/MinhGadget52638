@@ -13,6 +13,7 @@ import Banner from './components/Banner'
 import Privacy from './pages/Privacy'
 import Jobs from './pages/Jobs'
 import Cart from './pages/Cart'
+import DetailProduct from './pages/DetailProduct'
 const App = () => {
   return (
     <div className='mx-4 sm:mx-[5%]'>
@@ -32,6 +33,7 @@ const App = () => {
         <Route path="/my-profile" element={<MyProfile/>} />  
         <Route path="/privacy" element={<Privacy/>} />
         <Route path="/jobs" element={<Jobs/>} />
+        <Route path="/detail/:prID" element={<DetailProduct/>} />
       </Routes>
       </div>
       <Footer/>
