@@ -18,7 +18,7 @@ const ProductSchema = new mongoose.Schema({
     },
     price: {
         type: Number,
-        required: true,
+        default:500,
         min: 0,
     },
     bestseller: {
@@ -31,7 +31,7 @@ const ProductSchema = new mongoose.Schema({
         min: 0,
     },
     release_date: {
-        type: Date,
+        type: String,
     },
     description: {
         type: String,
@@ -47,6 +47,6 @@ const ProductSchema = new mongoose.Schema({
     },
 });
 
-const Product = mongoose.model('Product', ProductSchema);
+const productModel = mongoose.model('Product', ProductSchema);
 
-module.exports = Product;
+module.exports = productModel;

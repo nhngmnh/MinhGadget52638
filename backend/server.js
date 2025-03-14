@@ -12,6 +12,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }))
 //app.use('/api/admin',adminRouter);
 app.use('/api/user',userRouter);
+app.use('/api/admin',adminRouter);
 app.get('/',(req, res) => { connectDB(); res.send("api working")});
 app.listen(port,()=>console.log("Server started",port));
 
