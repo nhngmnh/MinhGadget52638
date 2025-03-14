@@ -1,6 +1,7 @@
 import express from 'express';
 import connectDB from '../config/connectDB.js';
 import productModel from '../models/productModel.js'
+import userModel from '../models/userModel.js'
 // api add product
 const addProduct = async (req, res) => {
     try { 
@@ -45,7 +46,30 @@ const addProduct = async (req, res) => {
         res.json({ success: false, message: error.message });
     }
 };
+const getProducts = async (req, res) => {
+    try {
+        const products = await productModel.find(); // Lấy toàn bộ sản phẩm
+        res.json({ success: true, data: products });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
+const adminDashboard = async(req,res)=>{
+    try {
+       
+        const users=await userModel.find({})
+        const product=await productModel.find({})
+
+        const dashData={
+        }
+        res.json({success:true,dashData})
+    } catch (error) {
+        console.log(error)
+        res.json({success:false,message:error.message})
+    }
+}
 
 export {
-    addProduct
+    addProduct,getProducts,adminDashboard
 }
