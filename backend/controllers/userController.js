@@ -6,9 +6,11 @@ import bycrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import {v2 as cloudinary} from 'cloudinary'
 import {toast} from 'react-toastify'
+import productModel from '../models/productModel.js';
+import cartModel from '../models/cartModel.js';
 const registerUser = async (req,res) =>{
 try {
-    connectDB();
+   
     const {name,email,password}=req.body 
     if (!name || !email || !password){
         return res.json({success:false,message:"Missing Details"}) // missing sth
@@ -76,7 +78,7 @@ const updateProfile=async(req,res)=>{
         if (!name || !phone || !dob || !gender || !imageFile) {
             return res.json({success:false,message:"Data missing"})
         }
-        await userModel.findByIdAndUpdate(userId,{name,phone,address:JSON.parse(address),dob,gender})
+        await userModel.findByIdAndUpdate(userId,{name,phone,address,dob,gender})
         if (imageFile){
             // uplpad img to cloudinary
             const imageUpload=await cloudinary.uploader.upload(imageFile.path,{resource_type:'image'})
@@ -92,6 +94,17 @@ const updateProfile=async(req,res)=>{
         res.json({success:false,message:error.message})
     }
 }
+const listCart= async(req,res)=>{
+    try {
+        
+        const {userId}=req.body
+        const appointments=await cartModel.find({userId})
+        res.json({success:true,appointments})
+    } catch (error) {
+        console.log(error)
+        res.json({success:false,message:error.message})
+    }
+}
 export {
-    registerUser,loginUser,getProfile,updateProfile
+    registerUser,loginUser,getProfile,updateProfile,listCart
 }
