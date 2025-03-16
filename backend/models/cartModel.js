@@ -1,11 +1,11 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const cartSchema = new mongoose.Schema({
     userId: { type: String, required: true },
     itemId:{type: String, required: true},
     totalPrice: { type: Number, required: true }, 
     totalItems: { type: Number, required: true,default:1 },  
-    status: { type: String, enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'], default: 'pending' },
+    status: { type: String, enum: [ 'processing', 'shipped', 'cancelled'], default: 'processing' },
     paymentMethod: { type: String, enum: ['cash', 'credit_card', 'paypal'], required: true },
     paymentStatus: { type: Boolean, default: false },
     shippingAddress: { type: String, required: true },

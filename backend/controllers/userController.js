@@ -98,13 +98,33 @@ const listCart= async(req,res)=>{
     try {
         
         const {userId}=req.body
-        const appointments=await cartModel.find({userId})
-        res.json({success:true,appointments})
+        const carts=await cartModel.find({userId})
+        res.json({success:true,carts})
     } catch (error) {
         console.log(error)
         res.json({success:false,message:error.message})
     }
 }
+const cancelOrder = async (req, res) => {
+    try {
+        const { orderId } = req.params;
+
+        
+        const order = await cartModel.findByIdAndUpdate(
+            orderId,
+            { status: 'cancelled' },
+            { new: true } 
+        );
+
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        return res.status(200).json({ message: 'Order cancelled successfully', order });
+    } catch (error) {
+        return res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+};
 export {
-    registerUser,loginUser,getProfile,updateProfile,listCart
+    registerUser,loginUser,getProfile,updateProfile,listCart,cancelOrder
 }
