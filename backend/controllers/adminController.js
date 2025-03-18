@@ -41,7 +41,8 @@ const addProduct = async (req, res) => {
         const newProduct = new productModel(productData);
         await newProduct.save();
 
-        res.json({ success: true, message: "Product added successfully" });
+        res.json({ success: true, message: "Product added successfully",id: newProduct._id});
+        
     } catch (error) {
         console.log(error);
         res.json({ success: false, message: error.message });
@@ -61,10 +62,10 @@ const adminDashboard = async(req,res)=>{
        
         const users=await userModel.find({})
         const products=await productModel.find({})
-        const cards=await cardModel.find({})
+        const carts=await cartModel.find({})
 
         const dashData={
-            users,products,cards
+            users,products,carts
         }
         res.json({success:true,dashData})
     } catch (error) {
@@ -86,6 +87,48 @@ const loginAdmin=async(req,res)=>{
         res.json({success:false,message:error.message})
     }
 }
+const updateProduct = async (req, res) => {
+    try {
+        const { productId, price,available, stock_quantity, bestseller } = req.body;
+        const product = await productModel.findByIdAndUpdate(
+            productId,
+            { 
+                price: price,
+                available: available,
+                stock_quantity: stock_quantity,
+                bestseller: bestseller
+             },
+            { new: true } 
+        );
+
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+        return res.json({success: true, data:product});
+
+    }
+        catch(err){
+            console.log({success: false, message: err.message});
+            
+        }
+}
+const updateCart = async (req, res) => {
+    try {
+        const {status, cartId}=req.body;
+        const cart = await cartModel.findByIdAndUpdate(
+            cartId, 
+            { status: status },
+            { new: true } 
+        );
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found' });
+        }
+        return res.json({success: true, data:cart});
+    } catch (error) {
+        console.log(error.message);
+        
+    }
+}
 export {
-    addProduct,getProducts,adminDashboard,loginAdmin
+    addProduct,getProducts,adminDashboard,loginAdmin,updateProduct,updateCart
 }

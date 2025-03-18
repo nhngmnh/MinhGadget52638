@@ -8,6 +8,7 @@ import {v2 as cloudinary} from 'cloudinary'
 import {toast} from 'react-toastify'
 import productModel from '../models/productModel.js';
 import cartModel from '../models/cartModel.js';
+import { parseAstAsync } from 'vite';
 const registerUser = async (req,res) =>{
 try {
    
@@ -125,6 +126,33 @@ const cancelOrder = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 };
+const createCart = async (req, res) => {
+    try {
+        const {
+            userId,itemId,totalItem,paymentMethod,shippingAddress
+        }=req.body;
+        let itemData=productModel.findById(itemId);
+        const data={
+            userId,
+            itemId,
+            totalItem,
+            paymentMethod,
+            shippingAddress,
+            status:'processing',
+            itemData,
+            totalPrice:itemData.price*totalItem,
+            paymentStatus:false,
+            deliveryDate:today.getDate()+5,
+        }
+        const newCart=new cartModel(data)
+        if (!newCart) return res.json({success:false});
+        const cart=await newCart.save()
+        res.json({success:true,message:"Cart created successfully",cartData:cart})
+    } catch (error) {
+        console.log(error.message);
+        
+    }
+}
 export {
-    registerUser,loginUser,getProfile,updateProfile,listCart,cancelOrder
+    registerUser,loginUser,getProfile,updateProfile,listCart,cancelOrder,createCart
 }
