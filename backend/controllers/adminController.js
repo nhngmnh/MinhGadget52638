@@ -2,6 +2,7 @@ import express from 'express';
 import connectDB from '../config/connectDB.js';
 import productModel from '../models/productModel.js'
 import userModel from '../models/userModel.js'
+import cartModel from '../models/cartModel.js';
 // api add product
 const addProduct = async (req, res) => {
     try { 
@@ -59,9 +60,11 @@ const adminDashboard = async(req,res)=>{
     try {
        
         const users=await userModel.find({})
-        const product=await productModel.find({})
+        const products=await productModel.find({})
+        const cards=await cardModel.find({})
 
         const dashData={
+            users,products,cards
         }
         res.json({success:true,dashData})
     } catch (error) {
@@ -69,7 +72,20 @@ const adminDashboard = async(req,res)=>{
         res.json({success:false,message:error.message})
     }
 }
-
+const loginAdmin=async(req,res)=>{
+    try {
+        const {email,password}=req.body
+        if (email===process.env.ADMIN_EMAIL && password===process.env.ADMIN_PASSWORD){
+            const token=jwt.sign(email+password,process.env.JWT_SECRET)
+            res.json({success:true,token})
+        } else {
+            res.json({success:false, message:"Invalid credentials"})
+        }
+    } catch (error) {
+        console.log(error)
+        res.json({success:false,message:error.message})
+    }
+}
 export {
-    addProduct,getProducts,adminDashboard
+    addProduct,getProducts,adminDashboard,loginAdmin
 }
