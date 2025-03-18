@@ -128,31 +128,69 @@ const cancelOrder = async (req, res) => {
 };
 const createCart = async (req, res) => {
     try {
-        const {
-            userId,itemId,totalItem,paymentMethod,shippingAddress
-        }=req.body;
-        let itemData=productModel.findById(itemId);
-        const data={
+        const { userId, itemId, totalItems, paymentMethod, shippingAddress } = req.body;
+        
+        // Lấy thông tin sản phẩm
+        const itemData = await productModel.findById(itemId);
+        if (!itemData) {
+            return res.status(404).json({ success: false, message: "Item not found" });
+        }
+
+        // Tính ngày giao hàng đúng cách
+        const today = new Date();
+        const deliveryDate = new Date();
+        deliveryDate.setDate(today.getDate() + 5);
+
+        // Tạo dữ liệu giỏ hàng
+        const data = {
             userId,
             itemId,
-            totalItem,
+            totalItems,
             paymentMethod,
             shippingAddress,
-            status:'processing',
+            status: 'processing',
             itemData,
-            totalPrice:itemData.price*totalItem,
-            paymentStatus:false,
-            deliveryDate:today.getDate()+5,
-        }
-        const newCart=new cartModel(data)
-        if (!newCart) return res.json({success:false});
-        const cart=await newCart.save()
-        res.json({success:true,message:"Cart created successfully",cartData:cart})
+            totalPrice: itemData.price*totalItems,
+            paymentStatus: false,
+            deliveryDate
+        };
+
+        // Tạo và lưu giỏ hàng
+        const newCart = new cartModel(data);
+        const cart = await newCart.save();
+
+        res.json({ success: true, message: "Cart created successfully", cartData: cart });
+        
     } catch (error) {
         console.log(error.message);
-        
+        res.status(500).json({ success: false, message: "Internal Server Error" });
     }
-}
+};
+const searchProducts = async (req, res) => {
+    try {
+        const { query } = req.query; 
+
+        let filter = {}; 
+
+        if (query) {
+            filter = {
+                $or: [
+                    { brand: { $regex: query, $options: "i" } }, // Tìm trong brand
+                    { category: { $regex: query, $options: "i" } }, // Tìm trong category
+                    { description: { $regex: query, $options: "i" } } // Tìm trong description
+                ]
+            };
+        }
+
+        const products = await productModel.find(filter); // Lọc theo query (nếu có)
+
+        res.json({ success: true, results: products });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+};
+
 export {
-    registerUser,loginUser,getProfile,updateProfile,listCart,cancelOrder,createCart
+    registerUser,loginUser,getProfile,updateProfile,listCart,cancelOrder,createCart,searchProducts
 }
