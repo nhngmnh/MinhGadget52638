@@ -166,31 +166,36 @@ const createCart = async (req, res) => {
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 };
-const searchProducts = async (req, res) => {
+const getProducts = async (req, res) => {
     try {
-        const { query } = req.query; 
-
-        let filter = {}; 
+        const { query, category, brand } = req.query;
+        let filter = [];
 
         if (query) {
-            filter = {
+            filter.push({
                 $or: [
-                    { brand: { $regex: query, $options: "i" } }, // Tìm trong brand
-                    { category: { $regex: query, $options: "i" } }, // Tìm trong category
-                    { description: { $regex: query, $options: "i" } } // Tìm trong description
+                    { brand: { $regex: query, $options: "i" } }, 
+                    { category: { $regex: query, $options: "i" } }, 
+                    { description: { $regex: query, $options: "i" } }
                 ]
-            };
+            });
         }
 
-        const products = await productModel.find(filter); // Lọc theo query (nếu có)
+        if (category) {
+            filter.push({ category });
+        }
+
+        if (brand) {
+            filter.push({ brand });
+        }
+
+        const products = await productModel.find(filter.length ? { $and: filter } : {});
 
         res.json({ success: true, results: products });
     } catch (error) {
-        console.log(error.message);
-        res.status(500).json({ success: false, message: "Internal Server Error" });
+        res.status(500).json({ success: false, message: error.message });
     }
 };
-
 export {
-    registerUser,loginUser,getProfile,updateProfile,listCart,cancelOrder,createCart,searchProducts
+    registerUser,loginUser,getProfile,updateProfile,listCart,cancelOrder,createCart,getProducts
 }

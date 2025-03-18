@@ -48,15 +48,6 @@ const addProduct = async (req, res) => {
         res.json({ success: false, message: error.message });
     }
 };
-const getProducts = async (req, res) => {
-    try {
-        const products = await productModel.find(); // Lấy toàn bộ sản phẩm
-        res.json({ success: true, data: products });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ success: false, message: error.message });
-    }
-}
 const adminDashboard = async(req,res)=>{
     try {
        
@@ -129,6 +120,37 @@ const updateCart = async (req, res) => {
         
     }
 }
+const getProducts = async (req, res) => {
+    try {
+        const { query, category, brand } = req.query;
+        let filter = [];
+
+        if (query) {
+            filter.push({
+                $or: [
+                    { brand: { $regex: query, $options: "i" } }, 
+                    { category: { $regex: query, $options: "i" } }, 
+                    { description: { $regex: query, $options: "i" } }
+                ]
+            });
+        }
+
+        if (category) {
+            filter.push({ category });
+        }
+
+        if (brand) {
+            filter.push({ brand });
+        }
+
+        const products = await productModel.find(filter.length ? { $and: filter } : {});
+
+        res.json({ success: true, results: products });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 export {
     addProduct,getProducts,adminDashboard,loginAdmin,updateProduct,updateCart
 }
