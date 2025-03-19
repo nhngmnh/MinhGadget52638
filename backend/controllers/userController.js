@@ -110,22 +110,35 @@ const cancelOrder = async (req, res) => {
     try {
         const { orderId } = req.params;
 
-        
-        const order = await cartModel.findByIdAndUpdate(
-            orderId,
-            { status: 'cancelled' },
-            { new: true } 
-        );
-
+        // Lấy thông tin đơn hàng
+        const order = await cartModel.findById(orderId);
         if (!order) {
-            return res.status(404).json({ message: 'Order not found' });
+            return res.status(404).json({ message: "Order not found" });
         }
 
-        return res.status(200).json({ message: 'Order cancelled successfully', order });
+        // Không cho phép hủy nếu đơn đã giao hoặc đã bị hủy
+        if (["shipped", "cancelled"].includes(order.status)) {
+            return res.status(400).json({ message: "Cannot cancel an order that is already shipped or cancelled" });
+        }
+
+        // Lấy thông tin sản phẩm
+        const product = await productModel.findById(order.itemId);
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
+        // Cập nhật trạng thái đơn hàng và kho hàng đồng thời
+        const [updatedOrder, _] = await Promise.all([
+            cartModel.findByIdAndUpdate(orderId, { status: "cancelled" }, { new: true }),
+            productModel.findByIdAndUpdate(order.itemId, { $inc: { stock_quantity: order.totalItems } })
+        ]);
+
+        return res.status(200).json({ message: "Order cancelled successfully", updatedOrder });
     } catch (error) {
-        return res.status(500).json({ message: 'Internal server error', error: error.message });
+        return res.status(500).json({ message: "Internal server error", error: error.message });
     }
 };
+
 const createCart = async (req, res) => {
     try {
         const { userId, itemId, totalItems, paymentMethod, shippingAddress } = req.body;

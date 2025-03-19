@@ -84,7 +84,7 @@ const updateProduct = async (req, res) => {
         const { productId, price,available, stock_quantity, bestseller } = req.body;
         const product = await productModel.findByIdAndUpdate(
             productId,
-            { 
+            {   
                 price: price,
                 available: available,
                 stock_quantity: stock_quantity,
@@ -151,7 +151,6 @@ const getProducts = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
-
 export {
     addProduct,getProducts,adminDashboard,loginAdmin,updateProduct,updateCart
 }
