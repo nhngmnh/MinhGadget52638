@@ -148,7 +148,7 @@ const createCart = async (req, res) => {
         if (!itemData) {
             return res.status(404).json({ success: false, message: "Item not found" });
         }
-
+        if (totalItems>itemData.stock_quantity || totalItems>20 ) {return res.status(404).json({ success: false, message:"So luong vuot qua cho phep"})}
         // Tính ngày giao hàng đúng cách
         const today = new Date();
         const deliveryDate = new Date();
@@ -167,12 +167,16 @@ const createCart = async (req, res) => {
             paymentStatus: false,
             deliveryDate
         };
-
         // Tạo và lưu giỏ hàng
         const newCart = new cartModel(data);
         const cart = await newCart.save();
-
-        res.json({ success: true, message: "Cart created successfully", cartData: cart });
+        const product =await productModel.findByIdAndUpdate(itemId,{
+            stock_quantity:itemData.stock_quantity-totalItems
+        },
+    {
+        new: true,
+    }).select('-image_url')
+        res.json({ success: true, message: "Cart created successfully", cartData: cart, productData: product});
         
     } catch (error) {
         console.log(error.message);
