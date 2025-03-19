@@ -4,6 +4,7 @@ import { assets } from '../assets/assets';
 import { AppContext } from '../context/AppContext';
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios';
 import { useEffect } from 'react';
 const Login = () => {
   const navigate=useNavigate();
@@ -20,8 +21,9 @@ const Login = () => {
         if (data && data.success){
           localStorage.setItem('token',data.token)
           setToken(data.token)
+          toast.success("Thành công")
         } else {
-          toast.error("k thành công")
+          toast.error("không thành công")
         }
       } else {
         const {data}=await axios.post(backendurl+'/api/user/login',{password,email})

@@ -15,9 +15,12 @@ import Jobs from './pages/Jobs'
 import Cart from './pages/Cart'
 import DetailProduct from './pages/DetailProduct'
 import CheckoutAddToCart from './pages/CheckoutAddToCart'
+import { ToastContainer,toast } from 'react-toastify'
 const App = () => {
   return (
+    
     <div className='mx-4 sm:mx-[5%]'>
+      <ToastContainer/>
       <Navbar className='z-50'/>
       <div className='flex flex-col'>
       

@@ -24,8 +24,8 @@ try {
         return res.json({success:false,message:"Please enter strong password"}) 
     }
     // HAShing USER PASSWORD
-    const salt = await bycrypt.genSalt(10)
-    const hashedPassword=await bycrypt.hash(password,salt)
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword=await bcrypt.hash(password,salt)
     const userData={
         name:username,
         email,
@@ -57,7 +57,7 @@ try {
     }
 } catch (error) {
     console.log(error)
-     return res.json({success:false,message:error.message})
+     return res.json({success:false,message:error.message+"hehehe"})
 }
 }
 //api get user profile

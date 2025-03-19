@@ -11,7 +11,7 @@ const AppContextProvider=(props)=>{
     const [products,setProducts]=useState([]);
     const getProductsData = async ()=>{
         try {
-            const {data}=axios.get(backendurl+'/api/user/get-products')
+            const {data}= await axios.get(backendurl+'/api/user/get-products')
             if (data && data.success) {
                 setProducts(data.products);
                 console.log(data.products);
@@ -26,7 +26,7 @@ const AppContextProvider=(props)=>{
 
     const getUserData=async()=>{
         try {
-            const {data}= axios.get(backendurl+'/user/get-profile')
+            const {data}= await axios.get(backendurl+'/api/user/get-profile',{headers:{token}})
             if (data.success) {
                 setUserData(data)
                 console.log(userData);

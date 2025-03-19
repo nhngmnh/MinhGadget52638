@@ -8,5 +8,5 @@ userRouter.post('/login',loginUser)
 userRouter.get('/get-profile',authUser,getProfile)
 userRouter.get('/list-mycart',authUser,listCart)
 userRouter.post('/create-cart',authUser,createCart)
-userRouter.get('/get-products',authUser,getProducts)
+userRouter.get('/get-products',getProducts)
 export default userRouter
