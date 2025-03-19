@@ -151,6 +151,18 @@ const getProducts = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+const changeProductAvailability=async(req,res)=>{
+    try {
+        
+        const {productId}=req.body
+        const productData=await productModel.findById(productId)
+        const data= await productModel.findByIdAndUpdate(productId,{available:!productData.available}).select(['-image_url']);
+        res.json({success:true,message:"Availability Changed",data:data})
+    } catch (error) {
+         console.log(error)
+        res.json({success:false,message:error.message})
+    }
+}
 export {
-    addProduct,getProducts,adminDashboard,loginAdmin,updateProduct,updateCart
+    addProduct,getProducts,adminDashboard,loginAdmin,updateProduct,updateCart,changeProductAvailability
 }

@@ -60,7 +60,7 @@ const ProductSchema = new mongoose.Schema({
     },
     description: {
         type:String,
-        default:"",
+        default:"A quality product of MinhGadget store",
     }
 });
 
