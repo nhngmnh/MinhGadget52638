@@ -5,13 +5,13 @@ import SearchEngine from './SearchEngine'
 import { AppContext } from '../context/AppContext'
 const Navbar = () => {
     const navigate= useNavigate();
-    const {token,setToken} = useContext(AppContext)
+    const {token,setToken,backendurl} = useContext(AppContext)
     const deleteToken=()=>{
         setToken(null);
         localStorage.removeItem('token');
     }
     useEffect(()=>{
-        console.log(token);
+        console.log({token:token,urlbackend:backendurl});
         
     })
   return (

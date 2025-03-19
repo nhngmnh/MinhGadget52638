@@ -2,7 +2,7 @@ import express from 'express';
 import connectDB from '../config/connectDB.js';
 import userModel from '../models/userModel.js'
 import validator from 'validator'
-import bycrypt from 'bcrypt'
+import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import {v2 as cloudinary} from 'cloudinary'
 import {toast} from 'react-toastify'
@@ -12,8 +12,8 @@ import { parseAstAsync } from 'vite';
 const registerUser = async (req,res) =>{
 try {
    
-    const {name,email,password}=req.body 
-    if (!name || !email || !password){
+    const {username,email,password}=req.body 
+    if (!username || !email || !password){
         return res.json({success:false,message:"Missing Details"}) // missing sth
     }
     if (!validator.isEmail(email)) // invalid email
@@ -27,7 +27,7 @@ try {
     const salt = await bycrypt.genSalt(10)
     const hashedPassword=await bycrypt.hash(password,salt)
     const userData={
-        name,
+        name:username,
         email,
         password:hashedPassword
     }
@@ -47,7 +47,7 @@ try {
     if (!user){
         return res.json({success:false,message:"User do not exist"})
     }
-    const isMatch= await bycrypt.compare(password,user.password)
+    const isMatch= await bcrypt.compare(password,user.password)
     if (isMatch)
     {
         const token=jwt.sign({id:user._id},process.env.JWT_SECRET)

@@ -12,11 +12,11 @@ const AppContextProvider=(props)=>{
     const getProductsData = async ()=>{
         try {
             const {data}=axios.get(backendurl+'/api/user/get-products')
-            if (data.success) {
+            if (data && data.success) {
                 setProducts(data.products);
                 console.log(data.products);
             } else {
-                toast.error(data.message)
+                toast.error("chả thấy data nảo cả")
             }
         } catch (error) {
             console.log(error);
@@ -49,6 +49,8 @@ const AppContextProvider=(props)=>{
         setUserData, 
         getUserData,
         getProductsData,
+        backendurl,
+        
     }
     
     useEffect(()=>{
