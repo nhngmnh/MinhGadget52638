@@ -208,7 +208,7 @@ const getProducts = async (req, res) => {
 
         const products = await productModel.find(filter.length ? { $and: filter } : {});
 
-        res.json({ success: true, results: products });
+        res.json({ success: true, products: products });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }

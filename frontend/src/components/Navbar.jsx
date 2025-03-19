@@ -1,13 +1,19 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {assets} from '../assets/assets'
 import { NavLink, useNavigate } from 'react-router-dom'
 import SearchEngine from './SearchEngine'
+import { AppContext } from '../context/AppContext'
 const Navbar = () => {
     const navigate= useNavigate();
-    const [token,setToken]=useState('token');
+    const {token,setToken} = useContext(AppContext)
     const deleteToken=()=>{
         setToken(null);
+        localStorage.removeItem('token');
     }
+    useEffect(()=>{
+        console.log(token);
+        
+    })
   return (
     <div className='flex items-center justify-between text-sm py-4 mb-5 border-b border-b-gray-400 relative z-50'>
     <img onClick={()=>navigate('/')} className='w-40 cursor-pointer' src={assets.logo} alt="Our logo"/>

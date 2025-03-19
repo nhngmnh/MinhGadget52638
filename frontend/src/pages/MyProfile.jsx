@@ -4,11 +4,14 @@ import {assets} from '../assets/assets'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 const MyProfile = () => {
-  const {user,setUser }= useContext(AppContext)
+  const {userData,setUserData,products,setProducts }= useContext(AppContext)
 
   const [image,setImage]=useState(false)
 
   const [isEdit,setIsEdit]=useState(false)
+  useEffect(()=>{
+    console.log(products);
+  },[])
   // const updateProfileData=async() =>{
   //   try {
   //     const formData=new FormData()
@@ -37,7 +40,7 @@ const MyProfile = () => {
   //     toast.error(error.message)
   //   }
   // }
-  return user && (
+  return userData && (
     <div className='max-w-lg flex flex-col gap-2 text-sm'>
        {
         isEdit
