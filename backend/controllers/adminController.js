@@ -7,7 +7,7 @@ import cartModel from '../models/cartModel.js';
 const addProduct = async (req, res) => {
     try { 
         connectDB();
-        const { name, price, description, category, stock_quantity,brand } = req.body;
+        const { name, price, description, category, stock_quantity,brand,specifications } = req.body;
         const imageFile = req.file;
 
         // Kiểm tra xem đủ thông tin chưa
@@ -31,6 +31,7 @@ const addProduct = async (req, res) => {
             name,
             price,
             description,
+            specifications,
             category,
             brand,
             stock_quantity,
@@ -41,7 +42,7 @@ const addProduct = async (req, res) => {
         const newProduct = new productModel(productData);
         await newProduct.save();
 
-        res.json({ success: true, message: "Product added successfully",id: newProduct._id});
+        res.json({ success: true, message: "Product added successfully",data:newProduct});
         
     } catch (error) {
         console.log(error);
@@ -128,6 +129,7 @@ const getProducts = async (req, res) => {
         if (query) {
             filter.push({
                 $or: [
+                    {   name: {$regex:query,$options:"i"}},
                     { brand: { $regex: query, $options: "i" } }, 
                     { category: { $regex: query, $options: "i" } }, 
                     { description: { $regex: query, $options: "i" } }
@@ -142,7 +144,6 @@ const getProducts = async (req, res) => {
         if (brand) {
             filter.push({ brand });
         }
-
         const products = await productModel.find(filter.length ? { $and: filter } : {});
 
         res.json({ success: true, results: products });

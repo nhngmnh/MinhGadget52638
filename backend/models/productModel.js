@@ -29,6 +29,11 @@ const ProductSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    specifications :{
+        type: Object,
+        required: true,
+        trim: true,
+    },
     stock_quantity: {
         type: Number,
         required: true,
@@ -52,6 +57,10 @@ const ProductSchema = new mongoose.Schema({
     dateAdded:{
         type: Date,
         default: Date.now(),
+    },
+    description: {
+        type:String,
+        default:"",
     }
 });
 

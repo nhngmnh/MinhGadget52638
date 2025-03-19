@@ -3,7 +3,7 @@ import {addProduct,adminDashboard,getProducts, loginAdmin, updateCart, updatePro
 import authAdmin from '../middlewares/authAdmin.js';
 import upload from '../middlewares/multer.js';
 const adminRouter= express.Router();
-adminRouter.post('/add-product',authAdmin,upload.single('image'),addProduct);
+adminRouter.post('/add-product',upload.single('image'),addProduct);
 adminRouter.get('/all-products',authAdmin,getProducts);
 adminRouter.get('/admin-dashboard',authAdmin,adminDashboard)
 adminRouter.post('/update-product',authAdmin,updateProduct);
