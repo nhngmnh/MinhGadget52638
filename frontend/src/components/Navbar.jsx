@@ -10,10 +10,6 @@ const Navbar = () => {
         setToken(null);
         localStorage.removeItem('token');
     }
-    useEffect(()=>{
-        console.log({token:token,urlbackend:backendurl});
-        
-    })
   return (
     <div className='flex items-center justify-between text-sm py-4 mb-5 border-b border-b-gray-400 relative z-50'>
     <img onClick={()=>navigate('/')} className='w-40 cursor-pointer' src={assets.logo} alt="Our logo"/>
