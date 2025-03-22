@@ -5,7 +5,7 @@ import { products } from '../assets/assets'
 const Product = () => {
   const {category} =useParams()
   const[filterPro,setFilterPro]=useState([])
-
+  const {products,setProducts}=useContext(AppContext)
   const [showFilter,setShowFilter]=useState(false)
   const navigate=useNavigate()
   const applyFilter = () => {
@@ -21,8 +21,10 @@ const Product = () => {
     }
   }
   useEffect(()=>{
-    applyFilter()
-  },[products,category]
+    applyFilter();
+    console.log(products);
+    
+  },[category]
   )
   return (
     <div className='flex flex-col'>
@@ -41,7 +43,7 @@ const Product = () => {
           {
             filterPro.map((item,index)=>(
               <div onClick={()=>navigate(`/detail/${item._id}`)}className='border border-blue-200 rounded-xl overflow-hidden cursor-pointer hover:translate-y-[-10px] transition-all duration-500' key={index}>
-                <img className='bg-blue-50 'src={item.image} alt=''/>
+                <img className='bg-blue-50 'src={item.image_url} alt=''/>
                <div className='p-4'>
                <div className={`flex items-center gap-2 text-sm ${item.bestseller? 'text-green-500':'text-gray-500'}`}>
             <p className="flex items-center gap-2">
@@ -51,7 +53,7 @@ const Product = () => {
             </div>
                 <div>
                 <p className='text-gray-900 text-lg font-medium'>{item.name}</p>
-                <p className='text-gray-600 text-sm'>{item.branch}</p>
+                <p className='text-gray-600 text-sm'>{item.brand}</p>
                 </div>
                </div>
               </div>
