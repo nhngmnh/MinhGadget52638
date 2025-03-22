@@ -1,43 +1,59 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { AppContext } from '../context/AppContext'
-import { products } from '../assets/assets'
+import axios from 'axios'
 const Product = () => {
   const [category,setCategory]=useState('');
   const [brand,setBrand]=useState('');
   const handleCategoryChange = (newCategory) => {
-    setCategory(prev => (prev === newCategory ? '' : newCategory)); // Nếu đã chọn rồi thì xóa
+    setCategory(prev => (prev === newCategory ? '' : newCategory)); 
   };
   const handleBrandChange = (newBrand) => {
     setBrand(prev => (prev === newBrand ? '' : newBrand));
   };
 
   const[filterPro,setFilterPro]=useState([])
-  const {products,setProducts}=useContext(AppContext)
-  const [showFilter,setShowFilter]=useState(false)
+  const {products,setProducts,backendurl}=useContext(AppContext)
+  const [showFilterCategory,setShowFilterCategory]=useState(false)
+  const [showFilterBrand,setShowFilterBrand]=useState(false)
   const navigate=useNavigate()
   useEffect(() => {
-    const params = new URLSearchParams();
-  
-    if (category) params.set('category', category);
-    if (brand) params.set('brand', brand);
-    setFilterPro(products.filter(pr=>pr.category===category&&pr.brand===brand))
-    navigate(`?${params.toString()}`);
-  }, [category, brand]);
+    axios.get(backendurl+`/api/user/get-products?category=${category}&brand=${brand}`)
+      .then((res) => setFilterPro(res.data.products))
+      .catch((err) => console.error("Fetch error:", err));
+  }, [category, brand]); // Chạy lại khi query thay đổi
   
   return (
     <div className='flex flex-col'>
+      <div className='flex flex-row'>
+        <div>
       <p className='text-gray-600 ml-0'>Browse through the device categories.</p>
-      <div className='flex flex-col sm:flex-row items-start gap-5 mt-5'>
-        <button className={`py-1 flex relative w-36 px-3 border rounded text-sm transition-all sm:hidden ${showFilter? 'bg-primary text-white':''}`} onClick={()=>setShowFilter(prev=>!prev)}>Filter</button>
-        <div className={`flex flex-col gap-4 text-sm ${showFilter?'flex':'hidden sm:flex'}`}>
-          <p onClick={handleCategoryChange('Laptop')} className={`w-[94vw] sm:w-56 pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="Laptop"?"bg-indigo-200 text-black":""} `}>Laptop</p>
-          <p onClick={()=>category==='Smartphone'? navigate('/products'):navigate('/products/Smartphone')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="Smartphone"?"bg-indigo-200 text-black":""}`}>Smartphone</p>
-          <p onClick={()=>category==='Tablet'? navigate('/products'):navigate('/products/Tablet')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="Tablet"?"bg-indigo-200 text-black":""}`}>Tablet</p>
-          <p onClick={()=>category==='Pc, Printer'? navigate('/products'):navigate('/products/PcPrinter')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="PcPrinter"?"bg-indigo-200 text-black":""}`}>PC, Printer</p>
-          <p onClick={()=>category==='Smartwatch'? navigate('/products'):navigate('/products/Smartwatch')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="Smartwatch"?"bg-indigo-200 text-black":""}`}>Smartwatch</p>
-          <p onClick={()=>category==='Accessory'? navigate('/products'):navigate('/products/Accessory')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="Accessory"?"bg-indigo-200 text-black":""}`}>Accessory</p>
+      <div className='flex flex-col sm:flex-row items-start gap-5 mt-5 mr-5 mb-8'>
+        <button className={`py-1 flex relative w-36 px-3 border rounded text-sm transition-all sm:hidden ${showFilterCategory? 'bg-primary text-white':''}`} onClick={()=>setShowFilterCategory(prev=>!prev)}>Filter</button>
+        <div className={`flex flex-col gap-4 text-sm ${showFilterCategory?'flex':'hidden sm:flex'}`}>
+          <p onClick={()=>handleCategoryChange('Laptop')} className={`w-[94vw] sm:w-56 pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="Laptop"?"bg-indigo-200 text-black":""} `}>Laptop</p>
+          <p onClick={()=>handleCategoryChange('Smartphone')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="Smartphone"?"bg-indigo-200 text-black":""}`}>Smartphone</p>
+          <p onClick={()=>handleCategoryChange('Tablet')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="Tablet"?"bg-indigo-200 text-black":""}`}>Tablet</p>
+          <p onClick={()=>handleCategoryChange('PcPrinter')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="PcPrinter"?"bg-indigo-200 text-black":""}`}>PC, Printer</p>
+          <p onClick={()=>handleCategoryChange('Smartwatch')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="Smartwatch"?"bg-indigo-200 text-black":""}`}>Smartwatch</p>
+          <p onClick={()=>handleCategoryChange('Accessory')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="Accessory"?"bg-indigo-200 text-black":""}`}>Accessory</p>
         </div>
+        </div>
+        <div>
+        <p className='text-gray-600 ml-0'>Browse through the product's brand.</p>
+      <div className='flex flex-col sm:flex-row items-start gap-5 mt-5'>
+        <button className={`py-1 flex relative w-36 px-3 border rounded text-sm transition-all sm:hidden ${showFilterBrand? 'bg-primary text-white':''}`} onClick={()=>setShowFilterBrand(prev=>!prev)}>Filter</button>
+        <div className={`flex flex-col gap-4 text-sm ${showFilterBrand?'flex':'hidden sm:flex'}`}>
+          <p onClick={()=>handleBrandChange('Laptop')} className={`w-[94vw] sm:w-56 pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="Laptop"?"bg-indigo-200 text-black":""} `}>Laptop</p>
+          <p onClick={()=>handleBrandChange('Smartphone')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="Smartphone"?"bg-indigo-200 text-black":""}`}>Smartphone</p>
+          <p onClick={()=>handleBrandChange('Tablet')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="Tablet"?"bg-indigo-200 text-black":""}`}>Tablet</p>
+          <p onClick={()=>handleBrandChange('PcPrinter')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="PcPrinter"?"bg-indigo-200 text-black":""}`}>PC, Printer</p>
+          <p onClick={()=>handleBrandChange('Smartwatch')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="Smartwatch"?"bg-indigo-200 text-black":""}`}>Smartwatch</p>
+          <p onClick={()=>handleBrandChange('Accessory')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="Accessory"?"bg-indigo-200 text-black":""}`}>Accessory</p>
+        </div>
+        </div>  
+        </div>
+      </div>
         <div className='w-full grid grid-cols-auto gap-4 gap-y-6'>
           {
             filterPro.map((item,index)=>(
