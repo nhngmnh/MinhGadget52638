@@ -21,7 +21,7 @@ const Product = () => {
   
     if (category) params.set('category', category);
     if (brand) params.set('brand', brand);
-  
+    setFilterPro(products.filter(pr=>pr.category===category&&pr.brand===brand))
     navigate(`?${params.toString()}`);
   }, [category, brand]);
   
@@ -31,7 +31,7 @@ const Product = () => {
       <div className='flex flex-col sm:flex-row items-start gap-5 mt-5'>
         <button className={`py-1 flex relative w-36 px-3 border rounded text-sm transition-all sm:hidden ${showFilter? 'bg-primary text-white':''}`} onClick={()=>setShowFilter(prev=>!prev)}>Filter</button>
         <div className={`flex flex-col gap-4 text-sm ${showFilter?'flex':'hidden sm:flex'}`}>
-          <p onClick={()=>category==='Laptop'? navigate('/products'):navigate('/products/Laptop')} className={`w-[94vw] sm:w-56 pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="Laptop"?"bg-indigo-200 text-black":""} `}>Laptop</p>
+          <p onClick={handleCategoryChange('Laptop')} className={`w-[94vw] sm:w-56 pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="Laptop"?"bg-indigo-200 text-black":""} `}>Laptop</p>
           <p onClick={()=>category==='Smartphone'? navigate('/products'):navigate('/products/Smartphone')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="Smartphone"?"bg-indigo-200 text-black":""}`}>Smartphone</p>
           <p onClick={()=>category==='Tablet'? navigate('/products'):navigate('/products/Tablet')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="Tablet"?"bg-indigo-200 text-black":""}`}>Tablet</p>
           <p onClick={()=>category==='Pc, Printer'? navigate('/products'):navigate('/products/PcPrinter')} className={`w-[94vw] sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded transition-all cursor-pointer hover:bg-primary hover:text-white ${category==="PcPrinter"?"bg-indigo-200 text-black":""}`}>PC, Printer</p>
