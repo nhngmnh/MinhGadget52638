@@ -3,29 +3,28 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { AppContext } from '../context/AppContext'
 import { products } from '../assets/assets'
 const Product = () => {
-  const {category} =useParams()
+  const [category,setCategory]=useState('');
+  const [brand,setBrand]=useState('');
+  const handleCategoryChange = (newCategory) => {
+    setCategory(prev => (prev === newCategory ? '' : newCategory)); // Nếu đã chọn rồi thì xóa
+  };
+  const handleBrandChange = (newBrand) => {
+    setBrand(prev => (prev === newBrand ? '' : newBrand));
+  };
+
   const[filterPro,setFilterPro]=useState([])
   const {products,setProducts}=useContext(AppContext)
   const [showFilter,setShowFilter]=useState(false)
   const navigate=useNavigate()
-  const applyFilter = () => {
-    
-    if (category){
-      setFilterPro(products.filter(pr=> pr.category===category))
-      console.log("loc roi");
-      
-    } else {
-      setFilterPro(products)
-      console.log("chua loc");
-      
-    }
-  }
-  useEffect(()=>{
-    applyFilter();
-    console.log(products);
-    
-  },[category]
-  )
+  useEffect(() => {
+    const params = new URLSearchParams();
+  
+    if (category) params.set('category', category);
+    if (brand) params.set('brand', brand);
+  
+    navigate(`?${params.toString()}`);
+  }, [category, brand]);
+  
   return (
     <div className='flex flex-col'>
       <p className='text-gray-600 ml-0'>Browse through the device categories.</p>
