@@ -185,7 +185,7 @@ const createCart = async (req, res) => {
 };
 const getProducts = async (req, res) => {
     try {
-        const { query, category, brand } = req.query;
+        const { query, category, brand, minPrice, maxPrice } = req.query;
         let filter = [];
 
         if (query) {
@@ -206,6 +206,13 @@ const getProducts = async (req, res) => {
             filter.push({ brand });
         }
 
+        let priceFilter = {};
+        if (minPrice) priceFilter.$gte = parseFloat(minPrice) || 0;
+        if (maxPrice) priceFilter.$lte = parseFloat(maxPrice) || Infinity;
+        if (Object.keys(priceFilter).length > 0) {
+            filter.push({ price: priceFilter });
+        }
+
         const products = await productModel.find(filter.length ? { $and: filter } : {});
 
         res.json({ success: true, products: products });
@@ -213,6 +220,7 @@ const getProducts = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
 export {
     registerUser,loginUser,getProfile,updateProfile,listCart,cancelOrder,createCart,getProducts
 }

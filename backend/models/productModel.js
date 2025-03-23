@@ -61,6 +61,12 @@ const ProductSchema = new mongoose.Schema({
     description: {
         type:String,
         default:"A quality product of MinhGadget store",
+    },
+    discount: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 100,
     }
 });
 
