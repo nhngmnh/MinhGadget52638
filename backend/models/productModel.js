@@ -40,7 +40,8 @@ const ProductSchema = new mongoose.Schema({
         min: 0,
     },
     release_date: {
-        type: String,
+        type: Date,
+        default: Date.now(),
     },
     description: {
         type: String,

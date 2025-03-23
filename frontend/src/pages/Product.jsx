@@ -1,9 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { AppContext } from '../context/AppContext'
 import axios from 'axios'
 
 const Product = () => {
+  const location=useLocation();
+  const [showFilterTime,setShowFilterTime]=useState(false)
+  const [sortFlag,setSortFlag]=useState(0);
+  const [sortOrder, setSortOrder] = useState(''); // 'asc' or 'desc' or '' is not sort order
   const [showFilterPrice, setShowFilterPrice] = useState(false);
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
@@ -14,11 +18,27 @@ const Product = () => {
   const [showFilterCategory, setShowFilterCategory] = useState(false);
   const [showFilterBrand, setShowFilterBrand] = useState(false);
   const navigate = useNavigate();
-
+  useEffect(() => {
+    if (sortOrder !== "") {
+      setFilterPro(prev =>
+        [...prev].sort((a, b) =>
+          sortOrder === "desc"
+            ? new Date(b.release_date) - new Date(a.release_date)
+            : new Date(a.release_date) - new Date(b.release_date)
+        )
+      );
+    }
+  }, [sortFlag, sortOrder]);
+  useEffect(() => {
+  if (location.state?.category) {
+    setCategory(location.state.category);
+  }
+}, [location.state]);
   useEffect(() => {
     axios.get(`${backendurl}/api/user/get-products?category=${category}&brand=${brand}&minPrice=${minPrice}&maxPrice=${maxPrice}`)
       .then((res) => setFilterPro(res.data.products))
       .catch((err) => console.error("Fetch error:", err));
+      setSortFlag(1-sortFlag)
   }, [category, brand,maxPrice,minPrice]);
 
   const handleCategoryChange = (newCategory) => {
@@ -30,19 +50,22 @@ const Product = () => {
     setBrand(prev => (prev === newBrand ? '' : newBrand));
     setShowFilterBrand(false);
   };
-
+  const handleTimeChange=(newTime) => {
+    setSortOrder(prev=> (prev===newTime ? '': newTime));
+    setShowFilterTime(false);
+  }
   return (
     <div className='flex flex-col'>
       <div className='flex flex-row gap-5'>
         <div>
           <button 
-            className={`py-1 w-36 px-3 border rounded text-sm transition-all ${showFilterCategory ? 'bg-primary text-white' : ''}`} 
+            className={`py-1 w-36 px-3 border rounded text-sm transition-all mb-2 ${showFilterCategory ? 'bg-primary text-white' : ''}`} 
             onClick={() => setShowFilterCategory(prev => !prev)}
           >
             {category ? `Category: ${category}` : 'Select category'}
           </button>
           {showFilterCategory && (
-            <div className='flex flex-col gap-4 text-sm mt-2'>
+            <div className='flex flex-col gap-2 text-sm mt-1'>
               {['Laptop', 'Smartphone', 'Tablet', 'PcPrinter', 'Smartwatch', 'Accessory'].map(cat => (
                 <p key={cat} onClick={() => handleCategoryChange(cat)} 
                    className={`w-36 pl-3 py-1.5 border rounded cursor-pointer hover:bg-primary hover:text-white ${category === cat ? "bg-indigo-200 text-black" : ""}`}
@@ -55,18 +78,37 @@ const Product = () => {
         </div>
         <div>
           <button 
-            className={`py-1 w-36 px-3 border rounded text-sm transition-all ${showFilterBrand ? 'bg-primary text-white' : ''}`} 
+            className={`py-1 w-36 px-3 border rounded text-sm transition-all mb-2 ${showFilterBrand ? 'bg-primary text-white' : ''}`} 
             onClick={() => setShowFilterBrand(prev => !prev)}
           >
             {brand ? `Brand: ${brand}` : 'Select a brand'}
           </button>
           {showFilterBrand && (
-            <div className='flex flex-col gap-4 text-sm mt-2'>
+            <div className='flex flex-col gap-2 text-sm mt-1'>
               {['DELL', 'Apple', 'ASUS', 'Oppo', 'ACER', 'HP'].map(br => (
                 <p key={br} onClick={() => handleBrandChange(br)} 
                    className={`w-36 pl-3 py-1.5 border rounded cursor-pointer hover:bg-primary hover:text-white ${brand === br ? "bg-indigo-200 text-black" : ""}`}
                 >
                   {br}
+                </p>
+              ))}
+            </div>
+          )}
+        </div>
+        <div>
+          <button 
+            className={`py-1 w-36 px-3 border rounded text-sm transition-all mb-2 ${showFilterTime ? 'bg-primary text-white' : ''}`} 
+            onClick={() => setShowFilterTime(prev => !prev)}
+          >
+            {sortOrder ? `Sort by time: ${sortOrder==='asc'?'New':'Old'}` : 'Sort by time'}
+          </button>
+          {showFilterTime && (
+            <div className='flex flex-col gap-2 text-sm mt-1'>
+              {['asc','desc'].map(br => (
+                <p key={br} onClick={() => handleTimeChange(br)} 
+                   className={`w-36 pl-3 py-1.5 border rounded cursor-pointer hover:bg-primary hover:text-white ${sortOrder === br ? "bg-indigo-200 text-black" : ""}`}
+                >
+                  {br==='asc'?"New":"Old"}
                 </p>
               ))}
             </div>

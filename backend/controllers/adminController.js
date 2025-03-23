@@ -31,7 +31,7 @@ const addProduct = async (req, res) => {
             name,
             price,
             description,
-            specifications,
+            specifications:JSON.parse(specifications),
             category,
             brand,
             stock_quantity,

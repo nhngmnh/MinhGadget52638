@@ -1,80 +1,49 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { AppContext } from '../context/AppContext'
-import { products } from '../assets/assets'
-import { assets } from '../assets/assets'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useState } from 'react'
 import RelatedProducts from '../components/RelatedProducts'
 const DetailProduct = () => {
-   const navigate=useNavigate();
+  const {products}=useContext(AppContext)
+  const navigate=useNavigate();
   const [quantity, setQuantity] = useState(1);
-  const [selectedColor, setSelectedColor] = useState('red');
-  const [selectedSize, setSelectedSize] = useState('M');
   const [category, setCategory] = useState('');
   const {prID}=useParams();
     const [pr,setPr]=useState();
-    const applyFilter=()=>{
-        if (prID){
-            console.log(prID);
-            const prInfo= products.find(p=>p._id===prID);
-            setPr(prInfo);
-            setCategory(prInfo.category);
+    
+    useEffect(() => {
+      if (prID && products.length > 0) {
+        const prInfo = products.find(p => p._id === prID);
+        if (prInfo) {
+          setPr(prInfo);
+          setCategory(prInfo.category);
         }
-    }
-    useEffect(()=>{
-        applyFilter();
-    },[prID]);
+      }
+    }, [prID, products]);
+    
   const handleQuantityChange = (e) => {
     setQuantity(e.target.value);
   };
   const handleAddToCart = () => {
     // Chuyển hướng đến trang xác nhận
-    const cartData = { prID, quantity, selectedColor, selectedSize };
+    const cartData = { prID, quantity };
     localStorage.setItem('cartData', JSON.stringify(cartData));
     navigate('/checkout', { state: cartData });
   };
-  return (
+  return pr && (
     <div>
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg w-auto mt-8">
       <div className="flex">
       <img
-          src={pr?.image?.[0]}
+          src={pr.image_url}
           alt="Product"
-          className="w-1/2 h-auto rounded-lg"
+          className="w-1/2 h-1/2 rounded-lg"
         />
         <div className="ml-6 w-1/2">
-          <h1 className="text-2xl font-bold">Tên Sản Phẩm</h1>
-          <p className="text-xl text-gray-700 mt-2">Giá: $99.99</p>
-          
+          <h1 className="text-2xl font-bold">{pr.name}</h1>
+          <p className="text-xl text-gray-700 mt-2">Price: {pr.price}</p>
           <div className="mt-4">
-            <label className="block text-gray-700">Màu sắc:</label>
-            <select
-              value={selectedColor}
-              onChange={(e) => setSelectedColor(e.target.value)}
-              className="mt-1 border border-gray-300 rounded-md p-2 w-full"
-            >
-              <option value="red">Đỏ</option>
-              <option value="blue">Xanh</option>
-              <option value="green">Xanh lá</option>
-            </select>
-          </div>
-
-          <div className="mt-4">
-            <label className="block text-gray-700">Kích thước:</label>
-            <select
-              value={selectedSize}
-              onChange={(e) => setSelectedSize(e.target.value)}
-              className="mt-1 border border-gray-300 rounded-md p-2 w-full"
-            >
-              <option value="S">S</option>
-              <option value="M">M</option>
-              <option value="L">L</option>
-              <option value="XL">XL</option>
-            </select>
-          </div>
-
-          <div className="mt-4">
-            <label className="block text-gray-700">Số lượng:</label>
+            <label className="block text-gray-700">Quantity:</label>
             <input
               type="number"
               value={quantity}
@@ -83,6 +52,27 @@ const DetailProduct = () => {
               className="mt-1 border border-gray-300 rounded-md p-2 w-20"
             />
           </div>
+          {/* Kiểm tra nếu specifications tồn tại */}
+{pr?.specifications && (
+  <div className="mt-4">
+    <h2 className="text-xl font-semibold">Specifications</h2>
+    {
+      console.log(pr.specifications)
+      
+    }
+    <table className="w-full border border-gray-300 mt-2">
+      <tbody>
+        
+        {Object.entries(pr.specifications).map(([key, value]) => (
+          <tr key={key} className="border-b border-gray-200">
+            <td className="px-4 py-2 font-medium bg-gray-100">{key}</td>
+            <td className="px-4 py-2">{value}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}
 
           <button onClick={handleAddToCart} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">
             Thêm vào giỏ hàng
