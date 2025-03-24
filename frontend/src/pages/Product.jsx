@@ -143,7 +143,7 @@ const Product = () => {
       </div>
       <div className='w-full grid grid-cols-auto gap-4 gap-y-6 mt-6'>
         {filterPro.map((item, index) => (
-          <div onClick={() => navigate(`/detail/${item._id}`)} 
+          <div onClick={() => navigate(`/detail/${item._id}`, scrollTo(0,0))} 
                className='border border-blue-200 rounded-xl overflow-hidden cursor-pointer hover:translate-y-[-10px] transition-all duration-500' 
                key={index}
           >

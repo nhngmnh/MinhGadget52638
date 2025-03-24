@@ -74,7 +74,9 @@ import razorpay_logo from './razorpay_logo.png'
 import stripe_logo from './stripe_logo.png'
 import cross_icon from './cross_icon.png'
 import bg from './bg.jpg'
+import mdcn from './mon-do-cong-nghe.png'
 export const assets = {
+    mdcn,
     bg,
     avatar,
     logo,
