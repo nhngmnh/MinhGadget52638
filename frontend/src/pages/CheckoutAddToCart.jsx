@@ -10,7 +10,22 @@ const CheckoutAddToCart = () => {
 
   const product = products.find((p) => p._id === cartData.prID);
   const totalPrice = product ? product.price * cartData.quantity : 0;
-
+  const handleAddCart = async ()=>{
+    try {
+      const addCart= await axios.post(backendurl+'/api/user/create-cart',{itemId:prId,totalItems:quantity, paymentMethod:'Cash', shippingAddress:"An Thi"},{headers:{token}});
+      if (addCart) {
+        console.log(addCart);
+        toast.success("Add successfully")
+        
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message)
+      
+    }
+    
+    navigate('/mycart', { replace: true });
+  }
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg rounded-xl">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Order Confirmation</h1>
@@ -39,7 +54,7 @@ const CheckoutAddToCart = () => {
       </div>
 
       <button
-        onClick={() => navigate('/mycart')}
+        onClick={() => handleAddCart()}
         className="mt-6 w-full bg-blue-600 text-white py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-shadow shadow-md"
       >
         Confirm Order
