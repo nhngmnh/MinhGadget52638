@@ -5,7 +5,7 @@ import SearchEngine from './SearchEngine'
 import { AppContext } from '../context/AppContext'
 const Navbar = () => {
     const navigate= useNavigate();
-    const {token,setToken,backendurl} = useContext(AppContext)
+    const {token,setToken,backendurl,userData} = useContext(AppContext)
     const deleteToken=()=>{
         setToken(null);
         localStorage.removeItem('token');
@@ -42,7 +42,7 @@ const Navbar = () => {
             token 
             ?
         <div className='flex items-center gap-2 cursor-pointer group relative'>
-                <img className='w-10 rounded-full' src={assets.avatar} alt=''/>
+                <img className='w-10 rounded-full' src={userData.image} alt=''/>
                 <img className='w-2.5' src='' alt=''/>
                 <div className='absolute top-0 right-0 pt-14 text-base font-medium text-gray-600 hidden group-hover:block'>
                     <div className='min-w-48 round flex flex-col gap-2 p-4 bg-gray-50 font-bold text-black'>
