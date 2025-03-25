@@ -1,18 +1,20 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 
 const CheckoutAddToCart = () => {
   const navigate = useNavigate();
-  const { products } = useContext(AppContext);
+  const { products,userData } = useContext(AppContext);
   const location = useLocation();
   const cartData = location.state || JSON.parse(localStorage.getItem('cartData'));
-
+  const [address,setAddress]=useState(userData.address);
+  const [payment,setPayment]=useState('Cash');
   const product = products.find((p) => p._id === cartData.prID);
+  const [openChoosingMethod,setOpenChoosingMethod]=useState(false);
   const totalPrice = product ? product.price * cartData.quantity : 0;
   const handleAddCart = async ()=>{
     try {
-      const addCart= await axios.post(backendurl+'/api/user/create-cart',{itemId:prId,totalItems:quantity, paymentMethod:'Cash', shippingAddress:"An Thi"},{headers:{token}});
+      const addCart= await axios.post(backendurl+'/api/user/create-cart',{itemId:prId,totalItems:quantity, paymentMethod:'Cash', shippingAddress:address},{headers:{token}});
       if (addCart) {
         console.log(addCart);
         toast.success("Add successfully")
@@ -43,11 +45,40 @@ const CheckoutAddToCart = () => {
           <p className="text-lg font-bold mt-4">Total: ${totalPrice.toFixed(2)}</p>
         </div>
       </div>
+      <div className='mt-6'>
+  <h3 className='text-xl font-semibold text-gray-800 mb-2'>Payment Method:</h3>
+  <div className="relative w-48">
+    <button
+      className='w-full py-2 px-4 border rounded text-sm bg-gray-100 hover:bg-gray-200 transition'
+      onClick={() => setOpenChoosingMethod(prev => !prev)}
+    >
+      {payment}
+    </button>
+
+    {openChoosingMethod && (
+      <div className="absolute left-0 mt-2 w-full bg-white border shadow-lg rounded-md z-10">
+        {['Cash', 'Pay online'].map((mt) => (
+          <p
+            key={mt}
+            className='px-4 py-2 cursor-pointer hover:bg-blue-500 hover:text-white transition'
+            onClick={() => {
+              setPayment(mt);
+              setOpenChoosingMethod(false);
+            }}
+          >
+            {mt}
+          </p>
+        ))}
+      </div>
+    )}
+  </div>
+</div>
 
       <div className="mt-6">
         <h2 className="text-xl font-semibold text-gray-800">Shipping Address</h2>
         <input
           type="text"
+          onChange={(e)=>setAddress(e.target.value)}
           placeholder="Enter your shipping address"
           className="mt-2 border border-gray-300 rounded-md p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
         />

@@ -6,7 +6,7 @@ const cartSchema = new mongoose.Schema({
     totalPrice: { type: Number, required: true }, 
     totalItems: { type: Number, required: true,default:1 },  
     status: { type: String, enum: [ 'processing', 'shipped', 'cancelled'], default: 'processing' },
-    paymentMethod: { type: String, enum: ['cash', 'credit_card', 'paypal'], required: true,default: 'cash'},
+    paymentMethod: { type: String, enum: ['Cash', 'Pay online'], required: true,default: 'Cash'},
     paymentStatus: { type: Boolean, default: false },
     shippingAddress: { type: String, required: true },
     deliveryDate: { type: Date, default: null },
