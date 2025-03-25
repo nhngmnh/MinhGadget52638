@@ -1,10 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
-
+import { toast } from 'react-toastify';
+import axios from 'axios';
 const CheckoutAddToCart = () => {
   const navigate = useNavigate();
-  const { products,userData } = useContext(AppContext);
+  const { products,userData,backendurl,token } = useContext(AppContext);
   const location = useLocation();
   const cartData = location.state || JSON.parse(localStorage.getItem('cartData'));
   const [address,setAddress]=useState(userData.address);
@@ -14,7 +15,7 @@ const CheckoutAddToCart = () => {
   const totalPrice = product ? product.price * cartData.quantity : 0;
   const handleAddCart = async ()=>{
     try {
-      const addCart= await axios.post(backendurl+'/api/user/create-cart',{itemId:prId,totalItems:quantity, paymentMethod:'Cash', shippingAddress:address},{headers:{token}});
+      const addCart= await axios.post(backendurl+'/api/user/create-cart',{itemId:cartData.prID,totalItems:cartData.quantity, paymentMethod:payment, shippingAddress:address},{headers:{token}});
       if (addCart) {
         console.log(addCart);
         toast.success("Add successfully")

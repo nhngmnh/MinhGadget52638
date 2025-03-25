@@ -100,7 +100,7 @@ const listCart= async(req,res)=>{
         
         const {userId}=req.body
         const carts=await cartModel.find({userId})
-        res.json({success:true,carts})
+        res.json({success:true,cartData:carts})
     } catch (error) {
         console.log(error)
         res.json({success:false,message:error.message})

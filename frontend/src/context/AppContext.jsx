@@ -9,6 +9,7 @@ const AppContextProvider=(props)=>{
     const [userData,setUserData]=useState(false)
     const [token,setToken]=useState(localStorage.getItem('token')?localStorage.getItem('token'):false);
     const [products,setProducts]=useState([]);
+    const [cart,setCart]=useState([]);
     const getProductsData = async ()=>{
         try {
             const {data}= await axios.get(backendurl+'/api/user/get-products')
@@ -39,7 +40,7 @@ const AppContextProvider=(props)=>{
             toast.error(error.message)
         }
     }
-
+        
     const value={
         products,
         setProducts,
@@ -58,7 +59,7 @@ const AppContextProvider=(props)=>{
     },[])
     useEffect(()=>{
         if (token){
-            getUserData()
+            getUserData();
         } else {
             setUserData(false)
         }
