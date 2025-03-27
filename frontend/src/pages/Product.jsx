@@ -5,6 +5,7 @@ import axios from 'axios'
 
 const Product = () => {
   const location=useLocation();
+  const {search,setSearch}=useContext(AppContext)
   const [showFilterTime,setShowFilterTime]=useState(false)
   const [sortFlag,setSortFlag]=useState(0);
   const [sortOrder, setSortOrder] = useState(''); // 'asc' or 'desc' or '' is not sort order
@@ -35,11 +36,11 @@ const Product = () => {
   }
 }, [location.state]);
   useEffect(() => {
-    axios.get(`${backendurl}/api/user/get-products?category=${category}&brand=${brand}&minPrice=${minPrice}&maxPrice=${maxPrice}`)
+    axios.get(`${backendurl}/api/user/get-products?query=${search}&category=${category}&brand=${brand}&minPrice=${minPrice}&maxPrice=${maxPrice}`)
       .then((res) => setFilterPro(res.data.products))
       .catch((err) => console.error("Fetch error:", err));
       setSortFlag(1-sortFlag)
-  }, [category, brand,maxPrice,minPrice]);
+  }, [category, brand,maxPrice,minPrice,search]);
 
   const handleCategoryChange = (newCategory) => {
     setCategory(prev => (prev === newCategory ? '' : newCategory));

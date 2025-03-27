@@ -5,7 +5,7 @@ import SearchEngine from './SearchEngine'
 import { AppContext } from '../context/AppContext'
 const Navbar = () => {
     const navigate= useNavigate();
-    const {token,setToken,backendurl,userData} = useContext(AppContext)
+    const {token,setToken,backendurl,userData,search,setSearch} = useContext(AppContext)
     const deleteToken=()=>{
         setToken(null);
         localStorage.removeItem('token');
@@ -36,7 +36,7 @@ const Navbar = () => {
             </NavLink>
 
         </ul>    
-        <SearchEngine />
+        <SearchEngine search={search} setSearch={setSearch}/>
         <div className='flex items-center gap-4'>
         {
             token 

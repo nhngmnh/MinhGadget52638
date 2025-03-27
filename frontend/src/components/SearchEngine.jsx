@@ -3,13 +3,14 @@ import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 import { toast } from 'react-toastify';
 
-const SearchEngine = () => {
+const SearchEngine = ({search,setSearch}) => {
   const [searchTerm, setSearchTerm] = useState('');
   const { backendurl, token } = useContext(AppContext);
 
   const handleSearch = async () => {
+    
     const trimmedSearchTerm = searchTerm.trim(); // Loại bỏ khoảng trắng đầu & cuối
-
+    setSearch(trimmedSearchTerm);
     if (!trimmedSearchTerm) {
       toast.error("Search term cannot be empty!");
       return;
@@ -18,7 +19,7 @@ const SearchEngine = () => {
     try {
       const value = await axios.get(`${backendurl}/api/user/get-products?query=${trimmedSearchTerm}`);
       if (value) {
-        console.log(value);
+        console.log(value.data);
       } else {
         toast.error("No product found!");
       }

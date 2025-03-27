@@ -2,8 +2,8 @@ import { createContext, useEffect,useState } from "react";
 import axios from 'axios'
 import {toast} from "react-toastify"
 export const AppContext=createContext()
-import { products } from "../assets/assets";
 const AppContextProvider=(props)=>{
+    const [search,setSearch]=useState('')
     const currencySymbol='$'
     const backendurl=import.meta.env.VITE_BACKEND_URL
     const [userData,setUserData]=useState(false)
@@ -42,6 +42,8 @@ const AppContextProvider=(props)=>{
     }
         
     const value={
+        search,
+        setSearch,
         products,
         setProducts,
         token,setToken,
