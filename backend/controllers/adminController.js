@@ -3,6 +3,7 @@ import connectDB from '../config/connectDB.js';
 import productModel from '../models/productModel.js'
 import userModel from '../models/userModel.js'
 import cartModel from '../models/cartModel.js';
+import jwt from 'jsonwebtoken'
 // api add product
 const addProduct = async (req, res) => {
     try { 
