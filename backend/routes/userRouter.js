@@ -14,5 +14,5 @@ userRouter.post('/create-cart',authUser,createCart)
 userRouter.get('/get-products',getProducts)
 userRouter.post('/update-profile',upload.single('image'),authUser,updateProfile) 
 userRouter.post('/cancel-order',authUser,cancelOrder)
-userRouter.post('/user-comment',createComment)
+userRouter.post('/comment',createComment)
 export default userRouter
