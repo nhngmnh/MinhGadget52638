@@ -11,7 +11,7 @@ const AdminContextProvider=(props)=>{
     const backendurl=import.meta.env.VITE_BACKEND_URL
     const getProducts=async()=>{
         try {
-            const{data}=await axios.post(backendurl+'/api/admin/get-products',{},{headers:{aToken}})
+            const{data}=await axios.get(backendurl+'/api/admin/get-products',{},{headers:{aToken}})
             if (data.success){
                 setProducts(data.products)
                 console.log(data.products);
@@ -37,7 +37,7 @@ const AdminContextProvider=(props)=>{
     }
     const getDashData= async()=>{
         try {
-            const {data}=await axios.get(backendurl+'/api/admin/dashboard',{headers:{aToken}})
+            const {data}=await axios.get(backendurl+'/api/admin/admin-dashboard',{headers:{aToken}})
             if (data.success){
                 setDashData(data.dashData)
                 console.log(data.dashData);

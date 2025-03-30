@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar"
 import { ToastContainer } from "react-toastify"
 import { useContext } from "react"
 import 'react-toastify/dist/ReactToastify.css'
+import Dashboard from "./pages/Dashboard"
 const App = () => {
   const {aToken}=useContext(AdminContext)
   return aToken ? (
@@ -17,7 +18,7 @@ const App = () => {
         <Routes>
           {/*ad route*/}
             <Route path='/' element={<></>}/>
-           
+            <Route path='/dashboard' element={<Dashboard/>}/>
         </Routes>
        </div>
     </div>
