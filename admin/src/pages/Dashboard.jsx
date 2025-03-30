@@ -18,21 +18,21 @@ const Dashboard = () => {
           <img  className='w-14'src='' alt=''/>
           <div>
             <p>{dashData._id}</p>
-            <p>Doctors</p>
+            <p>Products</p>
           </div>
         </div>
         <div className='flex items-center gap-2 bg-white p-4 min-w-52 rounded border-2 border-gray-100 cursor-pointer hover:scale-105 transition-all'>
           <img className='w-14' src='' alt=''/>
           <div>
             <p>{dashData.products._id}</p>
-            <p>Appointments</p>
+            <p>Carts</p>
           </div>
         </div>
         <div className='flex items-center gap-2 bg-white p-4 min-w-52 rounded border-2 border-gray-100 cursor-pointer hover:scale-105 transition-all'>
           <img className='w-14' src='' alt=''/>
           <div>
             <p>{dashData.carts._id}</p>
-            <p>Patients</p>
+            <p>Comments</p>
           </div>
         </div>
       </div>

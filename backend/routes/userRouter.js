@@ -3,6 +3,7 @@ import { createCart, getProfile, listCart, loginUser, registerUser, getProducts,
 import authUser from '../middlewares/authUser.js';
 import upload from '../middlewares/multer.js';
 import { cancelOrder, detailProduct } from '../controllers/productController.js';
+import { createComment } from '../controllers/commentController.js';
 const userRouter = express.Router();
 
 userRouter.post('/register', registerUser)
@@ -13,4 +14,5 @@ userRouter.post('/create-cart',authUser,createCart)
 userRouter.get('/get-products',getProducts)
 userRouter.post('/update-profile',upload.single('image'),authUser,updateProfile) 
 userRouter.post('/cancel-order',authUser,cancelOrder)
+userRouter.post('/user-comment',createComment)
 export default userRouter
