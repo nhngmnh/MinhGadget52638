@@ -44,8 +44,8 @@ const getAllComments = async (req, res) => {
   };
   const getCommentsByProduct = async (req, res) => {
     try {
-      const { productId } = req.params; // Lấy productId từ URL
-      const comments = await commentModel.find({ productId });
+      const { id } = req.params; // Lấy productId từ URL
+      const comments = await commentModel.find({ id });
   
       if (!comments.length) {
         return res.status(404).json({ message: "No comments found for this product." });

@@ -5,7 +5,7 @@ import axios from 'axios';
 import RelatedProducts from '../components/RelatedProducts';
 
 const DetailProduct = () => {
-  const { products } = useContext(AppContext);
+  const { products,backendurl,userData } = useContext(AppContext);
   const navigate = useNavigate();
   const { prID } = useParams();
   const [pr, setPr] = useState();
@@ -27,7 +27,7 @@ const DetailProduct = () => {
 
   useEffect(() => {
     if (prID) {
-      axios.get(`/api/comments/${prID}`)
+      axios.get(backendurl+`/api/user/get-comments-by-id/:${prID}`)
         .then(res => setComment(res.data))
         .catch(err => console.error("Error fetching comment:", err));
     }
@@ -43,7 +43,7 @@ const DetailProduct = () => {
 
   const handleCommentSubmit = () => {
     if (!commentText.trim()) return;
-    axios.post(`/api/comments/${prID}`, { text: commentText })
+    axios.post(`/api/user/create-comment`, { text: commentText,productId: prID, userId:userData._id })
       .then(res => {
         setComment(res.data);
         setEditing(false);
