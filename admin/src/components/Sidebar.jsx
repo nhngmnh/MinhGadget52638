@@ -7,10 +7,10 @@ const Sidebar = () => {
 
   const menuItems = [
     { path: '/dashboard', label: 'Dashboard' },
-    { path: '/all-appointments',  label: "Customer's Cart" },
-    { path: '/add-doctor',  label: 'Add Products' },
-    { path: '/doctor-list',  label: 'List Products' },
-    { path: '/comments-list', label: 'List Comments' }, // Fix đường dẫn bị trùng
+    { path: '/all-carts',  label: "Customer's Cart" },
+    { path: '/add-products',  label: 'Add Products' },
+    { path: '/products-list',  label: 'List Products' },
+    { path: '/comments-list', label: 'List Comments' },
   ];
 
   return (

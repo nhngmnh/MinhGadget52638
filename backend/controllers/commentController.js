@@ -56,7 +56,35 @@ const getAllComments = async (req, res) => {
       res.status(500).json({ error: "Failed to fetch comments for product!" });
     }
   };
+  const updateComment = async (req, res) => {
+    try {
+      const { productId,userId,text } = req.body;
+  
+      if (!commentId || !userId || !text.trim()) {
+        return res.status(400).json({ message: 'Thiếu dữ liệu đầu vào' });
+      }
+  
+      // Tìm bình luận của user cho sản phẩm này
+      let comment = await Comment.findOne({ productId, userId });
+  
+      if (comment) {
+        // Nếu đã có bình luận, cập nhật nội dung mới
+        comment.text = text;
+        comment.updatedAt = new Date();
+        await comment.save();
+        return res.status(200).json({ message: 'Bình luận đã được cập nhật', comment });
+      } else {
+        // Nếu chưa có bình luận, tạo mới
+        comment = new Comment({ productId, userId, text });
+        await comment.save();
+        return res.status(201).json({ message: 'Bình luận đã được thêm', comment });
+      }
+    } catch (error) {
+      console.error('Lỗi cập nhật bình luận:', error);
+      res.status(500).json({ message: 'Lỗi server' });
+    }
+  };
   
 export {
-    createComment,getAllComments,getCommentsByUser,getCommentsByProduct
+    createComment,getAllComments,getCommentsByUser,getCommentsByProduct,updateComment
 }

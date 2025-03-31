@@ -3,7 +3,7 @@ import { createCart, getProfile, listCart, loginUser, registerUser, getProducts,
 import authUser from '../middlewares/authUser.js';
 import upload from '../middlewares/multer.js';
 import { cancelOrder, detailProduct } from '../controllers/productController.js';
-import { createComment, getCommentsByProduct } from '../controllers/commentController.js';
+import { createComment, getCommentsByProduct, updateComment } from '../controllers/commentController.js';
 const userRouter = express.Router();
 
 userRouter.post('/register', registerUser)
@@ -15,5 +15,7 @@ userRouter.get('/get-products',getProducts)
 userRouter.post('/update-profile',upload.single('image'),authUser,updateProfile) 
 userRouter.post('/cancel-order',authUser,cancelOrder)
 userRouter.post('/create-comment',createComment)
-userRouter.get('/get-comments-by-product/:id',getCommentsByProduct)
+userRouter.get('/get-comments-by-product/:id',authUser,getCommentsByProduct)
+userRouter.post('/update-comment',authUser,updateComment)
+
 export default userRouter

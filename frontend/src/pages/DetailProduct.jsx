@@ -5,13 +5,13 @@ import axios from 'axios';
 import RelatedProducts from '../components/RelatedProducts';
 
 const DetailProduct = () => {
-  const { products,backendurl,userData } = useContext(AppContext);
+  const { products, backendurl, userData } = useContext(AppContext);
   const navigate = useNavigate();
   const { prID } = useParams();
   const [pr, setPr] = useState();
   const [quantity, setQuantity] = useState(1);
   const [category, setCategory] = useState('');
-  const [comment, setComment] = useState(null);
+  const [userComment, setUserComment] = useState(null);
   const [editing, setEditing] = useState(false);
   const [commentText, setCommentText] = useState('');
 
@@ -26,12 +26,18 @@ const DetailProduct = () => {
   }, [prID, products]);
 
   useEffect(() => {
-    if (prID) {
-      axios.get(backendurl+`/api/user/get-comments-by-id/:${prID}`)
-        .then(res => setComment(res.data))
-        .catch(err => console.error("Error fetching comment:", err));
+    if (prID && userData) {
+      axios.get(`${backendurl}/api/user/get-comments-by-id/${prID}`)
+        .then(res => {
+          const userExistingComment = res.data.find(comment => comment.userId === userData._id);
+          if (userExistingComment) {
+            setUserComment(userExistingComment);
+            setCommentText(userExistingComment.text);
+          }
+        })
+        .catch(err => console.error("Error fetching comments:", err));
     }
-  }, [prID]);
+  }, [prID, userData]);
 
   const handleQuantityChange = (e) => setQuantity(e.target.value);
 
@@ -43,12 +49,27 @@ const DetailProduct = () => {
 
   const handleCommentSubmit = () => {
     if (!commentText.trim()) return;
-    axios.post(`/api/user/create-comment`, { text: commentText,productId: prID, userId:userData._id })
-      .then(res => {
-        setComment(res.data);
-        setEditing(false);
+    if (userComment) {
+      axios.post(`${backendurl}/api/user/update-comment`, { 
+        productId: prID, 
+        text: commentText 
       })
-      .catch(err => console.error("Error posting comment:", err));
+        .then(res => {
+          setUserComment(res.data);
+          setEditing(false);
+        })
+        .catch(err => console.error("Error updating comment:", err));
+    } else {
+      axios.post(`${backendurl}/api/user/create-comment`, { 
+        text: commentText, 
+        productId: prID, 
+      })
+        .then(res => {
+          setUserComment(res.data);
+          setEditing(false);
+        })
+        .catch(err => console.error("Error posting comment:", err));
+    }
   };
 
   return pr && (
@@ -63,42 +84,15 @@ const DetailProduct = () => {
               <label className="block text-gray-700">Quantity:</label>
               <input type="number" value={quantity} onChange={handleQuantityChange} min="1" className="mt-1 border border-gray-300 rounded-md p-2 w-20" />
             </div>
-            {pr?.specifications && (
-              <div className="mt-4">
-                <h2 className="text-xl font-semibold">Specifications</h2>
-                <table className="w-full border border-gray-300 mt-2">
-                  <tbody>
-                    {Object.entries(pr.specifications).map(([key, value]) => (
-                      <tr key={key} className="border-b border-gray-200">
-                        <td className="px-4 py-2 font-medium bg-gray-100">{key}</td>
-                        <td className="px-4 py-2">{value}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
             <button onClick={handleAddToCart} className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">
               Thêm vào giỏ hàng
             </button>
           </div>
         </div>
         <div className="mt-6">
-          <h2 className="text-xl font-semibold">Product's description</h2>
-          <p className="text-gray-600 mt-2">{pr?.description}</p>
-        </div>
-        <div className="mt-6">
-          <h2 className="text-xl font-semibold">Product Review</h2>
-          <p className="text-gray-600 mt-2">⭐️⭐️⭐️⭐️☆ (4/5 từ 100 đánh giá)</p>
-        </div>
-        <div className="mt-6">
-          <h2 className="text-xl font-semibold">Delivery information</h2>
-          <p className="text-gray-600 mt-2">Giao hàng miễn phí trong vòng 3-5 ngày làm việc.</p>
-        </div>
-        <div className="mt-6">
           <h2 className="text-xl font-semibold">Comments</h2>
           <div className="mt-2 border-t pt-2">
-            {comment ? (
+            {userComment ? (
               <div className="border-b py-2">
                 {editing ? (
                   <div>
@@ -107,8 +101,8 @@ const DetailProduct = () => {
                   </div>
                 ) : (
                   <div>
-                    <p className="text-gray-700">{comment.text}</p>
-                    <button onClick={() => { setEditing(true); setCommentText(comment.text); }} className="text-blue-500">Chỉnh sửa</button>
+                    <p className="text-gray-700">{userComment.text}</p>
+                    <button onClick={() => setEditing(true)} className="text-blue-500">Chỉnh sửa</button>
                   </div>
                 )}
               </div>
