@@ -10,8 +10,5 @@ const commentSchema = new mongoose.Schema({
   timestamps: true 
 });
 
-// Đảm bảo một user chỉ có 1 đánh giá cho 1 sản phẩm
-commentSchema.index({ userId: 1, productId: 1 }, { unique: true });
-
 const commentModel = mongoose.model.comment || mongoose.model("comment", commentSchema);
 export default commentModel;

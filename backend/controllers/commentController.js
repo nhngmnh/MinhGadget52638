@@ -1,5 +1,4 @@
 import commentModel from "../models/commentModel.js";
-
 const createComment = async (req, res) => {
   try {
     const { userId, productId, text, rating = null } = req.body;
@@ -8,6 +7,7 @@ const createComment = async (req, res) => {
     const existingComment = await commentModel.findOne({ userId, productId });
 
     if (existingComment) {
+      
       return res.status(400).json({ error: "You have already commented on this product. Please edit your comment instead." });
     }
 
@@ -44,13 +44,12 @@ const getAllComments = async (req, res) => {
   };
   const getCommentsByProduct = async (req, res) => {
     try {
-      const { id } = req.params; // Lấy productId từ URL
-      const comments = await commentModel.find({ id });
-  
-      if (!comments.length) {
-        return res.status(404).json({ message: "No comments found for this product." });
-      }
-  
+      
+      
+      const { prID } = req.params; // Lấy productId từ URL
+      if (!prID) res.status(404).json({error:'sai tham so'});
+      console.log(prID);
+      const comments = await commentModel.find({ productId:prID });
       res.status(200).json(comments);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch comments for product!" });
@@ -60,12 +59,12 @@ const getAllComments = async (req, res) => {
     try {
       const { productId,userId,text } = req.body;
   
-      if (!commentId || !userId || !text.trim()) {
+      if (!productId || !userId || !text.trim()) {
         return res.status(400).json({ message: 'Thiếu dữ liệu đầu vào' });
       }
   
       // Tìm bình luận của user cho sản phẩm này
-      let comment = await Comment.findOne({ productId, userId });
+      let comment = await commentModel.findOne({ productId, userId });
   
       if (comment) {
         // Nếu đã có bình luận, cập nhật nội dung mới
@@ -75,7 +74,7 @@ const getAllComments = async (req, res) => {
         return res.status(200).json({ message: 'Bình luận đã được cập nhật', comment });
       } else {
         // Nếu chưa có bình luận, tạo mới
-        comment = new Comment({ productId, userId, text });
+        comment = new commentModel({ productId, userId, text });
         await comment.save();
         return res.status(201).json({ message: 'Bình luận đã được thêm', comment });
       }
