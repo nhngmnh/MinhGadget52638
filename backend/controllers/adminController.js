@@ -69,7 +69,7 @@ const adminDashboard = async(req,res)=>{
 const loginAdmin=async(req,res)=>{
     try {
         const {email,password}=req.body
-        if (email===process.env.ADMIN_EMAIL && password===process.env.ADMIN_PASSWORD){
+        if (email===process.env.VITE_ADMIN_EMAIL && password===process.env.VITE_ADMIN_PASSWORD){
             const token=jwt.sign(email+password,process.env.JWT_SECRET)
             res.json({success:true,token})
         } else {
@@ -147,7 +147,7 @@ const getProducts = async (req, res) => {
         }
         const products = await productModel.find(filter.length ? { $and: filter } : {});
 
-        res.json({ success: true, results: products });
+        res.json({ success: true, products: products});
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
@@ -155,9 +155,15 @@ const getProducts = async (req, res) => {
 const changeProductAvailability=async(req,res)=>{
     try {
         
-        const {productId}=req.body
+        const {productId}=req.body;
+        if (!productId) return res.json({ success: false, message:"productId is required"});
         const productData=await productModel.findById(productId)
-        const data= await productModel.findByIdAndUpdate(productId,{available:!productData.available}).select(['-image_url']);
+        if(!productData) return res.json({ success: false, message:"ko có dl"});
+        const data = await productModel.findByIdAndUpdate(
+            productId, 
+            { available: !productData?.available },  // Optional chaining to avoid errors if productData is undefined
+            { new: true }  // Thêm { new: true } để trả về đối tượng đã được cập nhật
+          ).select('-image_url');
         res.json({success:true,message:"Availability Changed",data:data})
     } catch (error) {
          console.log(error)

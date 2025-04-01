@@ -9,5 +9,5 @@ adminRouter.get('/admin-dashboard',authAdmin,adminDashboard)
 adminRouter.post('/update-product',authAdmin,updateProduct);
 adminRouter.post('/update-cart',authAdmin,updateCart);
 adminRouter.post('/login',loginAdmin);
-adminRouter.post('/change-product-availability',changeProductAvailability);
+adminRouter.post('/change-product-availability',authAdmin,changeProductAvailability);
 export default adminRouter

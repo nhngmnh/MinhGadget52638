@@ -2,12 +2,21 @@ import React, { useContext, useEffect } from 'react'
 import { AdminContext } from '../context/AdminContext'
 
 const ProductsList = () => {
-  const {aToken,changeAvailability,getAllProducts,products}=useContext(AdminContext)
-  useEffect(()=>{
-    if (aToken){
-      getAllProducts()
-    }
-  },[aToken])
+  const {aToken,changeAvailability,getProducts,products,setProducts}=useContext(AdminContext)
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        if (aToken) {
+          const data = await getProducts(); 
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+  
+    fetchProducts();
+  }, [aToken]);
+  
   return (
     <div className='m-5 max-h-[90vh] overflow-y-scroll'>
       <h1 className='text-lg font-medium'>
@@ -21,7 +30,8 @@ const ProductsList = () => {
               <p className='text-neutral-800 text-lg font-medium'>{item.name}</p>
               <p className='text-zinc-600 text-sm'>{item.category}</p>
               <div className='mt-2 flex items-center gap-1 text-sm'>
-                <input onChange={()=>changeAvailability(item._id)} type="checkbox" checked={item.available}/>
+                <input onChange={()=>{changeAvailability(item._id);  console.log(item._id);}
+                } type="checkbox" checked={item.available}/>
                 <p>Available</p>
               </div>
             </div>

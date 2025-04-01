@@ -7,6 +7,7 @@ import { ToastContainer } from "react-toastify"
 import { useContext } from "react"
 import 'react-toastify/dist/ReactToastify.css'
 import Dashboard from "./pages/Dashboard"
+import ProductsList from "./pages/ProductsList"
 const App = () => {
   const {aToken}=useContext(AdminContext)
   return aToken ? (
@@ -19,6 +20,7 @@ const App = () => {
           {/*ad route*/}
             <Route path='/' element={<></>}/>
             <Route path='/dashboard' element={<Dashboard/>}/>
+            <Route path='/products-list' element={<ProductsList/>}/>
         </Routes>
        </div>
     </div>
