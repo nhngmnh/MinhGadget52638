@@ -28,15 +28,14 @@ const AdminContextProvider=(props)=>{
     }
     const getCarts =async(req,res)=>{
         try {
-            const {data}=await get(backendurl+'/api/admin/all-carts',{headers:{aToken}})
+            const {data}=await axios.get(backendurl+'/api/admin/all-carts',{headers:{aToken}})
             if (data){
-                res.json({success:true,carts:data.carts})
+                toast.success("Thành công")
                 setCarts(data.carts)
             } else {
-                res.status(400).json({success:false,message:data.message})
+                res.json({message:"thatbai"})
             }
         } catch (error) {
-            console.log(error);
             toast.error(error.message);
         }
     }
@@ -55,7 +54,7 @@ const AdminContextProvider=(props)=>{
     }
     const changeAvailability= async(itemId)=>{
         try {
-            const {data}=await axios.post(backendurl+ '/api/admin/change-product-availability',{itemId},{headers:{aToken}})
+            const {data}=await axios.post(backendurl+ '/api/admin/change-product-availability',{prID:itemId},{headers:{aToken}})
             if (data.success){
                 toast.success(data.message)
             } else {
@@ -66,6 +65,19 @@ const AdminContextProvider=(props)=>{
         } catch (error) {
             console.log(error);
             
+            toast.error(error.message)
+        }
+    }
+    const removeCart = async(cartId) => {
+        try {
+            const {data}= await axios.post(backendurl+`/api/admin/delete-cart/${cartId}`)
+            if (!data){
+                toast.error("No data")
+            } 
+            console.log(data.cart);
+            setCarts(prevCarts => prevCarts.filter(cart => cart._id !== cartId));
+        } catch (error) {
+            console.log(error);
             toast.error(error.message)
         }
     }
@@ -90,7 +102,7 @@ const AdminContextProvider=(props)=>{
         dashData,getDashData,setDashData,
         carts, setCarts,
         latestComments, setLatestComments,
-        getCarts, getLatestComment
+        getCarts, getLatestComment, removeCart
     }
     return (
         <AdminContext.Provider value={value}>

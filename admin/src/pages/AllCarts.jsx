@@ -1,19 +1,23 @@
 import React, { useContext, useEffect } from 'react'
 import { AdminContext } from '../context/AdminContext'
-import { assets } from '../assets/assets'
 
 const AllCarts = () => {
-  const { aToken, allCarts, getAllCarts, removeCart } = useContext(AdminContext)
+  const { aToken, carts, getCarts, removeCart } = useContext(AdminContext)
 
   useEffect(() => {
-    if (aToken) {
-      try {
-        getAllCarts();
-      } catch (error) {
-        console.error('Error fetching carts:', error);
+    const fetchCarts = async () => {
+      if (aToken) {
+        try {
+          await getCarts();
+        } catch (error) {
+          console.error('Error fetching carts:', error);
+        }
       }
-    }
-  }, [aToken]);
+    };
+  
+    fetchCarts();
+  }, [aToken,carts]);
+  
 
   return (
     <div className='w-full max-w-6xl m-5'>
@@ -31,30 +35,27 @@ const AllCarts = () => {
         
         {/* Danh sách giỏ hàng */}
         {
-          allCarts.map((cart, index) =>
-            <div key={cart.id} className='flex flex-wrap justify-between max-sm:gap-2 sm:grid sm:grid-cols-[0.5fr_2fr_2fr_1fr_1fr_1fr] items-center text-gray-800 py-3 px-6 border hover:bg-primary'>
+          carts.map((cart, index) =>
+            <div key={cart._id} className='flex flex-wrap justify-between max-sm:gap-2 sm:grid sm:grid-cols-[0.5fr_2fr_2fr_1fr_1fr_1fr] items-center text-gray-800 py-3 px-6 border hover:bg-primary'>
               <p className='max-sm:hidden'>{index + 1}</p>
 
               {/* Thông tin người dùng */}
               <div className='flex items-center gap-2'>
-                <img className='w-8 rounded-full' src={cart.user.image} alt="" />
-                <p>{cart.user.name}</p>
+                <img className='w-8 rounded-full' src={cart.itemData.image_url} alt="" />
+                <p>{cart.itemData.name}</p>
               </div>
-
-              {/* Số lượng sản phẩm */}
-              <p>{cart.items.length}</p>
 
               {/* Tổng tiền */}
               <p>{cart.totalPrice} VNĐ</p>
 
               {/* Trạng thái */}
-              {cart.isCheckedOut 
+              {cart.status === 'completed'
                 ? <p className='text-green-500 text-xs font-medium'>Checked Out</p>
                 : <p className='text-yellow-500 text-xs font-medium'>Pending</p>
               }
 
               {/* Xoá giỏ hàng */}
-              <img onClick={() => removeCart(cart.id)} className='w-10 cursor-pointer' src={assets.cancel_icon} alt="Remove Cart" />
+              <img onClick={() => removeCart(cart._id)} className='w-10 cursor-pointer' src='' alt="Remove Cart" />
             </div>
           )
         }

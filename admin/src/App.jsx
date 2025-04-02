@@ -8,6 +8,8 @@ import { useContext } from "react"
 import 'react-toastify/dist/ReactToastify.css'
 import Dashboard from "./pages/Dashboard"
 import ProductsList from "./pages/ProductsList"
+import AllCarts from "./pages/AllCarts"
+import 'tailwindcss/tailwind.css'
 const App = () => {
   const {aToken}=useContext(AdminContext)
   return aToken ? (
@@ -21,6 +23,7 @@ const App = () => {
             <Route path='/' element={<></>}/>
             <Route path='/dashboard' element={<Dashboard/>}/>
             <Route path='/products-list' element={<ProductsList/>}/>
+            <Route path='/all-carts' element={<AllCarts/>}/>
         </Routes>
        </div>
     </div>
