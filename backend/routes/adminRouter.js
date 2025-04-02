@@ -12,5 +12,5 @@ adminRouter.post('/update-cart',authAdmin,updateCart);
 adminRouter.post('/login',loginAdmin);
 adminRouter.post('/change-product-availability',authAdmin,changeProductAvailability);
 adminRouter.get('/all-carts',authAdmin,getCarts)
-adminRouter.post('/delete-cart',authAdmin,removeCart);
+adminRouter.post('/delete-cart/:cartId',authAdmin,removeCart);
 export default adminRouter
