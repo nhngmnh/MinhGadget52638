@@ -10,7 +10,8 @@ const cartSchema = new mongoose.Schema({
     paymentStatus: { type: Boolean, default: false },
     shippingAddress: { type: String, required: true },
     deliveryDate: { type: Date, default: null },
-    itemData:{type:Object,required:true}
+    itemData:{type:Object,required:true},
+    userData:{type:Object,required:true}
 }, { timestamps: true });  
 
 const cartModel= mongoose.models.cart || mongoose.model('cart',cartSchema);

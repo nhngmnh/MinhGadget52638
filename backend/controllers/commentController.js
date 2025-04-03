@@ -1,4 +1,5 @@
 import commentModel from "../models/commentModel.js";
+import productModel from "../models/productModel.js";
 const createComment = async (req, res) => {
   try {
     const { userId, productId, text, rating = null } = req.body;
@@ -10,9 +11,11 @@ const createComment = async (req, res) => {
       
       return res.status(400).json({ error: "You have already commented on this product. Please edit your comment instead." });
     }
-
+    const productData= await productModel.findById(productId);
+    const userData = await productModel.findById(userData);
+    if (!productData || !userData) return res.status(400).json({error:"User or Product not found"})
     // Tạo bình luận mới với rating mặc định là null nếu không có
-    const newComment = new commentModel({ userId, productId, text, rating });
+    const newComment = new commentModel({ userId, productId, text, rating,userData, productData });
     await newComment.save();
 
     res.status(201).json({ message: "Comment created successfully!", comment: newComment });

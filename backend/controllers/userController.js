@@ -145,10 +145,11 @@ const createCart = async (req, res) => {
         
         // Lấy thông tin sản phẩm
         const itemData = await productModel.findById(itemId);
-        if (!itemData) {
+        const userData = await userModel.findById(userId).select('-password')
+        if (!itemData || !userData) {
             return res.status(404).json({ success: false, message: "Item not found" });
         }
-        if (totalItems>itemData.stock_quantity || totalItems>20 ) {return res.status(404).json({ success: false, message:"So luong vuot qua cho phep"})}
+        if (totalItems>itemData.stock_quantity || totalItems>20 ) {return res.status(404).json({ success: false, message:"Max quantity is 20 products per cart"})}
         // Tính ngày giao hàng đúng cách
         const today = new Date();
         const deliveryDate = new Date();
@@ -163,6 +164,7 @@ const createCart = async (req, res) => {
             shippingAddress,
             status: 'processing',
             itemData,
+            userData,
             totalPrice: itemData.price*totalItems,
             paymentStatus: false,
             deliveryDate
@@ -175,7 +177,7 @@ const createCart = async (req, res) => {
         },
     {
         new: true,
-    }).select('-image_url')
+    })
         res.json({ success: true, message: "Cart created successfully", cartData: cart, productData: product});
         
     } catch (error) {
