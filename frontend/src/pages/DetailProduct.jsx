@@ -158,7 +158,7 @@ const DetailProduct = () => {
             {allComments.length > 0 ? (
               allComments.map((comment) => (
                 <div key={comment._id} className="border-b py-2 flex items-start gap-3">
-                  <img src={comment.userData.avatar} alt="Avatar" className="w-10 h-10 rounded-full" />
+                  <img src={comment.userData.image} alt="Avatar" className="w-10 h-10 rounded-full" />
                   <div>
                     <p className="text-gray-800 font-semibold">{comment.userData.name}</p>
                     <p className="text-gray-700">{comment.text}</p>
