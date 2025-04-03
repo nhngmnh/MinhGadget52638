@@ -9,7 +9,9 @@ import 'react-toastify/dist/ReactToastify.css'
 import Dashboard from "./pages/Dashboard"
 import ProductsList from "./pages/ProductsList"
 import AllCarts from "./pages/AllCarts"
+import Comments from "./pages/Comments"
 import 'tailwindcss/tailwind.css'
+import AddProduct from "./pages/AddProduct"
 const App = () => {
   const {aToken}=useContext(AdminContext)
   return aToken ? (
@@ -24,6 +26,8 @@ const App = () => {
             <Route path='/dashboard' element={<Dashboard/>}/>
             <Route path='/products-list' element={<ProductsList/>}/>
             <Route path='/all-carts' element={<AllCarts/>}/>
+            <Route path ='/comments-list' element={<Comments/>}/>
+            <Route path='/add-product' element={<AddProduct/>}/>
         </Routes>
        </div>
     </div>

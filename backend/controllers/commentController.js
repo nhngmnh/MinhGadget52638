@@ -23,7 +23,7 @@ const createComment = async (req, res) => {
 const getAllComments = async (req, res) => {
     try {
       const comments = await commentModel.find(); // Lấy tất cả bình luận từ database
-      res.status(200).json(comments);
+      res.status(200).json({success:true,comments:comments});
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch comments!" });
     }

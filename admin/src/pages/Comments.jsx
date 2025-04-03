@@ -2,31 +2,24 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AdminContext } from '../context/AdminContext';
 
 const Comments = () => {
-  const { aToken, comments, getComments, removeComment } = useContext(AdminContext);
-  const [changeComment, setChangeComment] = useState(false);
+  const { aToken, comments, getComments, replyToComment } = useContext(AdminContext);
   const [selectedComment, setSelectedComment] = useState(null);
+  const [replyText, setReplyText] = useState('');
 
   useEffect(() => {
-    const fetchComments = async () => {
-      if (aToken) {
-        try {
-          await getComments();
-        } catch (error) {
-          console.error('Error fetching comments:', error);
-        }
-      }
-    };
-    fetchComments();
-  }, [aToken, changeComment]);
+    if (aToken) {
+      getComments();
+    }
+  }, [aToken]);
 
-  const handleDeleteClick = (comment) => {
+  const handleReplyClick = (comment) => {
     setSelectedComment(comment);
+    setReplyText('');
   };
 
-  const confirmDelete = () => {
-    if (selectedComment) {
-      removeComment(selectedComment._id);
-      setChangeComment(prev => !prev);
+  const submitReply = () => {
+    if (selectedComment && replyText.trim()) {
+      replyToComment(selectedComment._id, replyText);
       setSelectedComment(null);
     }
   };
@@ -51,34 +44,38 @@ const Comments = () => {
             
             {/* User Info */}
             <div className='flex items-center gap-2'>
-              <img className='w-8 rounded-full' src={comment.userData.image} alt="User Avatar" />
-              <p>{comment.userData.name}</p>
+              <img className='w-8 rounded-full' src='' alt="User Avatar" />
+              <p>{comment.text}</p>
             </div>
             
             {/* Comment Content */}
             <p className='truncate'>{comment.text}</p>
             
-            {/* Delete Comment */}
-            <img
-              onClick={() => handleDeleteClick(comment)}
-              className='w-10 cursor-pointer'
-              src='' // Add trash icon here
-              alt="Remove Comment"
-            />
+            {/* Reply Button */}
+            <button
+              onClick={() => handleReplyClick(comment)}
+              className='px-3 py-1 bg-blue-600 text-white rounded text-sm'
+            >
+              Reply
+            </button>
           </div>
         ))}
       </div>
 
-      {/* Delete Confirmation Modal */}
+      {/* Reply Modal */}
       {selectedComment && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white rounded-lg shadow-lg p-5 w-96">
             <h3 className="text-lg font-semibold text-gray-900">
-              Delete comment from {selectedComment.user.name}?
+              Reply to {selectedComment.text}:
             </h3>
-            <p className="text-gray-700 mt-2">
-              Are you sure you want to delete this comment?
-            </p>
+            <textarea
+              className="w-full mt-3 p-2 border rounded"
+              rows="3"
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+              placeholder="Write your reply..."
+            />
             <div className="flex justify-end mt-4">
               <button
                 onClick={() => setSelectedComment(null)}
@@ -87,10 +84,10 @@ const Comments = () => {
                 Cancel
               </button>
               <button
-                onClick={confirmDelete}
-                className="px-4 py-2 bg-red-600 text-white rounded"
+                onClick={submitReply}
+                className="px-4 py-2 bg-green-600 text-white rounded"
               >
-                Confirm
+                Send Reply
               </button>
             </div>
           </div>
@@ -100,4 +97,4 @@ const Comments = () => {
   );
 };
 
-export default Comment;
+export default Comments;

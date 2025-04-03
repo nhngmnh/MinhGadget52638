@@ -3,6 +3,7 @@ import {addProduct,adminDashboard,changeProductAvailability,getProducts, loginAd
 import authAdmin from '../middlewares/authAdmin.js';
 import upload from '../middlewares/multer.js';
 import { getCarts, removeCart } from '../controllers/cartController.js';
+import { getAllComments } from '../controllers/commentController.js';
 const adminRouter= express.Router();
 adminRouter.post('/add-product',upload.single('image'),addProduct);
 adminRouter.get('/all-products',authAdmin,getProducts);
@@ -13,4 +14,5 @@ adminRouter.post('/login',loginAdmin);
 adminRouter.post('/change-product-availability',authAdmin,changeProductAvailability);
 adminRouter.get('/all-carts',authAdmin,getCarts)
 adminRouter.post('/delete-cart/:cartId',authAdmin,removeCart);
+adminRouter.get('/comments',authAdmin,getAllComments)
 export default adminRouter

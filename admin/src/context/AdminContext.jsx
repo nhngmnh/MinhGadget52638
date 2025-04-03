@@ -9,7 +9,7 @@ const AdminContextProvider=(props)=>{
     const [products,setProducts]=useState([])
     const [dashData, setDashData]=useState(false)
     const [carts, setCarts]=useState([])
-    const [latestComments, setLatestComments]=useState([])
+    const [comments, setComments]=useState([])
     const backendurl=import.meta.env.VITE_BACKEND_URL
     const getProducts=async()=>{
         try {
@@ -39,12 +39,14 @@ const AdminContextProvider=(props)=>{
             toast.error(error.message);
         }
     }
-    const getLatestComment= async(req,res)=>{
+    const getComments= async(req,res)=>{
         try {
-            const {data}=await axios.get(backendurl+'/api/admin/latest-comment',{headers:{aToken}})
+            const {data}=await axios.get(backendurl+'/api/admin/comments',{headers:{aToken}})
             if (data){
-                res.json({success:true,latestComment:data.latestComment});
-                setLatestComments(data.latestComment)
+                toast.success('Thành công')
+                setComments(data.comments)
+                console.log(data.comments);
+                
             } else {
                 toast.error(data.message)
             }
@@ -54,7 +56,7 @@ const AdminContextProvider=(props)=>{
     }
     const changeAvailability= async(itemId)=>{
         try {
-            const {data}=await axios.post(backendurl+ '/api/admin/change-product-availability',{prID:itemId},{headers:{aToken}})
+            const {data}=await axios.post(backendurl+ '/api/admin/change-product-availability',{productId:itemId},{headers:{aToken}})
             if (data.success){
                 toast.success(data.message)
             } else {
@@ -101,8 +103,8 @@ const AdminContextProvider=(props)=>{
         getProducts,changeAvailability,
         dashData,getDashData,setDashData,
         carts, setCarts,
-        latestComments, setLatestComments,
-        getCarts, getLatestComment, removeCart
+        comments, setComments,
+        getCarts, getComments, removeCart
     }
     return (
         <AdminContext.Provider value={value}>

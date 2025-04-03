@@ -8,7 +8,7 @@ const Sidebar = () => {
   const menuItems = [
     { path: '/dashboard', label: 'Dashboard' },
     { path: '/all-carts',  label: "Customer's Cart" },
-    { path: '/add-products',  label: 'Add Products' },
+    { path: '/add-product',  label: 'Add Products' },
     { path: '/products-list',  label: 'List Products' },
     { path: '/comments-list', label: 'List Comments' },
   ];
