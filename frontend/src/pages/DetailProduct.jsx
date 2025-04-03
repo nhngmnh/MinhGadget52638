@@ -14,12 +14,11 @@ const DetailProduct = () => {
   const [quantity, setQuantity] = useState(1);
   const [category, setCategory] = useState('');
   
-  const [allComments, setAllComments] = useState([]); // Danh sách tất cả bình luận
-  const [userComment, setUserComment] = useState(null); // Bình luận của người dùng hiện tại
+  const [allComments, setAllComments] = useState([]);
+  const [userComment, setUserComment] = useState(null);
   const [commentText, setCommentText] = useState('');
   const [editing, setEditing] = useState(false);
 
-  // Load thông tin sản phẩm
   useEffect(() => {
     if (prID && products.length > 0) {
       const prInfo = products.find(p => p._id === prID);
@@ -30,16 +29,12 @@ const DetailProduct = () => {
     }
   }, [prID, products]);
 
-  // Load danh sách bình luận
   useEffect(() => {
     const fetchComments = async () => {
       if (!prID) return;
-
       try {
         const res = await axios.get(`${backendurl}/api/user/get-comments-by-product/${prID}`);
-
         setAllComments(res.data);
-
         if (userData) {
           const userExistingComment = res.data.find(comment => comment.userId === userData._id);
           if (userExistingComment) {
@@ -51,7 +46,6 @@ const DetailProduct = () => {
         console.error("Error fetching comments:", error);
       }
     };
-
     fetchComments();
   }, [prID, userData]);
 
@@ -65,35 +59,26 @@ const DetailProduct = () => {
 
   const handleCommentSubmit = async () => {
     if (!commentText.trim()) return;
-
     try {
       let res;
       if (userComment) {
-        // Cập nhật bình luận nếu đã có
         res = await axios.post(`${backendurl}/api/user/update-comment`, {
           productId: prID,
           text: commentText,
         }, { headers: { token } });
-
         toast.success("Bình luận đã được cập nhật!");
       } else {
-        // Tạo bình luận mới
         res = await axios.post(`${backendurl}/api/user/create-comment`, {
           text: commentText,
           productId: prID,
         }, { headers: { token } });
-
         toast.success("Bình luận đã được thêm!");
       }
-
-      // Cập nhật danh sách bình luận
       const updatedComments = await axios.get(`${backendurl}/api/user/get-comments-by-product/${prID}`);
       setAllComments(updatedComments.data);
-
       setUserComment(res.data);
       setCommentText(res.data.text);
       setEditing(false);
-      
     } catch (error) {
       console.error("Error submitting comment:", error);
       toast.error("Có lỗi xảy ra khi xử lý bình luận!");
@@ -126,7 +111,6 @@ const DetailProduct = () => {
           </div>
         </div>
 
-        {/* Bình luận */}
         <div className="mt-6">
           <h2 className="text-xl font-semibold">Bình luận</h2>
           <div className="mt-2 border-t pt-2">
@@ -171,13 +155,14 @@ const DetailProduct = () => {
                 )}
               </div>
             )}
-
-            {/* Hiển thị tất cả bình luận */}
             {allComments.length > 0 ? (
               allComments.map((comment) => (
-                <div key={comment._id} className="border-b py-2">
-                  <p className="text-gray-800 font-semibold">{comment.username}</p>
-                  <p className="text-gray-700">{comment.text}</p>
+                <div key={comment._id} className="border-b py-2 flex items-start gap-3">
+                  <img src={comment.userData.avatar} alt="Avatar" className="w-10 h-10 rounded-full" />
+                  <div>
+                    <p className="text-gray-800 font-semibold">{comment.userData.name}</p>
+                    <p className="text-gray-700">{comment.text}</p>
+                  </div>
                 </div>
               ))
             ) : (
@@ -186,7 +171,6 @@ const DetailProduct = () => {
           </div>
         </div>
       </div>
-
       <RelatedProducts prid={prID} category={category} />
     </div>
   );

@@ -44,8 +44,8 @@ const Comments = () => {
             
             {/* User Info */}
             <div className='flex items-center gap-2'>
-              <img className='w-8 rounded-full' src='' alt="User Avatar" />
-              <p>{comment.text}</p>
+              <img className='w-8 rounded-full' src={comment.userData.image} alt="User Avatar" />
+              <p>{comment.userData.name}</p>
             </div>
             
             {/* Comment Content */}
