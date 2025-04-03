@@ -21,7 +21,7 @@ const Login = () => {
         if (data && data.success){
           localStorage.setItem('token',data.token)
           setToken(data.token)
-          toast.success("Thành công")
+          toast.success("Register successfully")
         } else {
           toast.error("không thành công")
         }

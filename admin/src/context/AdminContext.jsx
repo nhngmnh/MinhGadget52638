@@ -30,7 +30,7 @@ const AdminContextProvider=(props)=>{
         try {
             const {data}=await axios.get(backendurl+'/api/admin/all-carts',{headers:{aToken}})
             if (data){
-                toast.success("Thành công")
+                
                 setCarts(data.carts)
             } else {
                 res.json({message:"thatbai"})
@@ -43,7 +43,6 @@ const AdminContextProvider=(props)=>{
         try {
             const {data}=await axios.get(backendurl+'/api/admin/comments',{headers:{aToken}})
             if (data){
-                toast.success('Thành công')
                 setComments(data.comments)
                 console.log(data.comments);
                 

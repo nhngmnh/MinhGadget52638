@@ -5,7 +5,7 @@ import upload from '../middlewares/multer.js';
 import { getCarts, removeCart } from '../controllers/cartController.js';
 import { getAllComments } from '../controllers/commentController.js';
 const adminRouter= express.Router();
-adminRouter.post('/add-product',upload.single('image'),addProduct);
+adminRouter.post('/add-product',upload.single('image'),authAdmin,addProduct);
 adminRouter.get('/all-products',authAdmin,getProducts);
 adminRouter.get('/admin-dashboard',authAdmin,adminDashboard)
 adminRouter.post('/update-product',authAdmin,updateProduct);

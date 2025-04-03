@@ -4,13 +4,13 @@ import productModel from '../models/productModel.js'
 import userModel from '../models/userModel.js'
 import cartModel from '../models/cartModel.js';
 import jwt from 'jsonwebtoken'
+import {v2 as cloudinary} from "cloudinary"
 // api add product
 const addProduct = async (req, res) => {
     try { 
-        connectDB();
         const { name, price, description, category, stock_quantity,brand,specifications } = req.body;
         const imageFile = req.file;
-
+        if (!imageFile) res.status(404).json({success:false,message:'image is required'})
         // Kiểm tra xem đủ thông tin chưa
         if (!name || !price || !category || !stock_quantity ||!brand ) {
             return res.json({ success: false, message: "Missing product details" });
@@ -36,7 +36,7 @@ const addProduct = async (req, res) => {
             category,
             brand,
             stock_quantity,
-            image: imageURL,
+            image_url: imageURL,
             dateAdded: Date.now()
         };
 
