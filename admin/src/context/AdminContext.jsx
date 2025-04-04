@@ -123,13 +123,23 @@ const AdminContextProvider=(props)=>{
             
         }
     }
-    const replyComment= async (commentId)=>{
+    const replyComment = async (commentId, text) => {
         try {
-            
+          const x = await axios.post(backendurl + '/api/admin/reply', { commentId, text }, {
+            headers: { aToken }
+          });
+          if (!x) {
+            toast.error("Can't reply");
+            return null; // nếu lỗi thì return null
+          }
+          toast.success("Reply successfully");
+          return x; // return data để hàm gọi bên ngoài biết thành công
         } catch (error) {
-            
+          toast.error(error.message);
+          console.log(error);
+          throw error; // ném lỗi ra ngoài để try/catch ở nơi gọi xử lý
         }
-    }
+      };
     const value={
         aToken,setAToken,
         backendurl,products,setProducts,
