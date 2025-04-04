@@ -5,6 +5,7 @@ import upload from '../middlewares/multer.js';
 import { getCarts, removeCart } from '../controllers/cartController.js';
 import { getAllComments } from '../controllers/commentController.js';
 import { changeBestsellerStatus } from '../controllers/productController.js';
+import { getAllReplies, replyComment } from '../controllers/replyController.js';
 const adminRouter= express.Router();
 adminRouter.post('/add-product',upload.single('image'),authAdmin,addProduct);
 adminRouter.get('/all-products',authAdmin,getProducts);
@@ -17,4 +18,6 @@ adminRouter.get('/all-carts',authAdmin,getCarts)
 adminRouter.post('/delete-cart/:cartId',authAdmin,removeCart);
 adminRouter.get('/comments',authAdmin,getAllComments)
 adminRouter.post('/change-bestseller-status',authAdmin,changeBestsellerStatus)
+adminRouter.post('/reply',authAdmin,replyComment)
+adminRouter.post('/all-replies',authAdmin,getAllReplies)
 export default adminRouter

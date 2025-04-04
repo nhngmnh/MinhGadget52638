@@ -10,6 +10,7 @@ const AdminContextProvider=(props)=>{
     const [dashData, setDashData]=useState(false)
     const [carts, setCarts]=useState([])
     const [comments, setComments]=useState([])
+    const [replies,setReplies]=useState([])
     const backendurl=import.meta.env.VITE_BACKEND_URL
     const getProducts=async()=>{
         try {
@@ -109,6 +110,26 @@ const AdminContextProvider=(props)=>{
             toast.error(error.message)
         }
     }
+    const getAllReplies = async ()=>{
+        try {
+            const repliesData=await axios.get(backendurl+'/api/admin/get-replies',{headers:{aToken}});
+            if (!replies){
+                toast.error("No data")
+            }
+            setReplies(repliesData)
+        } catch (error) {
+            toast.error(error.message);
+            console.log(error);
+            
+        }
+    }
+    const replyComment= async (commentId)=>{
+        try {
+            
+        } catch (error) {
+            
+        }
+    }
     const value={
         aToken,setAToken,
         backendurl,products,setProducts,
@@ -117,8 +138,11 @@ const AdminContextProvider=(props)=>{
         carts, setCarts,
         comments, setComments,
         getCarts, getComments, removeCart,
-        changeBestsellerStatus
+        changeBestsellerStatus,
+        replies,setReplies,getAllReplies,
+        replyComment,
     }
+
     return (
         <AdminContext.Provider value={value}>
             {props.children}

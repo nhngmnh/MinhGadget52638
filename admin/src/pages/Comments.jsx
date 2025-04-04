@@ -2,10 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AdminContext } from '../context/AdminContext';
 
 const Comments = () => {
-  const { aToken, comments, getComments, replyToComment } = useContext(AdminContext);
+  const { aToken, comments, getComments, reply } = useContext(AdminContext);
   const [selectedComment, setSelectedComment] = useState(null);
   const [replyText, setReplyText] = useState('');
-
   useEffect(() => {
     if (aToken) {
       getComments();
