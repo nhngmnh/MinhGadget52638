@@ -45,6 +45,28 @@ const cancelOrder = async (req, res) => {
         return res.status(500).json({ message: "Internal server error", error: error.message });
     }
 };
+const changeBestsellerStatus = async (req, res) => {
+    try {
+        const { productId } = req.body;
+        if (!productId) return res.status(400).json({ success: false, message: "Fail to find product" });
+
+        // Tìm sản phẩm trước để lấy giá trị bestseller hiện tại
+        const product = await productModel.findById(productId);
+        if (!product) return res.status(404).json({ success: false, message: "Product not found" });
+
+        // Đảo ngược trạng thái bestseller
+        const updatedProduct = await productModel.findByIdAndUpdate(
+            productId,
+            { bestseller: !product.bestseller },
+            { new: true } // Trả về bản ghi mới sau khi cập nhật
+        );
+
+        return res.status(200).json({ success: true, product: updatedProduct });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: 'Fail to change bestseller status' });
+    }
+};
+
 export {
-    detailProduct,cancelOrder
+    detailProduct,cancelOrder, changeBestsellerStatus
 }

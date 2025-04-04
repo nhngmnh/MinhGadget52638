@@ -82,6 +82,19 @@ const AdminContextProvider=(props)=>{
             toast.error(error.message)
         }
     }
+    const changeBestsellerStatus = async (productId)=>{
+        try {
+            const {data}= await axios.post(backendurl+'/api/admin/change-bestseller-status',{productId:productId},{headers:{aToken}})
+            if (!data){
+                toast.error("Can't find data");
+            }
+            else {
+                toast.success('Change bestseller status successfully')
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
     const getDashData= async()=>{
         try {
             const {data}=await axios.get(backendurl+'/api/admin/admin-dashboard',{headers:{aToken}})
@@ -103,7 +116,8 @@ const AdminContextProvider=(props)=>{
         dashData,getDashData,setDashData,
         carts, setCarts,
         comments, setComments,
-        getCarts, getComments, removeCart
+        getCarts, getComments, removeCart,
+        changeBestsellerStatus
     }
     return (
         <AdminContext.Provider value={value}>

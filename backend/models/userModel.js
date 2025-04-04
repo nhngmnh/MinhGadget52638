@@ -9,5 +9,5 @@ const userSchema= new mongoose.Schema({
     dob:{type:String,default:null},
     phone:{type:String,default:'0987654321'}
 },{minimize:false})
-const userModel=mongoose.model.user || mongoose.model('user',userSchema)
+const userModel=mongoose.models.user || mongoose.model('user',userSchema)
 export default userModel

@@ -2,12 +2,12 @@ import React, { useContext, useEffect } from 'react'
 import { AdminContext } from '../context/AdminContext'
 
 const ProductsList = () => {
-  const {aToken,changeAvailability,getProducts,products,setProducts}=useContext(AdminContext)
+  const {aToken,changeAvailability,getProducts,products,setProducts,changeBestsellerStatus}=useContext(AdminContext)
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         if (aToken) {
-          const data = await getProducts(); 
+          await getProducts(); 
         }
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -48,6 +48,21 @@ const ProductsList = () => {
   checked={item.available} 
 />
                 <p>Available</p>
+              </div>
+              <div className='mt-2 flex items-center gap-1 text-sm'>
+              <input 
+  onChange={() => {
+    changeBestsellerStatus(item._id);
+    setProducts(prevProducts =>
+      prevProducts.map(p =>
+        p._id === item._id ? { ...p, bestseller: !p.bestseller } : p
+      )
+    );
+  }} 
+  type="checkbox" 
+  checked={item.bestseller} 
+/>
+                <p>Bestseller</p>
               </div>
             </div>
           </div>
