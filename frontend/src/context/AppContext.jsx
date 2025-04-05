@@ -10,6 +10,29 @@ const AppContextProvider=(props)=>{
     const [token,setToken]=useState(localStorage.getItem('token')?localStorage.getItem('token'):false);
     const [products,setProducts]=useState([]);
     const [cart,setCart]=useState([]);
+    const [replies,setReplies] =useState([])
+    const [comments,setComments]=useState([])
+    const getComments = async ()=>{
+        try {
+            const {data}=await axios.get(backendurl+'api/user/get-comments',{headers:{token}});
+            if (!data) toast.warn("No comment or error connect server");
+            setComments(data.comments);
+        } catch (error) {
+            toast.error(error.message);
+            console.log(error);
+            
+        }
+    }
+    const getRepliesByUser = async ()=>{
+        try {
+            const {data}=await axios.get(backendurl+'/api/user/get-replies',{headers:{token}})
+            if (!data) toast.warn("No replies yet or Error connect server")
+            setReplies(data.replies)
+        } catch (error) {
+            console.log(error);
+            toast.error(error.message)
+        }
+    }
     const getProductsData = async ()=>{
         try {
             const {data}= await axios.get(backendurl+'/api/user/get-products')
@@ -53,7 +76,8 @@ const AppContextProvider=(props)=>{
         getUserData,
         getProductsData,
         backendurl,
-        
+        getRepliesByUser, replies,setReplies,
+        comments, getComments, setComments
     }
     
     useEffect(()=>{

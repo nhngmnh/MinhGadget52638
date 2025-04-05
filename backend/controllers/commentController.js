@@ -41,7 +41,7 @@ const getAllComments = async (req, res) => {
         return res.status(404).json({ message: "No comments found for this user." });
       }
   
-      res.status(200).json(comments);
+      res.status(200).json({sucess:true,comments});
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch comments for user!" });
     }

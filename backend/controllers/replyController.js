@@ -68,7 +68,6 @@ const getReplyByUser = async (req, res) => {
             success: true,
             replyData
         });
-
     } catch (error) {
         console.error(error);
         return res.status(500).json({ success: false, message: "Server error" });
