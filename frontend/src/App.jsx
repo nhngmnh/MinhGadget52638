@@ -16,6 +16,7 @@ import Cart from './pages/Cart'
 import DetailProduct from './pages/DetailProduct'
 import CheckoutAddToCart from './pages/CheckoutAddToCart'
 import { ToastContainer,toast } from 'react-toastify'
+import MyComments from './pages/MyComments'
 const App = () => {
   return (
     
@@ -39,6 +40,7 @@ const App = () => {
         <Route path="/jobs" element={<Jobs/>} />
         <Route path="/detail/:prID" element={<DetailProduct/>} />
         <Route path="/checkout" element={<CheckoutAddToCart/>} />
+        <Route path="/comments" element={<MyComments/>} />
       </Routes>
       </div>
       <Footer/>

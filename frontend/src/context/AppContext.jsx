@@ -14,7 +14,7 @@ const AppContextProvider=(props)=>{
     const [comments,setComments]=useState([])
     const getComments = async ()=>{
         try {
-            const {data}=await axios.get(backendurl+'api/user/get-comments',{headers:{token}});
+            const {data}=await axios.get(backendurl+'/api/user/get-comments',{headers:{token}});
             if (!data) toast.warn("No comment or error connect server");
             setComments(data.comments);
         } catch (error) {

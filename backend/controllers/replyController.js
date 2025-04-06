@@ -66,7 +66,7 @@ const getReplyByUser = async (req, res) => {
         // Trả về danh sách reply
         return res.status(200).json({
             success: true,
-            replyData
+            replies:replyData
         });
     } catch (error) {
         console.error(error);

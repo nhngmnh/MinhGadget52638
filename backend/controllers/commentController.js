@@ -34,7 +34,7 @@ const getAllComments = async (req, res) => {
   };
   const getCommentsByUser = async (req, res) => {
     try {
-      const { userId } = req.params; // Lấy userId từ URL
+      const { userId } = req.body; // Lấy userId từ URL
       const comments = await commentModel.find({ userId });
   
       if (!comments.length) {

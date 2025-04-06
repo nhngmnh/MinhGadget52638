@@ -20,4 +20,4 @@ userRouter.get('/get-comments-by-product/:prID',getCommentsByProduct)
 userRouter.post('/update-comment',authUser,updateComment)
 userRouter.get('/get-comments',authUser,getCommentsByUser)
 userRouter.get('/get-replies',authUser,getReplyByUser);
-export default userRoute
+export default userRouter;
