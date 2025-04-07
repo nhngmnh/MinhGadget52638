@@ -15,7 +15,7 @@ import AddProduct from "./pages/AddProduct"
 const App = () => {
   const {aToken}=useContext(AdminContext)
   return aToken ? (
-    <div className='bg-gray-200'>
+    <div className='bg-white'>
        <ToastContainer/>
        <Navbar/>
        <div className='flex items-start '>

@@ -17,9 +17,7 @@ const AdminContextProvider=(props)=>{
             const { data } = await axios.get(backendurl + '/api/admin/all-products', { headers: { aToken } });
 
             if (data.success){
-                setProducts(data.products)
-                console.log(data.products);
-                
+                setProducts(data.products)  
             } else {
                 toast.error(data.message)
             }
@@ -45,7 +43,6 @@ const AdminContextProvider=(props)=>{
             const {data}=await axios.get(backendurl+'/api/admin/comments',{headers:{aToken}})
             if (data){
                 setComments(data.comments)
-                console.log(data.comments);
                 
             } else {
                 toast.error(data.message)
@@ -59,9 +56,7 @@ const AdminContextProvider=(props)=>{
             const {data}=await axios.post(backendurl+ '/api/admin/change-product-availability',{productId:itemId},{headers:{aToken}})
             if (data.success){
                 toast.success(data.message)
-            } else {
-                console.log(data.message);
-                
+            } else {       
                 toast.error(data.message)
             }
         } catch (error) {
@@ -76,7 +71,6 @@ const AdminContextProvider=(props)=>{
             if (!data){
                 toast.error("No data")
             } 
-            console.log(data.cart);
             setCarts(prevCarts => prevCarts.filter(cart => cart._id !== cartId));
         } catch (error) {
             console.log(error);
@@ -101,7 +95,6 @@ const AdminContextProvider=(props)=>{
             const {data}=await axios.get(backendurl+'/api/admin/admin-dashboard',{headers:{aToken}})
             if (data.success){
                 setDashData(data.dashData)
-                console.log(data.dashData);
                 
             } else {
                 toast.error(data.message)
@@ -112,11 +105,13 @@ const AdminContextProvider=(props)=>{
     }
     const getAllReplies = async ()=>{
         try {
-            const repliesData=await axios.get(backendurl+'/api/admin/get-replies',{headers:{aToken}});
-            if (!replies){
-                toast.error("No data")
+            const {data}=await axios.get(backendurl+'/api/admin/all-replies',{headers:{aToken}});
+            if (!data){
+                toast.error("No data");
             }
-            setReplies(repliesData)
+            setReplies(data.replies);
+           
+            
         } catch (error) {
             toast.error(error.message);
             console.log(error);
@@ -140,6 +135,33 @@ const AdminContextProvider=(props)=>{
           throw error; // ném lỗi ra ngoài để try/catch ở nơi gọi xử lý
         }
       };
+    const editReply= async (replyId,text)=>{
+        try {
+            const {data}=await axios.post(backendurl+'/api/admin/update-reply',{replyId,text},{headers:{aToken}})
+            if (!data) toast.error("Can't find data");
+            else toast.success("Edit successfully")
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
+    const deleteReply = async (replyId) => {
+        try {
+            const { data } = await axios.post(
+                backendurl + '/api/admin/remove-reply',
+                { replyId },
+                { headers: { aToken } }
+            );
+    
+            if (!data) {
+                toast.error("Can't find data");
+            } else {
+                toast.success("Reply removed successfully");
+            }
+        } catch (error) {
+            toast.error(error.message);
+        }
+    };
+    
     const value={
         aToken,setAToken,
         backendurl,products,setProducts,
@@ -150,7 +172,7 @@ const AdminContextProvider=(props)=>{
         getCarts, getComments, removeCart,
         changeBestsellerStatus,
         replies,setReplies,getAllReplies,
-        replyComment,
+        replyComment,deleteReply,editReply
     }
 
     return (

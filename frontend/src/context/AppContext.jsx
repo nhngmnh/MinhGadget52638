@@ -27,7 +27,8 @@ const AppContextProvider=(props)=>{
         try {
             const {data}=await axios.get(backendurl+'/api/user/get-replies',{headers:{token}})
             if (!data) toast.warn("No replies yet or Error connect server")
-            setReplies(data.replies)
+            setReplies(data.replies);
+            
         } catch (error) {
             console.log(error);
             toast.error(error.message)
@@ -38,7 +39,6 @@ const AppContextProvider=(props)=>{
             const {data}= await axios.get(backendurl+'/api/user/get-products')
             if (data && data.success) {
                 setProducts(data.products);
-                console.log(data.products);
             } else {
                 toast.error("chả thấy data nảo cả")
             }
@@ -53,7 +53,6 @@ const AppContextProvider=(props)=>{
             const {data}= await axios.get(backendurl+'/api/user/get-profile',{headers:{token}})
             if (data.success) {
                 setUserData(data.userData)
-                console.log(data.userData);
                 
             } else {
                 toast.error(data.message)

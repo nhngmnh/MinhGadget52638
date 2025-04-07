@@ -14,7 +14,6 @@ const replyComment = async(req,res)=>{
             createAt: Date.now()
     }
     const newReply= new replyModel(value);
-    console.log(newReply);
     await newReply.save();
     return res.status(200).json({success:true,message:"Reply successfully"})
     
@@ -27,11 +26,12 @@ const getAllReplies = async(req,res)=>{
     try {
         const data= await replyModel.find({});
         if (!data) {
-            toast.warn("No comment yet");
+           return res.status(204).json({success:true,replies:null})
         }
+        return res.status(200).json({success:true,replies:data})
     } catch (error) {
         console.log(error);
-        toast.error(error.message)
+        return res.status(404).json({success:false,message:"Error server"})
     }
 }
 const getReplyByComment= async(req,res)=>{
@@ -73,7 +73,59 @@ const getReplyByUser = async (req, res) => {
         return res.status(500).json({ success: false, message: "Server error" });
     }
 };
+const editReply = async (req, res) => {
+    try {
+        const { replyId, text } = req.body;
+
+        if (!replyId || !text) {
+            return res.status(400).json({ success: false, message: "Missing replyId or text" });
+        }
+
+        const updatedReply = await replyModel.findByIdAndUpdate(
+            replyId,
+            { text },
+            { new: true } // trả về document mới
+        );
+
+        if (!updatedReply) {
+            return res.status(404).json({ success: false, message: "Reply not found" });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Reply updated successfully",
+            data: updatedReply, // tuỳ chọn gửi lại dữ liệu
+        });
+    } catch (error) {
+        console.error("Error updating reply:", error);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+};
+const removeReply = async (req, res) => {
+    try {
+        const { replyId } = req.body;
+
+        if (!replyId) {
+            return res.status(400).json({ success: false, message: "Missing replyId" });
+        }
+
+        const deletedReply = await replyModel.findByIdAndDelete(replyId);
+
+        if (!deletedReply) {
+            return res.status(404).json({ success: false, message: "Reply not found" });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Reply removed successfully",
+            data: deletedReply, // optional: gửi lại dữ liệu đã xóa nếu cần
+        });
+    } catch (error) {
+        console.error("Error removing reply:", error);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+};
 
 export {
-    replyComment,getAllReplies,getReplyByComment,getReplyByUser
+    replyComment,getAllReplies,getReplyByComment,getReplyByUser,editReply,removeReply
 }

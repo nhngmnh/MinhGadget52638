@@ -10,29 +10,36 @@ const Comments = () => {
     replyComment,
     editReply,
     deleteReply,
+    getAllReplies,
   } = useContext(AdminContext);
 
-  const [selectedComment, setSelectedComment] = useState(null);
+  const [commentBeingReplied, setCommentBeingReplied] = useState(null);
+  const [commentWithRepliesShown, setCommentWithRepliesShown] = useState(null);
   const [replyText, setReplyText] = useState('');
   const [selectedReply, setSelectedReply] = useState(null);
 
   useEffect(() => {
-    if (aToken) {
-      getComments();
-    }
-  }, [aToken, getComments]);
+    const fetchData = async () => {
+      if (aToken) {
+        await getComments();
+        await getAllReplies();
+      }
+    };
+    fetchData();
+  }, [aToken,replies]);
 
   const handleReplyClick = (comment) => {
-    setSelectedComment(comment);
+    setCommentBeingReplied(comment);
     setReplyText('');
   };
 
   const submitReply = async () => {
-    if (selectedComment && replyText.trim()) {
-      const result = await replyComment(selectedComment._id, replyText);
+    if (commentBeingReplied && replyText.trim()) {
+      const result = await replyComment(commentBeingReplied._id, replyText);
       if (result) {
+        await getAllReplies();
         setReplyText('');
-        setSelectedComment(null);
+        setCommentBeingReplied(null);
       }
     }
   };
@@ -40,13 +47,16 @@ const Comments = () => {
   const handleEditReply = async (replyId, newText) => {
     const result = await editReply(replyId, newText);
     if (result) {
+      await getAllReplies();
       setSelectedReply(null);
+      setReplyText(''); // ✅ Reset replyText để đóng hộp thoại edit
     }
   };
 
   const handleDeleteReply = async (replyId) => {
     const result = await deleteReply(replyId);
     if (result) {
+      await getAllReplies();
       setSelectedReply(null);
     }
   };
@@ -99,20 +109,47 @@ const Comments = () => {
               </button>
               <button
                 onClick={() =>
-                  setSelectedComment(
-                    selectedComment?._id === comment._id ? null : comment
+                  setCommentWithRepliesShown(
+                    commentWithRepliesShown?._id === comment._id ? null : comment
                   )
                 }
                 className="text-sm text-gray-600"
               >
-                {selectedComment?._id === comment._id
+                {commentWithRepliesShown?._id === comment._id
                   ? 'Hide Replies'
                   : 'Show Replies'}
               </button>
             </div>
 
+            {/* New Reply Input - đặt ngay dưới comment tương ứng */}
+            {commentBeingReplied?._id === comment._id && (
+              <div className="col-span-full ml-4 mt-2 w-full max-w-4xl">
+                <textarea
+                  className="w-full p-2 border rounded"
+                  rows="3"
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                  placeholder="Write your reply..."
+                />
+                <div className="flex justify-end mt-2 gap-2">
+                  <button
+                    onClick={() => setCommentBeingReplied(null)}
+                    className="px-4 py-2 bg-gray-300 text-gray-800 rounded"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={submitReply}
+                    className="px-4 py-2 bg-green-600 text-white rounded"
+                  >
+                    Send Reply
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* Replies Section */}
-            {selectedComment?._id === comment._id && (
+            {commentWithRepliesShown?._id === comment._id && (
               <div className="col-span-full ml-4 mt-2 w-full">
                 {filteredReplies(comment._id).length > 0 ? (
                   filteredReplies(comment._id).map((reply) => (
@@ -121,18 +158,17 @@ const Comments = () => {
                       className="flex flex-col gap-2 mb-3 border rounded p-2 bg-gray-50"
                     >
                       <div className="flex items-center gap-2">
-                        <img
-                          className="w-6 h-6 rounded-full"
-                          src={reply.text}
-                          alt="Reply User Avatar"
-                        />
+                        <p>Reply from admin:</p>
                         <p className="text-gray-700">{reply.text}</p>
                       </div>
 
                       {/* Edit/Delete buttons */}
                       <div className="flex gap-2 text-sm">
                         <button
-                          onClick={() => setSelectedReply(reply._id)}
+                          onClick={() => {
+                            setSelectedReply(reply._id);
+                            setReplyText(reply.text);
+                          }}
                           className="text-blue-600"
                         >
                           Edit
@@ -151,11 +187,13 @@ const Comments = () => {
                           <textarea
                             className="w-full p-2 border rounded"
                             rows="2"
-                            defaultValue={reply.text}
+                            value={replyText}
                             onChange={(e) => setReplyText(e.target.value)}
                           />
                           <button
-                            onClick={() => handleEditReply(reply._id, replyText)}
+                            onClick={() =>
+                              handleEditReply(reply._id, replyText)
+                            }
                             className="mt-2 px-4 py-2 bg-green-600 text-white rounded"
                           >
                             Save
@@ -172,33 +210,6 @@ const Comments = () => {
           </div>
         ))}
       </div>
-
-      {/* New Reply Input */}
-      {selectedComment && (
-        <div className="ml-6 mt-3 w-full max-w-4xl">
-          <textarea
-            className="w-full p-2 border rounded"
-            rows="3"
-            value={replyText}
-            onChange={(e) => setReplyText(e.target.value)}
-            placeholder="Write your reply..."
-          />
-          <div className="flex justify-end mt-2 gap-2">
-            <button
-              onClick={() => setSelectedComment(null)}
-              className="px-4 py-2 bg-gray-300 text-gray-800 rounded"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={submitReply}
-              className="px-4 py-2 bg-green-600 text-white rounded"
-            >
-              Send Reply
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

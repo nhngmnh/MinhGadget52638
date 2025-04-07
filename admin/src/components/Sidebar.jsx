@@ -14,7 +14,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className='min-h-screen bg-gray-200 border-r'>
+    <div className='min-h-screen bg-white border-r'>
       {aToken && (
         <ul className='text-gray-700 mt-5'>
           {menuItems.map((item, index) => (
