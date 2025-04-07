@@ -29,10 +29,7 @@ const AdminContextProvider=(props)=>{
         try {
             const {data}=await axios.get(backendurl+'/api/admin/all-carts',{headers:{aToken}})
             if (data){
-                
                 setCarts(data.carts)
-            } else {
-                res.json({message:"thatbai"})
             }
         } catch (error) {
             toast.error(error.message);
@@ -66,11 +63,12 @@ const AdminContextProvider=(props)=>{
         }
     }
     const removeCart = async(cartId) => {
-        try {
-            const {data}= await axios.post(backendurl+`/api/admin/delete-cart/${cartId}`)
+        try {  
+            const {data}= await axios.post(backendurl+`/api/admin/delete-cart/${cartId}`,{},{headers:{aToken}})
             if (!data){
                 toast.error("No data")
             } 
+            console.log(data);
             setCarts(prevCarts => prevCarts.filter(cart => cart._id !== cartId));
         } catch (error) {
             console.log(error);
@@ -98,6 +96,8 @@ const AdminContextProvider=(props)=>{
                 
             } else {
                 toast.error(data.message)
+                console.log(data.headers);
+                
             }
         } catch (error) {
             toast.error(error.message)

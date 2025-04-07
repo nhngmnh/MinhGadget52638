@@ -25,13 +25,19 @@ const AllCarts = () => {
   };
 
   // Hàm xác nhận xóa cart
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (selectedCart) {
-      removeCart(selectedCart._id);
-      setChangeCart(prev => !prev);
-      setSelectedCart(null); // Đóng modal
+      try {
+        await removeCart(selectedCart._id);
+        setChangeCart(prev => !prev);
+        setSelectedCart(null); // Đóng modal
+      } catch (error) {
+        console.error('Lỗi khi xóa giỏ hàng:', error);
+        // Optional: hiển thị thông báo lỗi cho người dùng
+      }
     }
   };
+  
 
   return (
     <div className='w-full max-w-6xl m-5'>

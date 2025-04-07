@@ -20,7 +20,9 @@ const Login = () => {
                     setAToken(data.token)}
                 
              else {
-                toast.error(data.message)}
+                toast.error(data.message);
+            console.log(error.headers);
+            }
              
         } catch (error) {
             toast.error(error.message)

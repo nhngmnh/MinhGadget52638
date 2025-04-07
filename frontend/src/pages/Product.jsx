@@ -18,6 +18,7 @@ const Product = () => {
   const { backendurl } = useContext(AppContext);
   const [showFilterCategory, setShowFilterCategory] = useState(false);
   const [showFilterBrand, setShowFilterBrand] = useState(false);
+  const [localstate,setLocalstate]=useState(false);
   const navigate = useNavigate();
   useEffect(() => {
     if (sortOrder !== "") {
@@ -32,15 +33,36 @@ const Product = () => {
   }, [sortFlag, sortOrder]);
   useEffect(() => {
   if (location.state?.category) {
-    setCategory(location.state.category);
+    setCategory(location.state.category)   ;
+    setLocalstate(true);
   }
 }, [location.state]);
-  useEffect(() => {
-    axios.get(`${backendurl}/api/user/get-products?query=${search}&category=${category}&brand=${brand}&minPrice=${minPrice}&maxPrice=${maxPrice}`)
-      .then((res) => setFilterPro(res.data.products))
-      .catch((err) => console.error("Fetch error:", err));
-      setSortFlag(1-sortFlag)
-  }, [category, brand,maxPrice,minPrice,search]);
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      // Gọi API và lấy dữ liệu sản phẩm
+      const res = await axios.get(`${backendurl}/api/user/get-products`, {
+        params: {
+          query: search,
+          category: category,
+          brand: brand,
+          minPrice: minPrice,
+          maxPrice: maxPrice,
+        },
+      });
+
+      // Cập nhật sản phẩm sau khi gọi API thành công
+      setFilterPro(res.data.products);   
+      // Cập nhật sortFlag để thay đổi sắp xếp
+      setSortFlag(prevFlag => 1 - prevFlag); // Sử dụng prevFlag để cập nhật đúng trạng thái
+    } catch (error) {
+      console.error("Fetch error:", error);
+    }
+  };
+
+  if(localstate) fetchData(); // Gọi hàm fetchData để lấy dữ liệu
+
+}, [category, brand, maxPrice, minPrice, search, backendurl]);
 
   const handleCategoryChange = (newCategory) => {
     setCategory(prev => (prev === newCategory ? '' : newCategory));

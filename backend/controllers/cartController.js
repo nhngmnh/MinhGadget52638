@@ -16,17 +16,10 @@ const removeCart = async (req, res) => {
         if (cartId) {
             cart = await cartModel.findByIdAndDelete(cartId);
         } 
-
-        // Kiểm tra nếu không tìm thấy giỏ hàng
-        if (!cart) {
-            return res.status(404).json({ message: 'Giỏ hàng không tồn tại' });
-        }
-
-        // Nếu xóa thành công, trả về thông báo
         return res.json({ message: 'Giỏ hàng đã được xóa thành công', cart });
     } catch (error) {
         console.error('Lỗi khi xóa giỏ hàng:', error);
-        res.status(500).json({ message: 'Lỗi server' });
+        return res.status(500).json({ message: 'Lỗi server' });
     }
 };
 const getCarts = async (req, res) => {
@@ -35,13 +28,13 @@ const getCarts = async (req, res) => {
     
     // Kiểm tra nếu không có giỏ hàng
     if (carts.length === 0) {
-      return res.status(404).json({ success: false, message: 'No carts found' });
+      return res.status(204).json({ success: true, message: 'No carts found' });
     }
-    res.json({ success: true, carts });
+    return res.status(200).json({ success: true, carts });
     
   } catch (error) {
     console.error('Cannot get carts', error);
-    res.status(500).json({ message: 'Server Error' });
+    return res.status(500).json({ message: 'Server Error' });
   }
 };
 
