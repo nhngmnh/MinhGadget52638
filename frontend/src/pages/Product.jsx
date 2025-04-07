@@ -18,7 +18,7 @@ const Product = () => {
   const { backendurl } = useContext(AppContext);
   const [showFilterCategory, setShowFilterCategory] = useState(false);
   const [showFilterBrand, setShowFilterBrand] = useState(false);
-  const [localstate,setLocalstate]=useState(false);
+ 
   const navigate = useNavigate();
   useEffect(() => {
     if (sortOrder !== "") {
@@ -32,37 +32,41 @@ const Product = () => {
     }
   }, [sortFlag, sortOrder]);
   useEffect(() => {
-  if (location.state?.category) {
-    setCategory(location.state.category)   ;
-    setLocalstate(true);
-  }
-}, [location.state]);
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      // Gọi API và lấy dữ liệu sản phẩm
-      const res = await axios.get(`${backendurl}/api/user/get-products`, {
-        params: {
-          query: search,
-          category: category,
-          brand: brand,
-          minPrice: minPrice,
-          maxPrice: maxPrice,
-        },
-      });
-
-      // Cập nhật sản phẩm sau khi gọi API thành công
-      setFilterPro(res.data.products);   
-      // Cập nhật sortFlag để thay đổi sắp xếp
-      setSortFlag(prevFlag => 1 - prevFlag); // Sử dụng prevFlag để cập nhật đúng trạng thái
-    } catch (error) {
-      console.error("Fetch error:", error);
+    let isCategoryFromLocation = false;
+  
+    if (location.state?.category) {
+      setCategory(location.state.category);
+      isCategoryFromLocation = true;
     }
-  };
-
-  if(localstate) fetchData(); // Gọi hàm fetchData để lấy dữ liệu
-
-}, [category, brand, maxPrice, minPrice, search, backendurl]);
+  
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(`${backendurl}/api/user/get-products`, {
+          params: {
+            query: search,
+            category: location.state?.category || category,
+            brand: brand,
+            minPrice: minPrice,
+            maxPrice: maxPrice,
+          },
+        });
+  
+        setFilterPro(res.data.products);
+        setSortFlag(prevFlag => 1 - prevFlag);
+      } catch (error) {
+        console.error("Fetch error:", error);
+      }
+    };
+  
+    // Nếu category được set từ location.state, delay fetch để tránh fetch cũ
+    if (isCategoryFromLocation) {
+      // Optional delay to ensure setState is reflected
+      setTimeout(fetchData, 0);
+    } else {
+      fetchData();
+    }
+  
+  }, [location.state, category, brand, maxPrice, minPrice, search, backendurl]);
 
   const handleCategoryChange = (newCategory) => {
     setCategory(prev => (prev === newCategory ? '' : newCategory));

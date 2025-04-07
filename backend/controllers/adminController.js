@@ -5,6 +5,7 @@ import userModel from '../models/userModel.js'
 import cartModel from '../models/cartModel.js';
 import jwt from 'jsonwebtoken'
 import {v2 as cloudinary} from "cloudinary"
+import commentModel from '../models/commentModel.js';
 // api add product
 const addProduct = async (req, res) => {
     try { 
@@ -53,12 +54,15 @@ const addProduct = async (req, res) => {
 const adminDashboard = async(req,res)=>{
     try {
        
-        const users=await userModel.find({})
+        const comments=await commentModel.find({})
         const products=await productModel.find({})
         const carts=await cartModel.find({})
-
+        const users = await userModel.find({}, '_id image name email');
         const dashData={
-            users,products,carts
+            qcomments:comments.length,
+            qproducts:products.length,
+            qcarts:carts.length,
+            users,
         }
         res.json({success:true,dashData})
     } catch (error) {

@@ -52,7 +52,6 @@ const getAllComments = async (req, res) => {
       
       const { prID } = req.params; // Lấy productId từ URL
       if (!prID) res.status(404).json({error:'sai tham so'});
-      console.log(prID);
       const comments = await commentModel.find({ productId:prID });
       res.status(200).json(comments);
     } catch (error) {

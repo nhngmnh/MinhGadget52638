@@ -103,6 +103,36 @@ const DetailProduct = () => {
                 className="mt-1 border border-gray-300 rounded-md p-2 w-20" 
               />
             </div>
+            
+            {/* Thông số sản phẩm */}
+            <div className="mt-6">
+              <h2 className="text-xl font-semibold">Thông số sản phẩm</h2>
+              <table className="w-full mt-4 table-auto">
+                <thead>
+                  <tr>
+                    <th className="border px-4 py-2 text-left">Thông số</th>
+                    <th className="border px-4 py-2 text-left">Chi tiết</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pr.specifications && Object.keys(pr.specifications).length > 0 ? (
+                    Object.entries(pr.specifications).map(([key, value]) => (
+                      <tr key={key}>
+                        <td className="border px-4 py-2">{key}</td>
+                        <td className="border px-4 py-2">{value}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="2" className="border px-4 py-2 text-center text-gray-500">
+                        Chưa cập nhật thông số
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
             <button 
               onClick={handleAddToCart} 
               className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">
