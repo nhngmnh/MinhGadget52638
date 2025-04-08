@@ -2,30 +2,16 @@ import axios from 'axios';
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const SearchEngine = ({search,setSearch}) => {
   const [searchTerm, setSearchTerm] = useState('');
   const { backendurl, token } = useContext(AppContext);
-
-  const handleSearch = async () => {
-    
+  const navigate=useNavigate();
+  const handleSearch = () => {
     const trimmedSearchTerm = searchTerm.trim(); // Loại bỏ khoảng trắng đầu & cuối
     setSearch(trimmedSearchTerm);
-    if (!trimmedSearchTerm) {
-      toast.error("Search term cannot be empty!");
-      return;
-    }
-
-    try {
-      const value = await axios.get(`${backendurl}/api/user/get-products?query=${trimmedSearchTerm}`);
-      if (value) {
-        console.log(value.data);
-      } else {
-        toast.error("No product found!");
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
+    navigate('/products',{state:{search:trimmedSearchTerm}})
   };
 
   return (

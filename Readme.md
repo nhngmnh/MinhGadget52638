@@ -1,58 +1,77 @@
+# 🖥️ MinhGadget - Website Bán Đồ Công Nghệ Trực Tuyến
 
-  ODABS - Online Doctor Appointment Booking System
+## 🌟 Mô tả ngắn gọn  
+**MinhGadget** là một nền tảng thương mại điện tử hiện đại chuyên cung cấp các thiết bị công nghệ như điện thoại, laptop, tai nghe, phụ kiện,... Dự án được xây dựng bằng MERN Stack (MongoDB, Express.js, React.js, Node.js), đảm bảo trải nghiệm người dùng mượt mà và hiệu suất cao.
 
-🌟 Mô tả ngắn gọn
-ODABS là một hệ thống đặt lịch hẹn bác sĩ trực tuyến hiện đại, giúp người dùng dễ dàng tìm kiếm và đặt lịch hẹn với bác sĩ thông qua một nền tảng trực tuyến thân thiện và hiệu quả. Dự án được xây dựng trên MERN Stack với các công nghệ tiên tiến nhằm đảm bảo hiệu năng và trải nghiệm người dùng.
+---
 
-🔑 Tính năng chính
-1. Hệ thống quản lý người dùng
-Đăng ký và đăng nhập:
--  Admin: Quản lý toàn bộ hệ thống, bao gồm thêm, sửa và xóa thông tin bác sĩ.
--  Doctor: Quản lý thông tin cá nhân, cập nhật lịch làm việc và mức phí.
--  Client: Đăng ký, đăng nhập, và đặt lịch hẹn với bác sĩ.
-Xác thực người dùng an toàn bằng JWT.
+## 🔑 Tính năng chính  
 
-2. Trang chủ thân thiện
-Hiển thị thông tin bác sĩ, các lĩnh vực chuyên môn, giới thiệu hệ thống, và thông tin liên hệ.
+### 1. Hệ thống quản lý người dùng  
+- **Đăng ký / Đăng nhập với phân quyền:**  
+  - **Admin:** Quản lý sản phẩm, đơn hàng, và người dùng.  
+  - **Client:** Mua hàng, theo dõi đơn hàng, cập nhật thông tin cá nhân.  
+- **Bảo mật:** Xác thực bằng JWT, mã hóa mật khẩu bằng bcrypt.
 
-4. Đặt lịch hẹn trực tuyến
-  Người dùng có thể:
--  Tìm kiếm bác sĩ theo chuyên môn.
--  Chọn thời gian phù hợp để đặt lịch.
--  Thực hiện thanh toán phí gặp mặt trực tuyến một cách nhanh chóng.
--  
-5. Quản lý thông tin bác sĩ
-Bác sĩ có thể cập nhật:
-+  Thông tin cá nhân và chi tiết các cuộc hẹn.
-+  Lịch trình làm việc và mức phí dịch vụ.
+### 2. Trang chủ thân thiện, hiện đại  
+- Hiển thị sản phẩm nổi bật.  
+- Giới thiệu thương hiệu, chính sách, và hỗ trợ khách hàng.  
 
-6. Quản trị hệ thống
-Admin có thể:
-+  Thêm, sửa, và xóa bác sĩ.
-+  Theo dõi lịch hẹn, theo dõi bác sĩ thông tin người dùng.
-  
-7. Hỗ trợ thanh toán và quản lý lịch hẹn
-Tạo, chỉnh sửa, hủy, và thanh toán các lịch hẹn.
+### 3. Tìm kiếm và lọc sản phẩm  
+- Tìm kiếm theo từ khóa.  
+- Lọc theo loại, thương hiệu, giá, đánh giá.  
 
+### 4. Giỏ hàng và thanh toán  
+- Thêm/xoá sản phẩm vào giỏ hàng.  
+- Đặt hàng, thanh toán trực tuyến.  
+- Theo dõi trạng thái đơn hàng.  
 
-🛠 Công nghệ sử dụng
--  Frontend: React.js với Vite tăng tốc phát triển.
--  Backend: Node.js kết hợp Express.js.
--  Cơ sở dữ liệu: MongoDB.
--  Thư viện hỗ trợ:
-  +  Toast: Hiển thị thông báo giao diện người dùng.
-  +  bcrypt: Mã hóa thông tin mật khẩu.
-  +  JWT: Quản lý xác thực và phân quyền người dùng.
+### 5. Trang quản trị (Admin Dashboard)  
+- Quản lý sản phẩm (thêm/sửa/xoá).  
+- Quản lý đơn hàng, người dùng.  
 
-🚀 Hướng dẫn chạy dự án:
-1. Clone repository:
-git clone https://github.com/nhngmnh/ODABS.git
-2. Cài đặt dependencies:
+### 6. Trang cá nhân người dùng  
+- Cập nhật thông tin.  
+- Xem lịch sử mua hàng và đánh giá sản phẩm.
+
+### 7. 💬 Tích hợp Chatbox tư vấn trực tuyến  
+- Giao diện chat thân thiện cho khách hàng.  
+- Hỗ trợ người dùng ngay trong quá trình mua sắm.  
+- Tư vấn tự động hoặc qua nhân viên hỗ trợ.  
+
+---
+
+## 🛠 Công nghệ sử dụng
+
+- **Frontend:** React.js + Vite  
+- **Backend:** Node.js + Express.js  
+- **Database:** MongoDB  
+- **Thư viện hỗ trợ:**  
+  - `react-toastify`: Hiển thị thông báo giao diện  
+  - `bcryptjs`: Mã hóa mật khẩu  
+  - `jsonwebtoken (JWT)`: Xác thực và phân quyền  
+  - `axios`: Giao tiếp client-server  
+  - `react-router-dom`: Điều hướng trang  
+  - **Chatbox:** Tuỳ chọn sử dụng `socket.io`, `Firebase Realtime`, hoặc tích hợp dịch vụ như `Tawk.to`, `LiveChat`,...
+
+---
+
+## 🚀 Hướng dẫn chạy dự án
+
+### 1. Clone repository:
+```bash
+git clone https://github.com/yourusername/MinhGadget.git
+cd MinhGadget
+
+### 2. Cài đặt dependencies:
 npm install
-3. chạy frontend và admin:
+
+### 3. Chạy frontend:
 npm run dev
-4. chạy backend:
+
+### 4. Chạy backend:
 npm run server
 
 💡 Đóng góp phát triển
-Tôi luôn hoan nghênh mọi đóng góp! Vui lòng gửi Pull Request hoặc Issue trên GitHub để cùng phát triển dự án.
+Mọi đóng góp đều được hoan nghênh!
+Hãy tạo Issue hoặc gửi Pull Request để cùng nhau phát triển MinhGadget trở thành nền tảng thương mại điện tử hàng đầu cho dân yêu công nghệ!

@@ -22,10 +22,6 @@ const Navbar = () => {
                 <li className='py-1 '>All products</li>
                 <hr className=' border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden' />
             </NavLink>
-            <NavLink className='p-2 hover:bg-gray-100 ' to='/ai-assistant'>
-                <li className='py-1'>AI assistant</li>
-                <hr className='border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden'/>
-            </NavLink>
             <NavLink className='p-2 hover:bg-gray-100 ' to='/about'>
                 <li className='py-1'>About</li>
                 <hr className='border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden'/>
@@ -47,8 +43,8 @@ const Navbar = () => {
                 <div className='absolute top-0 right-0 pt-14 text-base font-medium text-gray-600 hidden group-hover:block'>
                     <div className='min-w-48 round flex flex-col gap-2 p-4 bg-gray-50 font-bold text-black'>
                     <p onClick={()=>navigate('/my-profile')}  className='group cursor-pointer hover:bg-blue-400  hover:text-white px-2 py-2'>My Profile</p>
-                    <p onClick={()=>navigate('/mycart')} className='group cursor-pointer hover:bg-blue-400  hover:text-white px-2 py-2'>My Cart</p>
-                    <p onClick={()=>navigate('/comments')} className='group cursor-pointer hover:bg-blue-400  hover:text-white px-2 py-2'>Comments & Rating</p>
+                    <p onClick={()=>navigate('/mycart')} className='group cursor-pointer hover:bg-blue-400  hover:text-white px-2 py-2'>My Carts</p>
+                    <p onClick={()=>navigate('/comments')} className='group cursor-pointer hover:bg-blue-400  hover:text-white px-2 py-2'>My Comments</p>
                     <p onClick={deleteToken} className='group cursor-pointer hover:bg-blue-400  hover:text-white px-2 py-2'>Log out</p>
                     </div>
                 </div>

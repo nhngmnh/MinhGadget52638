@@ -32,39 +32,28 @@ const Product = () => {
     }
   }, [sortFlag, sortOrder]);
   useEffect(() => {
-    let isCategoryFromLocation = false;
-  
-    if (location.state?.category) {
-      setCategory(location.state.category);
-      isCategoryFromLocation = true;
-    }
-  
+    setSearch(search || location.state?.search)
+    setCategory(category||location.state?.category)
+    setBrand(brand||location.state?.brand)
     const fetchData = async () => {
       try {
         const res = await axios.get(`${backendurl}/api/user/get-products`, {
           params: {
             query: search,
-            category: location.state?.category || category,
-            brand: brand,
+            category:  category||location.state?.category,
+            brand: brand||location.state?.brand,
             minPrice: minPrice,
             maxPrice: maxPrice,
           },
         });
-  
         setFilterPro(res.data.products);
         setSortFlag(prevFlag => 1 - prevFlag);
       } catch (error) {
         console.error("Fetch error:", error);
       }
     };
-  
-    // Nếu category được set từ location.state, delay fetch để tránh fetch cũ
-    if (isCategoryFromLocation) {
-      // Optional delay to ensure setState is reflected
-      setTimeout(fetchData, 0);
-    } else {
+   
       fetchData();
-    }
   
   }, [location.state, category, brand, maxPrice, minPrice, search, backendurl]);
 

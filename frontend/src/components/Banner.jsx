@@ -30,26 +30,25 @@ const Banner = () => {
         >
           <div className="max-w-xl text-center ltr:sm:text-left rtl:sm:text-right">
             <h1 className="text-3xl font-extrabold sm:text-5xl">
-              Let us find your
+              Let us find your best
       
-              <strong className="block font-extrabold text-primary"> Forever Home. </strong>
+              <strong className="block font-extrabold text-primary"> Devices. </strong>
             </h1>
       
             <p className="mt-4 max-w-lg sm:text-xl/relaxed ml-6">
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nesciunt illo tenetur fuga ducimus
-              numquam ea!
+            Our products are of very good quality, widely used in the market and we are a leading reputable product distributor.
             </p>
       
             <div className="mt-8 flex flex-wrap gap-4 text-center">
               <a
-                href="#"
+                href="/products"
                 className="ml-12 block w-full rounded-sm bg-primary px-12 py-3 text-sm font-medium text-white shadow-sm hover:bg-rose-700 focus:ring-3 focus:outline-hidden sm:w-auto"
               >
                 Get Started
               </a>
       
               <a
-                href="#"
+                href="/about"
                 className="block w-full rounded-sm bg-white px-12 py-3 text-sm font-medium text-primary shadow-sm hover:text-white hover:bg-rose-700 focus:ring-3 focus:outline-hidden sm:w-auto"
               >
                 Learn More
