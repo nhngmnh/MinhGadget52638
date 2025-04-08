@@ -35,6 +35,10 @@ import Tablet from './Tablet.png'
 import Smartwatch from './Smartwatch.png'
 import Smartphone from './Smartphone.png'
 import Accessory from './Accessory.jpg'
+import banner1 from './banner1.jpg'
+import banner2 from './banner2.png'
+import banner3 from './banner3.jpg'
+import nnm from './nnm.jpg'
 export const assets = {
     mdcn,
     bg,
@@ -58,7 +62,9 @@ export const assets = {
     stripe_logo,
     cross_icon,
     Oppo, Xiaomi,Samsung,Vivo,DELL,ACER,ASUS,Realme,Lenovo,Apple,
-    Laptop,Smartwatch,Smartphone,PCPrinter,Accessory,Tablet
+    Laptop,Smartwatch,Smartphone,PCPrinter,Accessory,Tablet,
+    banner1,banner2,banner3,
+    nnm
 }
 
 export const typeOfProductData = [

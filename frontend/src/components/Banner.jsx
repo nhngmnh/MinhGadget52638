@@ -3,9 +3,9 @@ import { assets } from '../assets/assets';
 import { useState } from 'react';
 const Banner = () => {
     const images = [
-        assets.about_img,
-        assets.bin_icon,
-        assets.dropdown_icon,
+        assets.banner1,
+        assets.banner2,
+        assets.banner3,
       ];
     
       const [currentIndex, setCurrentIndex] = useState(0);

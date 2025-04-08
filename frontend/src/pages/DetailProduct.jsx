@@ -6,20 +6,22 @@ import RelatedProducts from '../components/RelatedProducts';
 import { toast } from 'react-toastify';
 
 const DetailProduct = () => {
-  const { products, backendurl, userData, token } = useContext(AppContext);
+  const { products, backendurl, userData, token, replies } = useContext(AppContext);
   const navigate = useNavigate();
   const { prID } = useParams();
-  
+
   const [pr, setPr] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [category, setCategory] = useState('');
-  
+
   const [allComments, setAllComments] = useState([]);
   const [userComment, setUserComment] = useState(null);
   const [commentText, setCommentText] = useState('');
   const [editing, setEditing] = useState(false);
 
   useEffect(() => {
+    console.log(replies);
+    
     if (prID && products.length > 0) {
       const prInfo = products.find(p => p._id === prID);
       if (prInfo) {
@@ -103,10 +105,10 @@ const DetailProduct = () => {
                 className="mt-1 border border-gray-300 rounded-md p-2 w-20" 
               />
             </div>
-            
+
             {/* Thông số sản phẩm */}
             <div className="mt-6">
-              <h2 className="text-xl font-semibold">Thông số sản phẩm</h2>
+              <h2 className="text-xl font-semibold">Detail Products</h2>
               <table className="w-full mt-4 table-auto">
                 <thead>
                   <tr>
@@ -125,7 +127,7 @@ const DetailProduct = () => {
                   ) : (
                     <tr>
                       <td colSpan="2" className="border px-4 py-2 text-center text-gray-500">
-                        Chưa cập nhật thông số
+                        Not updated yet
                       </td>
                     </tr>
                   )}
@@ -136,13 +138,13 @@ const DetailProduct = () => {
             <button 
               onClick={handleAddToCart} 
               className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">
-              Thêm vào giỏ hàng
+              Add to cart
             </button>
           </div>
         </div>
 
         <div className="mt-6">
-          <h2 className="text-xl font-semibold">Bình luận</h2>
+          <h2 className="text-xl font-semibold">Comments</h2>
           <div className="mt-2 border-t pt-2">
             {userData && (
               <div className="mb-4">
@@ -156,7 +158,7 @@ const DetailProduct = () => {
                     <button 
                       onClick={handleCommentSubmit} 
                       className="mt-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                      Cập nhật bình luận
+                      Update comment
                     </button>
                   </div>
                 ) : userComment ? (
@@ -165,7 +167,7 @@ const DetailProduct = () => {
                     <button 
                       onClick={() => setEditing(true)} 
                       className="text-blue-500">
-                      Chỉnh sửa
+                      Edit
                     </button>
                   </div>
                 ) : (
@@ -179,7 +181,7 @@ const DetailProduct = () => {
                     <button 
                       onClick={handleCommentSubmit} 
                       className="mt-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                      Gửi bình luận
+                      Send
                     </button>
                   </div>
                 )}
@@ -187,16 +189,29 @@ const DetailProduct = () => {
             )}
             {allComments.length > 0 ? (
               allComments.map((comment) => (
-                <div key={comment._id} className="border-b py-2 flex items-start gap-3">
-                  <img src={comment.userData.image} alt="Avatar" className="w-10 h-10 rounded-full" />
-                  <div>
-                    <p className="text-gray-800 font-semibold">{comment.userData.name}</p>
-                    <p className="text-gray-700">{comment.text}</p>
+                <div key={comment._id} className="border-b py-2">
+                  <div className="flex items-start gap-3">
+                    <img src={comment.userData.image} alt="Avatar" className="w-10 h-10 rounded-full" />
+                    <div>
+                      <p className="text-gray-800 font-semibold">{comment.userData.name}</p>
+                      <p className="text-gray-700">{comment.text}</p>
+                    </div>
+                  </div>
+                  {/* Hiển thị replies của bình luận này */}
+                  <div className="ml-12 mt-2">
+                    {replies
+                      .filter(reply => reply.commentId === comment._id)
+                      .map(reply => (
+                        <div key={reply._id} className="text-gray-600 mb-1">
+                          <strong className='ml-3'>{"Admin"}:</strong> {reply.text}
+                        </div>
+                      ))
+                    }
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-gray-500">Chưa có bình luận nào.</p>
+              <p className="text-gray-500">No comment yet.</p>
             )}
           </div>
         </div>

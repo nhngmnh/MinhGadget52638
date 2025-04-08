@@ -11,6 +11,7 @@ const AppContextProvider=(props)=>{
     const [products,setProducts]=useState([]);
     const [cart,setCart]=useState([]);
     const [replies,setReplies] =useState([])
+    const [myReplies,setMyReplies]=useState([])
     const [comments,setComments]=useState([])
     const getComments = async ()=>{
         try {
@@ -25,7 +26,18 @@ const AppContextProvider=(props)=>{
     }
     const getRepliesByUser = async ()=>{
         try {
-            const {data}=await axios.get(backendurl+'/api/user/get-replies',{headers:{token}})
+            const {data}=await axios.get(backendurl+'/api/user/get-my-replies',{headers:{token}})
+            if (!data) toast.warn("No replies yet or Error connect server")
+            setMyReplies(data.replies);
+            
+        } catch (error) {
+            console.log(error);
+            toast.error(error.message)
+        }
+    }
+    const getAllReplies = async ()=>{
+        try {
+            const {data}=await axios.get(backendurl+'/api/user/get-all-replies',{headers:{token}})
             if (!data) toast.warn("No replies yet or Error connect server")
             setReplies(data.replies);
             
@@ -79,16 +91,32 @@ const AppContextProvider=(props)=>{
         comments, getComments, setComments
     }
     
-    useEffect(()=>{
-        getProductsData()
-    },[])
-    useEffect(()=>{
-        if (token){
-            getUserData();
-        } else {
-            setUserData(false)
-        }
-    },[token])
+    useEffect(() => {
+        const fetchInitialData = async () => {
+          try {
+            await Promise.all([
+              getProductsData(),
+              getAllReplies()
+            ]);
+          } catch (error) {
+            console.error("Error fetching initial data", error);
+          }
+        };
+      
+        fetchInitialData();
+      }, []);
+      
+      useEffect(() => {
+        const fetchUserData = async () => {
+          if (token) {
+            await getUserData();
+          } else {
+            setUserData(false);
+          }
+        };
+      
+        fetchUserData();
+      }, [token]);
     return(
         <AppContext.Provider value={value}>
             {props.children}

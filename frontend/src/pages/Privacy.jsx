@@ -32,7 +32,7 @@ const Privacy = () => {
     <h2 class="text-2xl font-semibold mb-4">Changes to This Policy</h2>
     <p class="mb-6">We may update this Privacy Policy from time to time. Any changes will be posted on this page, so please review it periodically.</p>
   
-    <p class="text-red-200 mb-8">Last updated: March 2025</p>
+    <p class="text-red-200 mb-8">Last updated: May 2025</p>
   </div>
   
   )
