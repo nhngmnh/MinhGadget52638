@@ -96,7 +96,7 @@ const Cart = () => {
 
             {/* Actions */}
             <div className="flex flex-col gap-2">
-              {!item.cancelled && !item.isCompleted && (
+              { item.status==='processing' && (
                 <button
                   onClick={() => navigate('/banking')}
                   className="px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 transition rounded-lg text-sm"
@@ -105,13 +105,13 @@ const Cart = () => {
                 </button>
               )}
 
-              {item.isCompleted && (
+              {item.status==='shipped' && (
                 <p className="px-4 py-2 text-sm text-green-600 border border-green-500 rounded-lg text-center">
-                  ✅ Completed
+                  ✅ Paid
                 </p>
               )}
 
-              {!item.cancelled && !item.isCompleted && (
+              {(item.status==='cancelled' || item.status==='processing') && (
                 <button
                   className="px-4 py-2 text-sm text-white bg-red-500 hover:bg-red-600 transition rounded-lg"
                   onClick={() => {
