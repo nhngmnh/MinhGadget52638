@@ -6,7 +6,7 @@ const Sidebar = () => {
   const { aToken } = useContext(AdminContext);
 
   const menuItems = [
-    { path: '/dashboard', label: 'Dashboard' },
+    { path: '/', label: 'Dashboard' },
     { path: '/all-carts',  label: "Customer's Cart" },
     { path: '/add-product',  label: 'Add Products' },
     { path: '/products-list',  label: 'List Products' },
@@ -22,7 +22,7 @@ const Sidebar = () => {
               key={index}
               className={({ isActive }) =>
                 `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer ${
-                  isActive ? 'bg-white border-r-4 border-primary' : ''
+                  isActive ? 'bg-gray-200 border-r-4 border-blue-400' : ''
                 }`
               }
               to={item.path}

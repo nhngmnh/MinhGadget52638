@@ -2,7 +2,7 @@ import express from 'express';
 import {addProduct,adminDashboard,changeProductAvailability,getProducts, loginAdmin, updateCart} from '../controllers/adminController.js'
 import authAdmin from '../middlewares/authAdmin.js';
 import upload from '../middlewares/multer.js';
-import { getCarts, removeCart } from '../controllers/cartController.js';
+import { changeStatus, getCarts, removeCart } from '../controllers/cartController.js';
 import { getAllComments } from '../controllers/commentController.js';
 import { changeBestsellerStatus, detailProduct, updateProduct } from '../controllers/productController.js';
 import { editReply, getAllReplies, removeReply, replyComment } from '../controllers/replyController.js';
@@ -23,4 +23,5 @@ adminRouter.get('/all-replies',authAdmin,getAllReplies)
 adminRouter.post('/update-reply',authAdmin,editReply)
 adminRouter.post('/remove-reply',authAdmin,removeReply)
 adminRouter.get('/get-product/:prId',authAdmin,detailProduct)
+adminRouter.post('/change-cart-status',authAdmin,changeStatus)
 export default adminRouter

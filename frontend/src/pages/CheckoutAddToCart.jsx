@@ -15,9 +15,11 @@ const CheckoutAddToCart = () => {
   const totalPrice = product ? product.price * cartData.quantity : 0;
   const handleAddCart = async ()=>{
     try {
-      const addCart= await axios.post(backendurl+'/api/user/create-cart',{itemId:cartData.prID,totalItems:cartData.quantity, paymentMethod:payment, shippingAddress:address},{headers:{token}});
+      if (!token) toast.error("Login to add to cart")
+      
+
+     const addCart= await axios.post(backendurl+'/api/user/create-cart',{itemId:cartData.prID,totalItems:cartData.quantity, paymentMethod:payment, shippingAddress:address},{headers:{token}});
       if (addCart) {
-        console.log(addCart);
         toast.success("Add successfully")
         
       }
@@ -29,7 +31,7 @@ const CheckoutAddToCart = () => {
     
     navigate('/mycart', { replace: true });
   }
-  return (
+  return token && (
     <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg rounded-xl">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Order Confirmation</h1>
 

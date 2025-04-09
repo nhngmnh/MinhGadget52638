@@ -23,8 +23,7 @@ const App = () => {
         <Sidebar/>
         <Routes>
           {/*ad route*/}
-            <Route path='/' element={<></>}/>
-            <Route path='/dashboard' element={<Dashboard/>}/>
+            <Route path='/' element={<Dashboard/>}/>
             <Route path='/products-list' element={<ProductsList/>}/>
             <Route path='/all-carts' element={<AllCarts/>}/>
             <Route path ='/comments-list' element={<Comments/>}/>

@@ -37,7 +37,16 @@ const getCarts = async (req, res) => {
     return res.status(500).json({ message: 'Server Error' });
   }
 };
-
+const changeStatus =async (req,res)=>{
+  try {
+    const {cartId,status} =req.body
+    if (!status) return res.status(404).json({success:false,message:"Cannot get status"});
+    await cartModel.findByIdAndUpdate(cartId,{status},{new:true});
+    return res.status(200).json({success:true,message:`Change status to ${status} successfully`})
+  } catch (error) {
+    return res.status(500).json({ message: 'Server Error' });
+  }
+}
 export {
-    removeCart,getCarts
+    removeCart,getCarts,changeStatus
 }

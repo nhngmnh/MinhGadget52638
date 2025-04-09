@@ -161,7 +161,28 @@ const AdminContextProvider=(props)=>{
             toast.error(error.message);
         }
     };
-    
+    const changeCartStatus = async (cartId, status) => {
+        try {
+          const response = await axios.post(`${backendurl}/api/admin/change-cart-status`, {
+            cartId,
+            status,
+          }, {
+            headers: { aToken },
+          });
+      
+          if (response.data.success) {
+            toast.success(response.data.message);
+            return true;
+          } else {
+            toast.error(response.data.message || "Failed to change status");
+            return false;
+          }
+        } catch (error) {
+          console.error("Error changing cart status:", error);
+          toast.error("Server Error");
+          return false;
+        }
+      };
     const value={
         aToken,setAToken,
         backendurl,products,setProducts,
@@ -172,7 +193,7 @@ const AdminContextProvider=(props)=>{
         getCarts, getComments, removeCart,
         changeBestsellerStatus,
         replies,setReplies,getAllReplies,
-        replyComment,deleteReply,editReply
+        replyComment,deleteReply,editReply,changeCartStatus
     }
 
     return (

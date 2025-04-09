@@ -54,9 +54,13 @@ const DetailProduct = () => {
   const handleQuantityChange = (e) => setQuantity(e.target.value);
 
   const handleAddToCart = () => {
+    if (!token){
+      toast.error("Login to buy this device !");
+    }
+    else {
     const cartData = { prID, quantity };
     localStorage.setItem('cartData', JSON.stringify(cartData));
-    navigate('/checkout', { state: cartData });
+    navigate('/checkout', { state: cartData });}
   };
 
   const handleCommentSubmit = async () => {

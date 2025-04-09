@@ -43,10 +43,13 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    getMyCart();
-  }, []);
+    const fetchCart = async ()=>{
+      await getMyCart();
+    };
+    fetchCart();
+  }, [token]);
 
-  return (
+  return token && (
     <div className="mx-auto p-6">
       <h2 className="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2">
         🛒 My Cart
