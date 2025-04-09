@@ -84,39 +84,7 @@ const loginAdmin=async(req,res)=>{
         res.json({success:false,message:error.message})
     }
 }
-const updateProduct = async (req, res) => {
-    try {
-        const { productId, price, stock_quantity,name,category,brand  } = req.body;
-        const imageFile=req.file;
-        let imageURL = "";
-        if (imageFile) {
-            const imageUpload = await cloudinary.uploader.upload(imageFile.path, { resource_type: "image" });
-            imageURL = imageUpload.secure_url;
-        }
-        const product = await productModel.findByIdAndUpdate(
-            productId,
-            {   
-                price: price,
-                stock_quantity: stock_quantity,
-                name,
-                category,
-                brand,
-                description,
-                image_url:imageURL
-             },
-            { new: true } 
-        );
-        if (!product) {
-            return res.status(404).json({ success:false,message: 'Product not found' });
-        }
-        return res.json({success: true, data:product});
 
-    }
-        catch(err){
-            return res.status(500).json({success:false, message:"Server error"})
-            
-        }
-}
 const updateCart = async (req, res) => {
     try {
         const {status, cartId}=req.body;
@@ -183,5 +151,5 @@ const changeProductAvailability=async(req,res)=>{
     }
 }
 export {
-    addProduct,getProducts,adminDashboard,loginAdmin,updateProduct,updateCart,changeProductAvailability
+    addProduct,getProducts,adminDashboard,loginAdmin,updateCart,changeProductAvailability
 }

@@ -12,6 +12,7 @@ import AllCarts from "./pages/AllCarts"
 import Comments from "./pages/Comments"
 import 'tailwindcss/tailwind.css'
 import AddProduct from "./pages/AddProduct"
+import UpdateProduct from "./pages/UpdateProducts"
 const App = () => {
   const {aToken}=useContext(AdminContext)
   return aToken ? (
@@ -28,6 +29,7 @@ const App = () => {
             <Route path='/all-carts' element={<AllCarts/>}/>
             <Route path ='/comments-list' element={<Comments/>}/>
             <Route path='/add-product' element={<AddProduct/>}/>
+            <Route path='/update-product' element={<UpdateProduct/>}/>
         </Routes>
        </div>
     </div>

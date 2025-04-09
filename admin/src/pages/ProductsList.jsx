@@ -1,8 +1,23 @@
 import React, { useContext, useEffect } from 'react'
 import { AdminContext } from '../context/AdminContext'
+import { useNavigate } from 'react-router-dom'
 
 const ProductsList = () => {
+  const navigate =useNavigate();
   const {aToken,changeAvailability,getProducts,products,setProducts,changeBestsellerStatus}=useContext(AdminContext)
+  const handleNavigate =(item)=>{
+     navigate('/update-product',{state:{
+      productId:item._id,
+      specifications:item.specifications,
+      name: item.name,
+      category: item.category,
+      brand: item.brand,
+      description: item.description,
+      image_url:item.image_url,
+      price:item.price,
+      stock_quantity:item.stock_quantity
+     }})
+  }
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -24,7 +39,7 @@ const ProductsList = () => {
       </h1>
       <div className='w-full flex flex-wrap gap-4 pt-5 gap-y-6'>
         {products.map((item,index)=>(
-          <div className='border border-indigo-200 rounded-xl max-w-52 overflow-hidden cursor-pointer group' key={index}>
+          <div onClick={()=>handleNavigate(item)} className='border border-indigo-200 rounded-xl max-w-52 overflow-hidden cursor-pointer group' key={index}>
             <img 
   className='bg-indigo-50 group-hover:bg-primary transition-all duration-500 h-64 object-cover' 
   src={item.image_url} 

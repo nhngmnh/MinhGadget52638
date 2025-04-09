@@ -1,20 +1,22 @@
-import express from 'express';
 import productModel from '../models/productModel.js';
 import cartModel from '../models/cartModel.js';
-const detailProduct=async(req,res)=>{
+import {v2 as cloudinary} from "cloudinary"
+const detailProduct = async (req, res) => {
     try {
-        const {prId}=req.params;
-        const product = await productModel.findById(prId);
-        if (product) {
-            console.log({success: true, data: product});
-            
-        }
+      const { prId } = req.params;
+      const product = await productModel.findById(prId);
+  
+      if (!product) {
+        return res.status(404).json({ success: false, message: "Product not found" });
+      }
+  
+      res.json({ success: true, data: product });
     } catch (error) {
-        console.log(error);
-        toast.error("Cannot find products")
-        
+      console.error(error);
+      res.status(500).json({ success: false, message: "Cannot find product" });
     }
-}
+  };
+  
 const cancelOrder = async (req, res) => {
     try {
         const { orderId } = req.params;
@@ -66,7 +68,46 @@ const changeBestsellerStatus = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Fail to change bestseller status' });
     }
 };
-
+const updateProduct = async (req, res) => {
+    try {
+      const { productId, price, stock_quantity, name, category, brand, description } = req.body;
+      const specs = JSON.parse(req.body.specifications);
+      const imageFile = req.file;
+  
+      let imageURL = req.body.image_url; // giữ ảnh cũ nếu không upload ảnh mới
+  
+      if (imageFile) {
+        const imageUpload = await cloudinary.uploader.upload(imageFile.path, { resource_type: 'image' });
+        imageURL = imageUpload.secure_url;
+      }
+  
+      const product = await productModel.findByIdAndUpdate(
+        productId,
+        {
+          price,
+          stock_quantity,
+          name,
+          category,
+          brand,
+          description,
+          image_url: imageURL,
+          specifications: specs,
+        },
+        { new: true }
+      );
+  
+      if (!product) {
+        return res.status(404).json({ success: false, message: 'Product not found' });
+      }
+  
+      return res.json({ success: true, data: product });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: 'Server error' });
+    }
+  };
+  
+  
 export {
-    detailProduct,cancelOrder, changeBestsellerStatus
+    detailProduct,cancelOrder, changeBestsellerStatus,updateProduct
 }
