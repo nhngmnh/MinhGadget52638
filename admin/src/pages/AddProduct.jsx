@@ -82,7 +82,7 @@ const AddProduct = () => {
     }
   };
 
-  const categories = ["Laptop", "Smartphone", "Smartwatch", "Pc, Printer", "Accessory"];
+  const categories = ["Laptop", "Smartphone", "Smartwatch", "Pc, Printer", "Accessory","Tablet"];
 
   return (
     <form onSubmit={onSubmitHandler} className='m-5 w-full'>

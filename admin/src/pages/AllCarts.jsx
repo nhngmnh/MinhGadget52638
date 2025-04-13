@@ -35,9 +35,17 @@ const AllCarts = () => {
     }
   };
 
-  const handleStatusChange = async (cartId, newStatus) => {
-    const success = await changeCartStatus(cartId, newStatus);
-    if (success) setChangeCart(prev => !prev);
+  const handleStatusChange = async (cart, newStatus) => {
+    const success = await changeCartStatus(cart._id, newStatus);
+    if (success) {
+      // Sau khi cập nhật thành công thì tạo thông báo
+      await notifyChangeStatusCart({
+        userId: cart.userId,
+        text: `The cart #${cart._id} that has ${cart.totalItems} item(s) of ${cart.itemData.name} was updated to ${newStatus} by admin.`
+      });
+  
+      setChangeCart(prev => !prev);
+    }
   };
 
   return (
@@ -72,7 +80,7 @@ const AllCarts = () => {
               <div>
                 <select
                   value={cart.status}
-                  onChange={(e) => handleStatusChange(cart._id, e.target.value)}
+                  onChange={(e) => handleStatusChange(cart, e.target.value)}
                   className='text-xs border rounded px-2 py-1 bg-white'
                 >
                   <option value="processing">Processing</option>

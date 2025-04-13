@@ -183,6 +183,19 @@ const AdminContextProvider=(props)=>{
           return false;
         }
       };
+    const notifyChangeStatusCart= async (cart) =>{
+        try {
+            await axios.post(backendurl+'/api/admin/create-notification',{
+                userId:cart.userId,
+                text:cart.text,
+                createAt:Date.now(),
+                isRead:false,
+            },{headers:{aToken}})
+        } catch (error) {
+            console.log(error);
+            toast.error(error.message)
+        }
+    }
     const value={
         aToken,setAToken,
         backendurl,products,setProducts,
@@ -193,7 +206,8 @@ const AdminContextProvider=(props)=>{
         getCarts, getComments, removeCart,
         changeBestsellerStatus,
         replies,setReplies,getAllReplies,
-        replyComment,deleteReply,editReply,changeCartStatus
+        replyComment,deleteReply,editReply,changeCartStatus,
+        notifyChangeStatusCart
     }
 
     return (
