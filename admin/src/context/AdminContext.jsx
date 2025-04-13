@@ -196,6 +196,21 @@ const AdminContextProvider=(props)=>{
             toast.error(error.message)
         }
     }
+    const createReplyNotification = async (userId,replyText, productName) => {
+        try {
+          const x= await axios.post(
+            `${backendurl}/api/admin/create-notification`,
+            { userId, text:`The admin replied your comment in ${productName} page: ${replyText}.`},  // Truyền các tham số vào
+            { headers: { aToken } }
+          );
+          toast.success("Notification sent successfully.");
+          console.log(x);
+          
+        } catch (error) {
+          console.error('Failed to create notification', error);
+          toast.error('Error sending notification');
+        }
+      };
     const value={
         aToken,setAToken,
         backendurl,products,setProducts,
@@ -207,7 +222,7 @@ const AdminContextProvider=(props)=>{
         changeBestsellerStatus,
         replies,setReplies,getAllReplies,
         replyComment,deleteReply,editReply,changeCartStatus,
-        notifyChangeStatusCart
+        notifyChangeStatusCart,createReplyNotification
     }
 
     return (

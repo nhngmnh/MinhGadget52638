@@ -82,6 +82,42 @@ const getNewNotification = async (req, res) => {
       return res.status(500).json({ success:false, message: 'Internal server error' });
     }
   };
+
+  const getAllNotifications = async (req, res) => {
+    try {
+      const notifications = await notificationModel.find().sort({ createdAt: -1 });
+      return res.status(200).json({success:true,data:notifications});
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+      return res.status(500).json({success:false, message: 'Server error' });
+    }
+  };
+  const createReplyNotification = async (req, res) => {
+    try {
+      const { text, userId } = req.body
+  
+      if (!userId || !text) {
+        return res.status(400).json({ message: 'Missing userId or text' })
+      }
+  
+      const newNotification = new Notification({
+        userId,
+        text,
+        createAt:Date.now(),
+        isRead:false,
+      })
+  
+      await newNotification.save()
+  
+      return res.status(200).json({
+       success:true,
+        data: newNotification
+      })
+    } catch (error) {
+      console.error('createReplyNotification error:', error)
+      res.status(500).json({ success:false, message: 'Internal Server Error' })
+    }
+  }
 export {
-    createNotification, deleteNotification,getNewNotification,markOneAsRead,markAllAsRead
+    createNotification, deleteNotification,getNewNotification,markOneAsRead,markAllAsRead,getAllNotifications,createReplyNotification
 }

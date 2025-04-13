@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { AdminContext } from '../context/AdminContext'
 
 const AllCarts = () => {
-  const { aToken, carts, getCarts, removeCart, changeCartStatus } = useContext(AdminContext)
+  const { aToken, carts, getCarts, removeCart, changeCartStatus,notifyChangeStatusCart } = useContext(AdminContext)
   const [changeCart, setChangeCart] = useState(false);
   const [selectedCart, setSelectedCart] = useState(null);
 
@@ -27,8 +27,13 @@ const AllCarts = () => {
     if (selectedCart) {
       try {
         await removeCart(selectedCart._id);
+        await notifyChangeStatusCart({
+          userId: selectedCart.userId,
+          text: `The cart #${selectedCart._id} that has ${selectedCart.totalItems} item(s) of ${selectedCart.itemData.name} you ordered has been deleted by admin.`
+        });
         setChangeCart(prev => !prev);
         setSelectedCart(null);
+        toast.success("Delete successfully")
       } catch (error) {
         console.error('Error deleting cart:', error);
       }

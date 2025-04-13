@@ -11,6 +11,7 @@ const Comments = () => {
     editReply,
     deleteReply,
     getAllReplies,
+    createReplyNotification
   } = useContext(AdminContext);
 
   const [commentBeingReplied, setCommentBeingReplied] = useState(null);
@@ -36,11 +37,13 @@ const Comments = () => {
   const submitReply = async () => {
     if (commentBeingReplied && replyText.trim()) {
       const result = await replyComment(commentBeingReplied._id, replyText);
+      await createReplyNotification(commentBeingReplied.userId,replyText,commentBeingReplied.productData.name)
       if (result) {
         await getAllReplies();
         setReplyText('');
         setCommentBeingReplied(null);
       }
+      
     }
   };
 
