@@ -5,6 +5,7 @@ import upload from '../middlewares/multer.js';
 import { cancelOrder, detailProduct } from '../controllers/productController.js';
 import { createComment, getCommentsByProduct, getCommentsByUser, updateComment } from '../controllers/commentController.js';
 import { getAllReplies, getReplyByUser } from '../controllers/replyController.js';
+import { getNotificationsByUser, markAllAsRead, markOneAsRead } from '../controllers/notificationController.js';
 const userRouter = express.Router();
 
 userRouter.post('/register', registerUser)
@@ -21,4 +22,7 @@ userRouter.post('/update-comment',authUser,updateComment)
 userRouter.get('/get-comments',authUser,getCommentsByUser)
 userRouter.get('/get-my-replies',authUser,getReplyByUser)
 userRouter.get('/get-all-replies',authUser,getAllReplies)
+userRouter.get('/get-notifications',authUser,getNotificationsByUser)
+userRouter.post('/mark-one-as-read',authUser,markOneAsRead)
+userRouter.post('/mark-all-as-read',authUser,markAllAsRead)
 export default userRouter;

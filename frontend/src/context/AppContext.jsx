@@ -13,6 +13,7 @@ const AppContextProvider=(props)=>{
     const [replies,setReplies] =useState([])
     const [myReplies,setMyReplies]=useState([])
     const [comments,setComments]=useState([])
+    const [notifications,setNotifications]=useState(null)
     const getComments = async ()=>{
         try {
             const {data}=await axios.get(backendurl+'/api/user/get-comments',{headers:{token}});
@@ -74,7 +75,42 @@ const AppContextProvider=(props)=>{
             toast.error(error.message)
         }
     }
-        
+    const getNotifications = async ()=>{
+        try {
+            const {data} = await axios.get(backendurl+'/api/user/get-notifications',{headers:{token}});
+            if (!data) toast.error("Data not found")
+            setNotifications(data.data)
+            console.log(data.data);
+            
+        } catch (error) {
+            console.log(error);
+            toast.error("Server error")
+        }
+    } 
+    const markOneAsRead= async(notificationId)=>{
+        try {
+         await axios.post(backendurl+'/api/user/mark-one-as-read',{notificationId},{headers:{token}})
+            
+        } catch (error) {
+            toast.error(error.message)
+            console.log(error);
+            
+        }
+    }   
+    const markAllAsRead = async () => {
+        try {
+            await axios.post(
+                backendurl + '/api/user/mark-all-as-read',
+                {}, 
+                { headers: { token } }
+            );
+                toast.success("All notifications marked as read");
+            
+        } catch (error) {
+            toast.error(error.message);
+            console.log(error);
+        }
+    };
     const value={
         search,
         setSearch,
@@ -88,7 +124,9 @@ const AppContextProvider=(props)=>{
         getProductsData,
         backendurl,
         getRepliesByUser, replies,setReplies,
-        comments, getComments, setComments
+        comments, getComments, setComments,
+        getNotifications, notifications,
+        markAllAsRead,markOneAsRead
     }
     
     useEffect(() => {

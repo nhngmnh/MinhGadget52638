@@ -118,6 +118,19 @@ const getNewNotification = async (req, res) => {
       res.status(500).json({ success:false, message: 'Internal Server Error' })
     }
   }
+  const getNotificationsByUser = async (req, res) => {
+    const  userId  = req.body.userId;  // userId từ body (sẽ được set trong authUser)
+  
+    try {
+        const notifications = await notificationModel.find({ userId }).sort({ createdAt: -1 }).limit(15);
+        if (notifications.length === 0) return res.status(400).json({ success: true, message: "No data" });
+        return res.status(200).json({ success: true, data: notifications });
+    } catch (error) {
+        console.error('Error getting notifications:', error);
+        return res.status(500).json({ success: false, message: 'Failed to get notifications' });
+    }
+};
+
 export {
-    createNotification, deleteNotification,getNewNotification,markOneAsRead,markAllAsRead,getAllNotifications,createReplyNotification
+    createNotification, deleteNotification,getNewNotification,markOneAsRead,markAllAsRead,getAllNotifications,createReplyNotification,getNotificationsByUser
 }
