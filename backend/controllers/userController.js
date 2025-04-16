@@ -8,7 +8,11 @@ import {v2 as cloudinary} from 'cloudinary'
 import {toast} from 'react-toastify'
 import productModel from '../models/productModel.js';
 import cartModel from '../models/cartModel.js';
-import { parseAstAsync } from 'vite';
+import CryptoJS from 'crypto-js';
+import config from '../config/zalopay.js'
+import axios from 'axios'
+import { v1 as uuidv1 } from 'uuid';
+import moment from 'moment';
 const registerUser = async (req,res) =>{
 try {
    
@@ -217,12 +221,84 @@ const getProducts = async (req, res) => {
 
         const products = await productModel.find(filter.length ? { $and: filter } : {});
 
-        res.json({ success: true, products: products });
+        return res.json({ success: true, products: products });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 };
-
+const getMerchantBanks= async (req,res) => {
+    const reqtime = Date.now();
+    const mac = CryptoJS.HmacSHA256(`${config.appid}|${reqtime}`, config.key1).toString();
+  
+    const params = {
+      appid: config.appid,
+      reqtime,
+      mac
+    };
+  
+    try {
+      const response = await axios.get(config.endpoint, { params });
+      const banks = response.data.banks;
+  
+      for (const id in banks) {
+        const bankList = banks[id];
+        console.log(`${id}.`);
+        for (const bank of bankList) {
+          console.log(bank);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching merchant banks:", error.message);
+    }
+  }
+const payCart = async (req,res)=>{
+    try {
+        const embeddata = {
+            merchantinfo: "embeddata123"
+          };
+          
+          const items = [
+            {
+              itemid: "knb",
+              itemname: "kim nguyen bao",
+              itemprice: 1000,
+              itemquantity: 1
+            }
+          ];
+          
+          const createZaloOrder = async () => {
+            const order = {
+              appid: config.appid,
+              apptransid: `${moment().format('YYMMDD')}_${uuidv1()}`,
+              appuser: "demo",
+              apptime: Date.now(),
+              item: JSON.stringify(items),
+              embeddata: JSON.stringify(embeddata),
+              amount: 1000,
+              description: "ZaloPay Integration Demo",
+              bankcode: "zalopayapp"
+            };
+          
+            // Tạo chuỗi dữ liệu để mã hóa
+            const data = `${order.appid}|${order.apptransid}|${order.appuser}|${order.amount}|${order.apptime}|${order.embeddata}|${order.item}`;
+            order.mac = CryptoJS.HmacSHA256(data, config.key1).toString();
+          
+            try {
+              const response = await axios.post(config.endpoint, null, { params: order });
+              console.log(response.data);
+              return res.json({data:response.data})
+            } catch (error) {
+              console.error("Error creating ZaloPay order:", error);
+              return res.json({success:false,message:error})
+            }
+          };
+          
+          createZaloOrder();
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
 export {
-    registerUser,loginUser,getProfile,updateProfile,listCart,cancelOrder,createCart,getProducts
+    registerUser,loginUser,getProfile,updateProfile,listCart,cancelOrder,createCart,getProducts,getMerchantBanks,payCart
 }

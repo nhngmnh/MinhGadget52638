@@ -130,7 +130,6 @@ const getNewNotification = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Failed to get notifications' });
     }
 };
-
 export {
     createNotification, deleteNotification,getNewNotification,markOneAsRead,markAllAsRead,getAllNotifications,createReplyNotification,getNotificationsByUser
 }
