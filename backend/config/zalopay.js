@@ -1,7 +1,7 @@
 export default {
-    appid: "553",
-    key1: "9phuAOYhan4urywHTh0ndEXiV3pKHr5Q",
-    key2: "Iyz2habzyr7AG8SgvoBCbKwKi3UzlLi3",
-    endpoint: "https://sandbox.zalopay.com.vn/v001/tpe/createorder"
+    app_id: "2554",
+    key1: "sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn",
+    key2: "	trMrHtvjo6myautxDUiAcYsVtaeQ8nhf",
+    endpoint: "https://sb-openapi.zalopay.vn/v2/create"
   };
   

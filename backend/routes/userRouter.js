@@ -1,5 +1,5 @@
 import express from 'express';
-import { createCart, getProfile, listCart, loginUser, registerUser, getProducts, updateProfile, getMerchantBanks, payCart } from '../controllers/userController.js';
+import { createCart, getProfile, listCart, loginUser, registerUser, getProducts, updateProfile, getMerchantBanks, payCart, callback } from '../controllers/userController.js';
 import authUser from '../middlewares/authUser.js';
 import upload from '../middlewares/multer.js';
 import { cancelOrder, detailProduct } from '../controllers/productController.js';
@@ -27,4 +27,5 @@ userRouter.post('/mark-one-as-read',authUser,markOneAsRead)
 userRouter.post('/mark-all-as-read',authUser,markAllAsRead)
 userRouter.get('/bank',getMerchantBanks);
 userRouter.post('/pay-cart',payCart)
+userRouter.post('/callback',callback)
 export default userRouter;

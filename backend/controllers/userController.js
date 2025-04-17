@@ -1,5 +1,3 @@
-import express from 'express';
-import connectDB from '../config/connectDB.js';
 import userModel from '../models/userModel.js'
 import validator from 'validator'
 import bcrypt from 'bcrypt'
@@ -13,6 +11,7 @@ import config from '../config/zalopay.js'
 import axios from 'axios'
 import { v1 as uuidv1 } from 'uuid';
 import moment from 'moment';
+import { redirect } from 'react-router-dom'
 const registerUser = async (req,res) =>{
 try {
    
@@ -228,10 +227,10 @@ const getProducts = async (req, res) => {
 };
 const getMerchantBanks= async (req,res) => {
     const reqtime = Date.now();
-    const mac = CryptoJS.HmacSHA256(`${config.appid}|${reqtime}`, config.key1).toString();
+    const mac = CryptoJS.HmacSHA256(`${config.app_id}|${reqtime}`, config.key1).toString();
   
     const params = {
-      appid: config.appid,
+      app_id: config.app_id,
       reqtime,
       mac
     };
@@ -251,54 +250,87 @@ const getMerchantBanks= async (req,res) => {
       console.error("Error fetching merchant banks:", error.message);
     }
   }
-const payCart = async (req,res)=>{
+  const payCart = async (req, res) => {
     try {
-        const embeddata = {
-            merchantinfo: "embeddata123"
-          };
-          
-          const items = [
-            {
-              itemid: "knb",
-              itemname: "kim nguyen bao",
-              itemprice: 1000,
-              itemquantity: 1
-            }
-          ];
-          
-          const createZaloOrder = async () => {
-            const order = {
-              appid: config.appid,
-              apptransid: `${moment().format('YYMMDD')}_${uuidv1()}`,
-              appuser: "demo",
-              apptime: Date.now(),
-              item: JSON.stringify(items),
-              embeddata: JSON.stringify(embeddata),
-              amount: 1000,
-              description: "ZaloPay Integration Demo",
-              bankcode: "zalopayapp"
-            };
-          
-            // Tạo chuỗi dữ liệu để mã hóa
-            const data = `${order.appid}|${order.apptransid}|${order.appuser}|${order.amount}|${order.apptime}|${order.embeddata}|${order.item}`;
-            order.mac = CryptoJS.HmacSHA256(data, config.key1).toString();
-          
-            try {
-              const response = await axios.post(config.endpoint, null, { params: order });
-              console.log(response.data);
-              return res.json({data:response.data})
-            } catch (error) {
-              console.error("Error creating ZaloPay order:", error);
-              return res.json({success:false,message:error})
-            }
-          };
-          
-          createZaloOrder();
+        const embed_data = {
+            redirecturl: "https://docs.zalopay.vn/v2/general/overview.html"
+        };
+
+        const items = [{}];
+        const transID = Math.floor(Math.random() * 1000000);
+        const order = {
+            app_id: config.app_id,
+            app_trans_id: `${moment().format('YYMMDD')}_${transID}`,
+            app_user: "user123",
+            app_time: Date.now(),
+            item: JSON.stringify(items),
+            embed_data: JSON.stringify(embed_data),
+            amount: 50000,
+            description: `Lazada - Payment for the order #${transID}`,
+            bank_code: "zalopayapp",
+            callback_url: "https://2b19-118-70-98-111.ngrok-free.app/api/user/callback"
+        };
+
+        const data = [
+            order.app_id,
+            order.app_trans_id,
+            order.app_user,
+            order.amount,
+            order.app_time,
+            order.embed_data,
+            order.item
+        ].join("|");
+
+        order.mac = CryptoJS.HmacSHA256(data, config.key1).toString();
+
+        const response = await axios.post(config.endpoint, null, {
+            params: order
+        });
+
+        console.log(response.data);
+        return res.json(response.data); // Gửi dữ liệu phản hồi về client
     } catch (error) {
-        console.log(error);
-        
+        console.error(error);
+        return res.status(500).json({ message: "Payment error", error: error.message });
     }
-}
+};
+
+
+const callback = (req, res) => {
+    let result = {};
+  
+    try {
+      let dataStr = req.body.data;
+      let reqMac = req.body.mac;
+  
+      let mac = CryptoJS.HmacSHA256(dataStr, config.key2).toString();
+      console.log("mac =", mac);
+        console.log("reqmac=",reqMac);
+        
+  
+      // kiểm tra callback hợp lệ (đến từ ZaloPay server)
+      if (reqMac !== mac) {
+        // callback không hợp lệ
+        result.returncode = -1;
+        result.returnmessage = "mac not equal";
+      }
+      else {
+        // thanh toán thành công
+        // merchant cập nhật trạng thái cho đơn hàng
+        let dataJson = JSON.parse(dataStr, config.key2);
+        console.log("update order's status = success where apptransid =", dataJson["apptransid"]);
+  
+        result.returncode = 1;
+        result.returnmessage = "success";
+      }
+    } catch (ex) {
+      result.returncode = 0; // ZaloPay server sẽ callback lại (tối đa 3 lần)
+      result.returnmessage = ex.message;
+    }
+  
+    // thông báo kết quả cho ZaloPay server
+    return res.json(result);
+  };
 export {
-    registerUser,loginUser,getProfile,updateProfile,listCart,cancelOrder,createCart,getProducts,getMerchantBanks,payCart
+    registerUser,loginUser,getProfile,updateProfile,listCart,cancelOrder,createCart,getProducts,getMerchantBanks,payCart,callback
 }
