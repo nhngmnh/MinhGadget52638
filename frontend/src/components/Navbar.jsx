@@ -86,7 +86,7 @@ const Navbar = () => {
                                                 }}
                                                 className={`p-3 border-b hover:bg-gray-100 cursor-pointer ${n.isRead ? 'bg-gray-200' : 'bg-white'}`}
                                             >
-                                                <p className="font-semibold text-sm">{isRead?'Old notification':<strong className='text-blue-500'>New notification</strong>}</p>
+                                                <p className="font-semibold text-sm">{n.isRead?'Old notification':<strong className='text-blue-500'>New notification</strong>}</p>
                                                 <p className="text-xs text-gray-700">{n.text}</p>
                                             </div>
                                         ))

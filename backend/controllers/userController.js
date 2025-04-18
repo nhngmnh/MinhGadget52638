@@ -252,25 +252,37 @@ const getMerchantBanks= async (req,res) => {
   }
   const payCart = async (req, res) => {
     try {
+        const { cart } = req.body;
+        if (!cart) return res.status(400).json({success:false,message:"No cart choosen!"})
         const embed_data = {
-            redirecturl: "https://docs.zalopay.vn/v2/general/overview.html"
+            redirecturl: `http://localhost:3001/my-cart`
         };
 
-        const items = [{}];
+        const items = [
+            {
+              itemid: cart._id || 1,
+              itemname: cart.itemData?.name || "Unnamed Item",
+              itemprice: cart.itemData?.price || 0,
+              itemquantity: cart.totalItems || 1
+            }
+          ];
+          
         const transID = Math.floor(Math.random() * 1000000);
         const order = {
             app_id: config.app_id,
             app_trans_id: `${moment().format('YYMMDD')}_${transID}`,
-            app_user: "user123",
+            app_user: cart.userData.name,
             app_time: Date.now(),
             item: JSON.stringify(items),
             embed_data: JSON.stringify(embed_data),
-            amount: 50000,
-            description: `Lazada - Payment for the order #${transID}`,
-            bank_code: "zalopayapp",
-            callback_url: "https://2b19-118-70-98-111.ngrok-free.app/api/user/callback"
+            amount: cart.totalPrice,
+            description: `MinhGadget52638 - Payment for the order #${transID} - ${cart.totalItems} of ${cart.itemData.name}`,
+            bank_code: "",
+            callback_url: `${process.env.BACKEND_NGROK}/api/user/callback`
         };
-
+       
+        console.log(order.callback_url);
+        
         const data = [
             order.app_id,
             order.app_trans_id,
@@ -286,17 +298,13 @@ const getMerchantBanks= async (req,res) => {
         const response = await axios.post(config.endpoint, null, {
             params: order
         });
-
-        console.log(response.data);
-        return res.json(response.data); // Gửi dữ liệu phản hồi về client
+        return res.json({success:true,order_url:response.data.order_url}); // Gửi dữ liệu phản hồi về client
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ message: "Payment error", error: error.message });
+        return res.status(500).json({ message: "Payment error", success:false });
     }
 };
-
-
-const callback = (req, res) => {
+const callback = async (req, res) => {
     let result = {};
   
     try {
@@ -307,7 +315,6 @@ const callback = (req, res) => {
       console.log("mac =", mac);
         console.log("reqmac=",reqMac);
         
-  
       // kiểm tra callback hợp lệ (đến từ ZaloPay server)
       if (reqMac !== mac) {
         // callback không hợp lệ
@@ -317,14 +324,25 @@ const callback = (req, res) => {
       else {
         // thanh toán thành công
         // merchant cập nhật trạng thái cho đơn hàng
-        let dataJson = JSON.parse(dataStr, config.key2);
-        console.log("update order's status = success where apptransid =", dataJson["apptransid"]);
-  
+        let dataJson = JSON.parse(dataStr,config.key2);
+        console.log("update order's status = success where apptransid =", dataJson["app_trans_id"]);
+        const x= JSON.parse(dataJson.item);
+        console.log(x);
+        
         result.returncode = 1;
         result.returnmessage = "success";
+        const billStatus= await axios.post('https://sb-openapi.zalopay.vn/v2/query',{
+            app_trans_id: dataJson.app_trans_id,
+            app_id:dataJson.app_id,
+            mac:reqMac
+        })
+
+        if (billStatus && billStatus.return_code===1 )await cartModel.findByIdAndUpdate(x[0].itemid,{paymentStatus:true},{new:true});
       }
     } catch (ex) {
-      result.returncode = 0; // ZaloPay server sẽ callback lại (tối đa 3 lần)
+        console.log(ex);
+        
+      result.returncode = 0; 
       result.returnmessage = ex.message;
     }
   

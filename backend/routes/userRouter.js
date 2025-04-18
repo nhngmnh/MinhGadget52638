@@ -26,6 +26,6 @@ userRouter.get('/get-notifications',authUser,getNotificationsByUser)
 userRouter.post('/mark-one-as-read',authUser,markOneAsRead)
 userRouter.post('/mark-all-as-read',authUser,markAllAsRead)
 userRouter.get('/bank',getMerchantBanks);
-userRouter.post('/pay-cart',payCart)
+userRouter.post('/pay-cart',authUser,payCart)
 userRouter.post('/callback',callback)
 export default userRouter;

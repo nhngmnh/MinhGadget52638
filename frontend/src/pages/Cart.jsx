@@ -41,7 +41,24 @@ const Cart = () => {
       toast.error("Failed to remove item");
     }
   };
-
+  const handlePayment = async (cart) => {
+    try {
+      const response = await axios.post(`${backendurl}/api/user/pay-cart`, 
+        { cart },
+        { headers: { token } }
+      );
+  
+      const paymentUrl = response.data?.order_url;
+      if (paymentUrl) {
+        window.location.href = paymentUrl;
+      } else {
+        toast.error("No payment URL returned");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Payment failed");
+    }
+  };
   useEffect(() => {
     const fetchCart = async ()=>{
       await getMyCart();
@@ -71,9 +88,9 @@ const Cart = () => {
             <div className="flex-1">
               <p className="text-2xl mb-2">
                 {item.itemData.name}&nbsp;&nbsp;&nbsp;
-                {item.status === 'processing' ? (
+                {(item.status === 'processing')? (
                   <span className="text-gray-500 text-xs">&#128666; Delivering </span>
-                ) : item.status === 'shipped' ? (
+                ) : (item.status === 'shipped') ? (
                   <span className="text-green-600 flex items-center gap-1 text-sm">
                     <FaCheckCircle className="text-green-600 text-xs" /> Completed
                   </span>
@@ -96,16 +113,16 @@ const Cart = () => {
 
             {/* Actions */}
             <div className="flex flex-col gap-2">
-              { item.status==='processing' && (
+              { item.status==='processing' &&item.paymentStatus===false && (
                 <button
-                  onClick={() => navigate('/banking')}
+                  onClick={() => handlePayment(item)}
                   className="px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 transition rounded-lg text-sm"
                 >
                   Pay Online
                 </button>
               )}
 
-              {item.status==='shipped' && (
+              {paymentStatus===true && (
                 <p className="px-4 py-2 text-sm text-green-600 border border-green-500 rounded-lg text-center">
                   ✅ Paid
                 </p>
