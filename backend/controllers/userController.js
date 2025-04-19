@@ -337,11 +337,10 @@ const callback = async (req, res) => {
             mac:reqMac
         })
 
-        if (billStatus && billStatus.return_code===1 )await cartModel.findByIdAndUpdate(x[0].itemid,{paymentStatus:true},{new:true});
+        if (billStatus && billStatus.return_code===1) await cartModel.findByIdAndUpdate(x[0].itemid,{paymentStatus:true},{new:true});
       }
     } catch (ex) {
-        console.log(ex);
-        
+        console.log(ex); 
       result.returncode = 0; 
       result.returnmessage = ex.message;
     }
