@@ -6,7 +6,7 @@ import { cancelOrder, detailProduct } from '../controllers/productController.js'
 import { createComment, getCommentsByProduct, getCommentsByUser, updateComment } from '../controllers/commentController.js';
 import { getAllReplies, getReplyByUser } from '../controllers/replyController.js';
 import { getNotificationsByUser, markAllAsRead, markOneAsRead } from '../controllers/notificationController.js';
-import { askGroq, handleChat } from '../controllers/chatbotController.js';
+import { askGroq, handleChat, handleDeleteChatHistory } from '../controllers/chatbotController.js';
 
 const userRouter = express.Router();
 
@@ -31,5 +31,6 @@ userRouter.get('/bank',getMerchantBanks);
 userRouter.post('/pay-cart',authUser,payCart)
 userRouter.post('/callback',callback)
 userRouter.post('/ask-groq',askGroq)
-userRouter.post('/ask-and-save-groq',authUser,handleChat)
+userRouter.post('/ask-and-save-groq',handleChat)
+userRouter.post('/delete-conversation',handleDeleteChatHistory)
 export default userRouter;
