@@ -14,6 +14,37 @@ const AppContextProvider=(props)=>{
     const [myReplies,setMyReplies]=useState([])
     const [comments,setComments]=useState([])
     const [notifications,setNotifications]=useState(null)
+    const [messages, setMessages] = useState([]);
+    const addMessages = async(newMsgs) => {
+        try {
+            const a = await axios.post(backendurl+'/api/user/ask-and-save-groq',{message: newMsgs},{headers:{token}});
+            if (!a) toast.error("Can't send message");
+            setMessages(a.data.data);
+        } catch (error) {
+            console.log(error);
+            toast.error(error.message)
+        }
+      };
+    const getMessages = async()=>{
+        try {
+            const x= await axios.get(backendurl+'/api/user/get-conversation',{headers:{token}});
+            if (!x) toast.error("AI chat is now not available !")
+            setMessages(x.data.data)
+            
+        } catch (error) {
+            console.log(error);
+            toast.error(error.message)
+        }
+    }
+    const clearMessages= async()=>{
+        try {
+            await axios.post(backendurl+'/api/user/delete-conversation',{},{headers:{token}})
+            toast.success("Delete messages successfully")
+        } catch (error) {
+            console.log(error);
+            toast.error("Can't delete message");
+        }
+    }
     const getComments = async ()=>{
         try {
             const {data}=await axios.get(backendurl+'/api/user/get-comments',{headers:{token}});
@@ -80,7 +111,6 @@ const AppContextProvider=(props)=>{
             const {data} = await axios.get(backendurl+'/api/user/get-notifications',{headers:{token}});
             if (!data) toast.error("Data not found")
             setNotifications(data.data)
-            console.log(data.data);
             
         } catch (error) {
             console.log(error);
@@ -126,7 +156,8 @@ const AppContextProvider=(props)=>{
         getRepliesByUser, replies,setReplies,
         comments, getComments, setComments,
         getNotifications, notifications,
-        markAllAsRead,markOneAsRead
+        markAllAsRead,markOneAsRead,
+        clearMessages,addMessages,setMessages,messages,getMessages
     }
     
     useEffect(() => {

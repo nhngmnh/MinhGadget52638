@@ -6,7 +6,7 @@ import { cancelOrder, detailProduct } from '../controllers/productController.js'
 import { createComment, getCommentsByProduct, getCommentsByUser, updateComment } from '../controllers/commentController.js';
 import { getAllReplies, getReplyByUser } from '../controllers/replyController.js';
 import { getNotificationsByUser, markAllAsRead, markOneAsRead } from '../controllers/notificationController.js';
-import { askGroq, handleChat, handleDeleteChatHistory } from '../controllers/chatbotController.js';
+import { askGroq, getConversation, handleChat, handleDeleteChatHistory } from '../controllers/chatbotController.js';
 
 const userRouter = express.Router();
 
@@ -27,10 +27,11 @@ userRouter.get('/get-all-replies',authUser,getAllReplies)
 userRouter.get('/get-notifications',authUser,getNotificationsByUser)
 userRouter.post('/mark-one-as-read',authUser,markOneAsRead)
 userRouter.post('/mark-all-as-read',authUser,markAllAsRead)
-userRouter.get('/bank',getMerchantBanks);
+userRouter.get('/bank',authUser,getMerchantBanks);
 userRouter.post('/pay-cart',authUser,payCart)
-userRouter.post('/callback',callback)
+userRouter.post('/callback',authUser,callback)
 userRouter.post('/ask-groq',askGroq)
-userRouter.post('/ask-and-save-groq',handleChat)
-userRouter.post('/delete-conversation',handleDeleteChatHistory)
+userRouter.post('/ask-and-save-groq',authUser,handleChat)
+userRouter.post('/delete-conversation',authUser,handleDeleteChatHistory)
+userRouter.get('/get-conversation',authUser,getConversation)
 export default userRouter;

@@ -17,6 +17,7 @@ import DetailProduct from './pages/DetailProduct'
 import CheckoutAddToCart from './pages/CheckoutAddToCart'
 import { ToastContainer,toast } from 'react-toastify'
 import MyComments from './pages/MyComments'
+import ChatbotPopup from './components/ChatbotPopup'
 const App = () => {
   return (
     
@@ -43,6 +44,7 @@ const App = () => {
         <Route path="/comments" element={<MyComments/>} />
       </Routes>
       </div>
+      <ChatbotPopup/>
       <Footer/>
     </div>
   )
