@@ -28,9 +28,8 @@ const AppContextProvider=(props)=>{
     const getMessages = async()=>{
         try {
             const x= await axios.get(backendurl+'/api/user/get-conversation',{headers:{token}});
-            if (!x) toast.error("AI chat is now not available !")
-            setMessages(x.data.data)
-            
+            if (!x || !x.data) toast.error("AI chat is now not available !")
+            setMessages(x.data.data)  
         } catch (error) {
             console.log(error);
             toast.error(error.message)
@@ -114,7 +113,7 @@ const AppContextProvider=(props)=>{
             
         } catch (error) {
             console.log(error);
-            toast.error("Server error")
+            toast.error(error.message)
         }
     } 
     const markOneAsRead= async(notificationId)=>{

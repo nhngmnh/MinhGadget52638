@@ -9,7 +9,6 @@ import { getNotificationsByUser, markAllAsRead, markOneAsRead } from '../control
 import { askGroq, getConversation, handleChat, handleDeleteChatHistory } from '../controllers/chatbotController.js';
 
 const userRouter = express.Router();
-
 userRouter.post('/register', registerUser)
 userRouter.post('/login',loginUser)
 userRouter.get('/get-profile',authUser,getProfile)
@@ -29,7 +28,7 @@ userRouter.post('/mark-one-as-read',authUser,markOneAsRead)
 userRouter.post('/mark-all-as-read',authUser,markAllAsRead)
 userRouter.get('/bank',authUser,getMerchantBanks);
 userRouter.post('/pay-cart',authUser,payCart)
-userRouter.post('/callback',authUser,callback)
+userRouter.post('/callback',callback)
 userRouter.post('/ask-groq',askGroq)
 userRouter.post('/ask-and-save-groq',authUser,handleChat)
 userRouter.post('/delete-conversation',authUser,handleDeleteChatHistory)

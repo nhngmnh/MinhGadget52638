@@ -90,7 +90,7 @@ const Cart = () => {
                 {item.itemData.name}&nbsp;&nbsp;&nbsp;
                 {(item.status === 'processing')? (
                   <span className="text-gray-500 text-xs">&#128666; Delivering </span>
-                ) : (item.status === 'shipped') ? (
+                ) : (item.status === 'shipped' || item.paymentStatus==true) ? (
                   <span className="text-green-600 flex items-center gap-1 text-sm">
                     <FaCheckCircle className="text-green-600 text-xs" /> Completed
                   </span>

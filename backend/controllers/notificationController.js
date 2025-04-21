@@ -119,11 +119,11 @@ const getNewNotification = async (req, res) => {
     }
   }
   const getNotificationsByUser = async (req, res) => {
-    const  userId  = req.body.userId;  // userId từ body (sẽ được set trong authUser)
-  
     try {
+        const  userId  = req.body.userId; 
+        if (!userId) return res.status(400).json({success:false,message:"userId undefined"})
         const notifications = await notificationModel.find({ userId }).sort({ createdAt: -1 }).limit(15);
-        if (notifications.length === 0) return res.status(400).json({ success: true, message: "No data" });
+        if (!notifications || notifications.length === 0) return res.status(200).json({ success: true, data: [] });
         return res.status(200).json({ success: true, data: notifications });
     } catch (error) {
         console.error('Error getting notifications:', error);

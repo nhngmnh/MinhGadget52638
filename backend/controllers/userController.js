@@ -306,7 +306,8 @@ const getMerchantBanks= async (req,res) => {
 };
 const callback = async (req, res) => {
     let result = {};
-  
+    console.log("dfdfdfdfdf");
+    
     try {
       let dataStr = req.body.data;
       let reqMac = req.body.mac;
@@ -337,12 +338,20 @@ const callback = async (req, res) => {
             mac:reqMac
         })
 
-        if (billStatus && billStatus.return_code===1) await cartModel.findByIdAndUpdate(x[0].itemid,{paymentStatus:true},{new:true});
+        if (billStatus.return_code===1) {
+            try {
+                await cartModel.findByIdAndUpdate(x[0].itemid,{paymentStatus:true},{new:true});
+            } catch (error) {
+               console.log(error);
+            }
+            
+        } 
       }
     } catch (ex) {
         console.log(ex); 
-      result.returncode = 0; 
-      result.returnmessage = ex.message;
+        result.returncode = 0; 
+        result.returnmessage = ex.message;
+        
     }
   
     // thông báo kết quả cho ZaloPay server

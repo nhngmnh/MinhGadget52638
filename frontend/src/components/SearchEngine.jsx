@@ -1,7 +1,5 @@
-import axios from 'axios';
 import React, { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../context/AppContext';
-import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
 const SearchEngine = ({ search, setSearch }) => {
@@ -9,11 +7,11 @@ const SearchEngine = ({ search, setSearch }) => {
   const { backendurl, token } = useContext(AppContext);
   const navigate = useNavigate();
 
-  // Cập nhật search mỗi khi searchTerm thay đổi
+  // Cập nhật localStorage khi searchTerm thay đổi
   useEffect(() => {
     const trimmed = searchTerm.trim();
     setSearch(trimmed);
-    navigate('/products', { state: { search: trimmed } });
+    navigate('/products');
   }, [searchTerm]);
 
   return (

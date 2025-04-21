@@ -84,8 +84,8 @@ Important:
 - If the question is not related to a query, answer naturally like a regular assistant.
 - When they want to know the details about a product, include the description and specifications fields.
 - If they ask about the shop or owner, tell them to check the 'contact', 'privacy', or 'about us' pages.
-
-No need to explain how you query. Just respond naturally with the MongoDB query included.`;
+- Don't explain about the query
+Just respond naturally with the MongoDB query included.`;
 
     let history = await conversationModel.findOne({ userId });
     if (!history) {
@@ -106,27 +106,23 @@ No need to explain how you query. Just respond naturally with the MongoDB query 
 
     let assistantReply = completion.choices[0].message.content;
 
-    // Tìm truy vấn MongoDB từ câu trả lời
-    const match = assistantReply.match(/productModel\.find\(([\s\S]*?)\)(?:\.sort\(([\s\S]*?)\))?(?:\.limit\(([\s\S]*?)\))?/);
+    // Tìm truy vấn MongoDB trong phản hồi
+    const match = assistantReply.match(/productModel\.find\(([\s\S]*?)\)(?:\.sort\(([\s\S]*?)\))?(?:\.limit\((\d+)\))?/);
     let products = [];
 
     if (match) {
       try {
-        const query = eval(`(${match[1]})`);  // Query conditions
-        const sort = match[2] ? eval(`(${match[2]})`) : null; // Sort conditions
-        const limit = match[3] ? parseInt(match[3]) : null; // Limit
+        const [_, findStr, sortStr, limitStr] = match;
 
-        // Chuyển xử lý riêng cho query, sort, limit
+        // Parse chuỗi an toàn
+        const query = findStr ? Function('"use strict";return (' + findStr + ')')() : {};
+        const sort = sortStr ? Function('"use strict";return (' + sortStr + ')')() : null;
+        const limit = limitStr ? parseInt(limitStr) : null;
+
         let queryBuilder = productModel.find(query);
+        if (sort) queryBuilder = queryBuilder.sort(sort);
+        if (limit) queryBuilder = queryBuilder.limit(limit);
 
-        if (sort) {
-          queryBuilder = queryBuilder.sort(sort);  // Xử lý sort
-        }
-        if (limit) {
-          queryBuilder = queryBuilder.limit(limit);  // Xử lý limit
-        }
-
-        // Thực hiện truy vấn
         products = await queryBuilder.lean();
 
         const productList = products.length > 0
@@ -135,7 +131,7 @@ No need to explain how you query. Just respond naturally with the MongoDB query 
             ).join('\n')
           : 'Hiện tại không có sản phẩm nào phù hợp.';
 
-        // Thay thế code block với danh sách sản phẩm
+        // Thay thế đoạn code trong ```...``` bằng danh sách sản phẩm
         assistantReply = assistantReply.replace(/```(?:\s*javascript)?\s*\n([\s\S]*?)```/, productList);
 
       } catch (err) {
@@ -149,13 +145,8 @@ No need to explain how you query. Just respond naturally with the MongoDB query 
     history.conversation.push({ role: 'assistant', text: assistantReply });
     history.updatedAt = new Date();
     await history.save();
-    const newMsg = [{
-      role:'user',text:message
-    },
-  {
-    role:'assistant', text:assistantReply
-  }]
-    return res.status(200).json({ success:true, data: history.conversation });
+
+    return res.status(200).json({ success: true, data: history.conversation });
 
   } catch (error) {
     console.error('Chat error:', error);
