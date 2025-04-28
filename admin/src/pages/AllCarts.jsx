@@ -29,7 +29,7 @@ const AllCarts = () => {
         await removeCart(selectedCart._id);
         await notifyChangeStatusCart({
           userId: selectedCart.userId,
-          text: `The cart #${selectedCart._id} that has ${selectedCart.totalItems} item(s) of ${selectedCart.itemData.name} you ordered has been deleted by admin.`
+          text: `The cart (id: #${selectedCart._id}) that has ${selectedCart.totalItems} item(s) of ${selectedCart.itemData.name} you ordered has been deleted by admin.`
         });
         setChangeCart(prev => !prev);
         setSelectedCart(null);
@@ -46,7 +46,7 @@ const AllCarts = () => {
       // Sau khi cập nhật thành công thì tạo thông báo
       await notifyChangeStatusCart({
         userId: cart.userId,
-        text: `The cart #${cart._id} that has ${cart.totalItems} item(s) of ${cart.itemData.name} was updated to ${newStatus} by admin.`
+        text: `The cart (id: #${cart._id}) that has ${cart.totalItems} item(s) of ${cart.itemData.name} was updated to ${newStatus} by admin.`
       });
   
       setChangeCart(prev => !prev);

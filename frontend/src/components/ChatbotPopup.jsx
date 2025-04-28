@@ -26,6 +26,9 @@ export default function ChatbotPopup() {
 
   useEffect(() => {
     getMessages();
+  }, []);
+
+  useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
@@ -50,12 +53,20 @@ export default function ChatbotPopup() {
                 >
                   🗑 Clear
                 </button>
-                <button onClick={() => setOpen(false)} className="hover:text-red-200">✖</button>
+                <button onClick={() => setOpen(false)} className="hover:text-red-200">
+                  ✖
+                </button>
               </div>
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-3 bg-gray-50 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+            <div
+              className="flex-1 overflow-y-auto p-3 bg-gray-50"
+              style={{
+                scrollbarWidth: 'thin',
+                scrollbarColor: '#cbd5e0 #edf2f7', // thumb #cbd5e0 (gray-300), track #edf2f7 (gray-100)
+              }}
+            >
               <div className="flex flex-col space-y-2">
                 {messages.map((msg, idx) => (
                   <div

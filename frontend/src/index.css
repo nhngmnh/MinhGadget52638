@@ -2,12 +2,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-*{
-    font-family: Outfit;
+
+/* Áp dụng font Outfit cho body */
+body {
+  font-family: 'Outfit', sans-serif;
+  @apply font-sans; /* Sử dụng font-sans từ Tailwind */
 }
-.active hr{
-    @apply block
+
+* {
+  font-family: inherit; /* Đảm bảo các phần tử thừa hưởng font của body */
 }
-::-webkit-scrollbar{
-    @apply hidden
+
+.active hr {
+  @apply block;
+}
+
+::-webkit-scrollbar {
+  @apply hidden;
 }

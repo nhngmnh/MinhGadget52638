@@ -11,6 +11,8 @@ const AdminContextProvider=(props)=>{
     const [carts, setCarts]=useState([])
     const [comments, setComments]=useState([])
     const [replies,setReplies]=useState([])
+    const [search,setSearch]=useState('')
+    const [filterProducts,setFilterProducts]=useState([])
     const backendurl=import.meta.env.VITE_BACKEND_URL
     const getProducts=async()=>{
         try {
@@ -203,9 +205,6 @@ const AdminContextProvider=(props)=>{
             { userId, text:`The admin replied your comment in ${productName} page: ${replyText}.`},  // Truyền các tham số vào
             { headers: { aToken } }
           );
-          toast.success("Notification sent successfully.");
-          console.log(x);
-          
         } catch (error) {
           console.error('Failed to create notification', error);
           toast.error('Error sending notification');
@@ -216,7 +215,7 @@ const AdminContextProvider=(props)=>{
         backendurl,products,setProducts,
         getProducts,changeAvailability,
         dashData,getDashData,setDashData,
-        carts, setCarts,
+        carts, setCarts,search,setSearch,filterProducts,setFilterProducts,
         comments, setComments,
         getCarts, getComments, removeCart,
         changeBestsellerStatus,
