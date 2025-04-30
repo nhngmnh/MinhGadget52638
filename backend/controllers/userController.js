@@ -3,15 +3,12 @@ import validator from 'validator'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import {v2 as cloudinary} from 'cloudinary'
-import {toast} from 'react-toastify'
 import productModel from '../models/productModel.js';
 import cartModel from '../models/cartModel.js';
 import CryptoJS from 'crypto-js';
 import config from '../config/zalopay.js'
 import axios from 'axios'
-import { v1 as uuidv1 } from 'uuid';
 import moment from 'moment';
-import { redirect } from 'react-router-dom'
 const registerUser = async (req,res) =>{
 try {
    
@@ -37,10 +34,10 @@ try {
     const newUser= new userModel(userData)
     const user= await newUser.save()
     const token=jwt.sign({id:user._id},process.env.JWT_SECRET)
-    res.json({success:true,token})
+    return res.json({success:true,token})
 } catch (error) {
     console.log(error)
-    res.json({success:false,message:error.message})
+    return res.json({success:false,message:error.message})
 }}
 //API for user login
 const loginUser=async(req,res)=>{
@@ -255,7 +252,7 @@ const getMerchantBanks= async (req,res) => {
         const { cart } = req.body;
         if (!cart) return res.status(400).json({success:false,message:"No cart choosen!"})
         const embed_data = {
-            redirecturl: `http://localhost:3001/my-cart`
+            redirecturl: `${process.env.FE_URL}/mycart`
         };
 
         const items = [
@@ -278,7 +275,7 @@ const getMerchantBanks= async (req,res) => {
             amount: cart.totalPrice,
             description: `MinhGadget52638 - Payment for the order #${transID} - ${cart.totalItems} of ${cart.itemData.name}`,
             bank_code: "",
-            callback_url: `${process.env.BACKEND_NGROK}/api/user/callback`
+            callback_url: `${process.env.BE_URL}/api/user/callback`
         };
        
         console.log(order.callback_url);
@@ -305,58 +302,82 @@ const getMerchantBanks= async (req,res) => {
     }
 };
 const callback = async (req, res) => {
-    let result = {};
-    console.log("dfdfdfdfdf");
-    
-    try {
-      let dataStr = req.body.data;
-      let reqMac = req.body.mac;
-  
-      let mac = CryptoJS.HmacSHA256(dataStr, config.key2).toString();
-      console.log("mac =", mac);
-        console.log("reqmac=",reqMac);
-        
-      // kiểm tra callback hợp lệ (đến từ ZaloPay server)
-      if (reqMac !== mac) {
-        // callback không hợp lệ
-        result.returncode = -1;
-        result.returnmessage = "mac not equal";
-      }
-      else {
-        // thanh toán thành công
-        // merchant cập nhật trạng thái cho đơn hàng
-        let dataJson = JSON.parse(dataStr,config.key2);
-        console.log("update order's status = success where apptransid =", dataJson["app_trans_id"]);
-        const x= JSON.parse(dataJson.item);
-        console.log(x);
-        
-        result.returncode = 1;
-        result.returnmessage = "success";
-        const billStatus= await axios.post('https://sb-openapi.zalopay.vn/v2/query',{
-            app_trans_id: dataJson.app_trans_id,
-            app_id:dataJson.app_id,
-            mac:reqMac
-        })
+    let result = {
+        return_code: 1,  // Mặc định là thành công
+        return_message: "success"
+    };
 
-        if (billStatus.return_code===1) {
-            try {
-                await cartModel.findByIdAndUpdate(x[0].itemid,{paymentStatus:true},{new:true});
-            } catch (error) {
-               console.log(error);
-            }
-            
-        } 
-      }
-    } catch (ex) {
-        console.log(ex); 
-        result.returncode = 0; 
-        result.returnmessage = ex.message;
+    try {
+        const dataStr = req.body.data;
+        const reqMac = req.body.mac;
         
+        // Tính toán HMAC từ dữ liệu và key
+        const mac = CryptoJS.HmacSHA256(dataStr, config.key2).toString();
+        
+        // Kiểm tra MAC
+        if (reqMac !== mac) {
+            result = {
+                return_code: -1,  // Lỗi: MAC không khớp
+                return_message: "mac not equal",
+               
+                
+            };
+            console.log("mac not equal")
+            return res.json(result); // Trả về kết quả lỗi ngay lập tức
+        }
+        
+        // Trả về kết quả cho ZaloPay ngay lập tức
+        res.json(result);
+        
+        // Xử lý phía sau (non-blocking)
+        const dataJson = JSON.parse(dataStr);
+        const items = JSON.parse(dataJson.item);
+        const itemId = items[0]?.itemid;
+        const macQuery = CryptoJS.HmacSHA256(
+            `${dataJson.app_id}|${dataJson.app_trans_id}|${config.key1}`,
+            config.key1
+        ).toString();
+        // Truy vấn trạng thái thanh toán từ ZaloPay
+        const billStatus = await axios.post('https://sb-openapi.zalopay.vn/v2/query', {
+            app_trans_id: dataJson.app_trans_id,
+            app_id: dataJson.app_id,
+            mac: macQuery
+        });
+        console.log({
+            app_trans_id: dataJson.app_trans_id,
+            app_id: dataJson.app_id,
+            mac: macQuery
+        });
+        
+        console.log("Bill status:", billStatus.data);
+
+        if (billStatus.data.return_code === 1) {
+            // Thành công
+            try {
+                // Cập nhật trạng thái thanh toán trong giỏ hàng
+                await cartModel.findByIdAndUpdate(itemId, { paymentStatus: true });
+                console.log("Cart updated successfully.");
+            } catch (err) {
+                console.error("Update cart failed:", err);
+            }
+        } else if (billStatus.data.return_code === 2) {
+            // Trùng mã giao dịch
+            console.log("Transaction ID duplicated.");
+        } else {
+            // Không phải callback nữa
+            console.log("No callback or invalid state.");
+        }
+
+    } catch (err) {
+        console.error("Callback error:", err);
+        result = {
+            return_code: 0,  // Lỗi: Ngoại lệ hệ thống
+            return_message: "Internal server error"
+        };
+        return res.json(result); // Trả về lỗi nếu xảy ra ngoại lệ trong quá trình xử lý
     }
-  
-    // thông báo kết quả cho ZaloPay server
-    return res.json(result);
-  };
+};
+
 export {
     registerUser,loginUser,getProfile,updateProfile,listCart,cancelOrder,createCart,getProducts,getMerchantBanks,payCart,callback
 }

@@ -79,7 +79,7 @@ const Product = () => {
 
   return (
     <div className='flex flex-col'>
-      <div className='flex flex-row gap-5'>
+      <div className='flex flex-col sm:flex-row gap-5'>
         {/* Category filter */}
         <div>
           <button className={`py-1 w-36 px-3 border rounded text-sm ${showFilterCategory ? 'bg-primary text-white' : ''}`}
@@ -88,7 +88,7 @@ const Product = () => {
           </button>
           {showFilterCategory && (
             <div className='flex flex-col gap-2 text-sm mt-1'>
-              {['Laptop', 'Smartphone', 'Tablet', 'PcPrinter', 'Smartwatch', 'Accessory'].map(cat => (
+              {['Laptop', 'Smartphone', 'Tablet', 'Pc, Printer', 'Smartwatch', 'Accessory'].map(cat => (
                 <p key={cat} onClick={() => handleCategoryChange(cat)}
                    className={`w-36 pl-3 py-1.5 border rounded cursor-pointer hover:bg-primary hover:text-white ${category === cat ? "bg-indigo-200 text-black" : ""}`}>
                   {cat}
@@ -136,7 +136,7 @@ const Product = () => {
 
         {/* Price filter */}
         <div>
-          <button className={`py-1 w-72 px-3 border rounded text-sm ${showFilterPrice ? 'bg-primary text-white' : ''}`}
+          <button className={`py-1 w-36 px-3 border rounded text-sm ${showFilterPrice ? 'bg-primary text-white' : ''}`}
                   onClick={() => setShowFilterPrice(prev => !prev)}>
             {minPrice || maxPrice ? `Price: [${minPrice || 0} - ${maxPrice || '∞'}]` : 'Filter price'}
           </button>

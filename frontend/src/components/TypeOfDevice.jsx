@@ -7,7 +7,8 @@ const TypeOfDevice = () => {
 
   // Hàm để điều hướng với state
   const handleNavigate = (category) => {
-    navigate('/products', { state: { category } }); // Truyền type vào state
+    localStorage.setItem('category',category)
+    navigate('/products'); // Truyền type vào state
   }
 
   return (

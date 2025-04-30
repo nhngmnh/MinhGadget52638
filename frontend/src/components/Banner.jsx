@@ -20,9 +20,8 @@ const Banner = () => {
   return (
     <div className="relative h-screen bg-cover bg-center bg-no-repeat transition-all duration-700 ease-in-out"
     style={{ backgroundImage: `url(${images[currentIndex]})` }}>
-      
         <div
-          className="absolute inset-0 bg-white/10 sm:bg-white/25 sm:from-white/80 sm:to-white/20 bg-gradient-to-r ltr:sm:bg-gradient-to-r rtl:sm:bg-gradient-to-l"
+          className="absolute inset-0 bg-white/25 from-white/80 to-white/20 bg-gradient-to-r ltr:bg-gradient-to-r rtl:bg-gradient-to-l"
         ></div>
       
         <div

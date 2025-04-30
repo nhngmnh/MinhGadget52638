@@ -37,8 +37,8 @@ const getAllComments = async (req, res) => {
       const { userId } = req.body; // Lấy userId từ URL
       const comments = await commentModel.find({ userId });
   
-      if (!comments.length) {
-        return res.status(404).json({ message: "No comments found for this user." });
+      if (!comments || comments.length===0) {
+        return res.status(200).json({success:true, comments:[] });
       }
   
       res.status(200).json({sucess:true,comments});

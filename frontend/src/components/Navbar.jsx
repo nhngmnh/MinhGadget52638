@@ -4,8 +4,6 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import SearchEngine from './SearchEngine'
 import { AppContext } from '../context/AppContext'
 import { FaBell, FaShoppingCart } from 'react-icons/fa'
-import axios from 'axios'
-import { toast } from 'react-toastify'
 
 const Navbar = () => {
     const navigate = useNavigate();
@@ -14,19 +12,31 @@ const Navbar = () => {
         search, setSearch,
         getNotifications, notifications, markOneAsRead, markAllAsRead
     } = useContext(AppContext);
-
     const [showNotification, setShowNotification] = useState(false);
     const [showDetailModal, setShowDetailModal] = useState(false);
     const [selectedNotification, setSelectedNotification] = useState(null);
-
+    const [showMenu,setShowMenu]=useState(false) 
     const deleteToken = () => {
         setToken(null);
         localStorage.removeItem('token');
     }
-
+    const countNewNotifications = () => {
+        console.log(notifications);
+        
+        const count = notifications.filter((item) => !item.isRead).length;
+        setCountNewNoti(count);
+      };
+      
+    const [countNewNoti,setCountNewNoti]=useState(0);
     useEffect(() => {
-        if (token) getNotifications();
-    }, [token, markAllAsRead, markOneAsRead]);
+        const fetchData = async () => {
+          if (token) {
+            await getNotifications(); // đợi dữ liệu cập nhật
+            countNewNotifications();  // sau đó mới đếm
+          }
+        };
+        fetchData();
+      }, [token, markAllAsRead, markOneAsRead]);
 
     return (
         <div className='flex items-center justify-between text-sm py-4 mb-5 border-b border-b-gray-400 relative z-50'>
@@ -38,8 +48,23 @@ const Navbar = () => {
                 <NavLink className='p-2 hover:bg-gray-100' to='/about'><li className='py-1'>About</li></NavLink>
                 <NavLink className='p-2 hover:bg-gray-100' to='/contact'><li className='py-1'>Contact</li></NavLink>
             </ul>
-
-            <SearchEngine search={search} setSearch={setSearch} />
+            <div className='md:block hidden'><SearchEngine className='md:block hidden' search={search} setSearch={setSearch} /></div>
+            
+            <img onClick={()=>setShowMenu(true)} className='md:hidden w-6' src={assets.menu_icon} alt=""/>
+         {/* menu in mobile */}
+         <div className={`${showMenu? 'fixed w-full':'h-0 w-0'} md:hidden right-0 bottom-0 z-20 overflow-hidden bg-white transition-all`}>
+         <div className='flex items-center justify-between px-5 py-6'>
+            <img className='w-36'src={assets.logo} alt=""/>
+            <img className='w-7' onClick={()=>setShowMenu(false)} src={assets.cross_icon} alt=''/>
+         </div>
+            <ul className='flex flex-col items-center gap-2 mt-5 px-5 font-medium text-lg hover:bg-primary'>
+                <SearchEngine className='md:block hidden' search={search} setSearch={setSearch} />
+                <NavLink  onClick={()=>setShowMenu(false)}to='/'><p className='px-4 py-2 rounded inline-block'>Home</p></NavLink>
+                <NavLink  onClick={()=>setShowMenu(false)}to='/products'><p className='px-4 py-2 rounded inline-block '>All products</p></NavLink>
+                <NavLink  onClick={()=>setShowMenu(false)}to='/about'><p className='px-4 py-2 rounded inline-block'>About</p></NavLink>
+                <NavLink  onClick={()=>setShowMenu(false)}to='/contact'><p className='px-4 py-2 rounded inline-block'>Contact us</p></NavLink>
+            </ul>
+         </div>
 
             <div className='flex items-center gap-4'>
                 {/* My Cart icon */}
@@ -65,9 +90,9 @@ const Navbar = () => {
                             className="w-6 h-6 cursor-pointer text-gray-700 hover:text-primary transition duration-200"
                             onClick={() => setShowNotification(prev => !prev)}
                         />
-                        {notifications && (
+                        {notifications && ( 
                             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-                                {notifications.length > 9 ? '9+' : notifications.length}
+                                {countNewNoti> 9 ? '9+' : countNewNoti}
                             </span>
                         )}
                         {showNotification && (
@@ -118,7 +143,7 @@ const Navbar = () => {
                         </div>
                     </div>
                 ) : (
-                    <button onClick={() => navigate('/login')} className='bg-primary text-white px-8 py-3 rounded-full font-bold hidden md:block'>
+                    <button onClick={() => navigate('/login')} className='bg-primary text-white px-4 py-2 md:px-8 md:py-3 rounded-full font-bold md:block sm:block text-xs md:text-md'>
                         Login
                     </button>
                 )}
@@ -143,6 +168,7 @@ const Navbar = () => {
                     </div>
                 </div>
             )}
+        
         </div>
     )
 }

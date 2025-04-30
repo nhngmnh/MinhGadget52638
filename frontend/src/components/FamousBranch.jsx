@@ -7,8 +7,9 @@ const FamousBranch = () => {
 
   // Hàm điều hướng với state là brand
   const handleNavigate = (brand) => {
-    navigate('/products', { state: { brand } });
-  }
+    localStorage.setItem('brand', brand);  
+    navigate('/products');
+  };
 
   return (
     <div className='flex flex-col items-center gap-4 py-16 text-black' id='type'>

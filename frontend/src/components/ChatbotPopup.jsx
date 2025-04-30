@@ -1,14 +1,20 @@
 import { useState, useRef, useEffect, useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppContext } from '../context/AppContext';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function ChatbotPopup() {
-  const { messages, addMessages, getMessages, clearMessages } = useContext(AppContext);
+  const { messages, addMessages, getMessages, clearMessages,token } = useContext(AppContext);
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
   const [showConfirm, setShowConfirm] = useState(false);
   const chatEndRef = useRef(null);
-
+  const navigate=useNavigate();
+  const handlelogintochat = ()=>{
+    toast.warn("Log in or sign up to chat with our AI assistant !");
+    navigate('/login');
+  }
   const handleSend = async () => {
     if (!input.trim()) return;
     await addMessages(input.trim());
@@ -32,7 +38,7 @@ export default function ChatbotPopup() {
     scrollToBottom();
   }, [messages]);
 
-  return (
+  return token ? (
     <div className="fixed bottom-4 right-4 z-50">
       <AnimatePresence>
         {open && (
@@ -134,9 +140,16 @@ export default function ChatbotPopup() {
           onClick={() => setOpen(true)}
           className="bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700"
         >
-          Chat với bot 🤖
+          Chat with bot 🤖
         </button>
       )}
     </div>
-  );
+  ) : (
+    <div
+    className="fixed bottom-4 right-4 z-50 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 cursor-pointer"
+    onClick={handlelogintochat}
+  >
+    Chat with bot 🤖
+  </div>
+  )
 }

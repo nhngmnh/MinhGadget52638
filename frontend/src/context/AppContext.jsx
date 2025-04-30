@@ -38,6 +38,7 @@ const AppContextProvider=(props)=>{
     const clearMessages= async()=>{
         try {
             await axios.post(backendurl+'/api/user/delete-conversation',{},{headers:{token}})
+            await getMessages();
             toast.success("Delete messages successfully")
         } catch (error) {
             console.log(error);

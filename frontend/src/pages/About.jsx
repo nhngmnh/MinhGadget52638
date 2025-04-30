@@ -20,7 +20,7 @@ const About = () => {
     <div className='text-xl my-4 mt-12 mb-8 justify-center relative flex'>
       <p>WHY <span className='text-black font-semibold'>CHOOSE US</span></p>
     </div>
-    <div className='flex justify-center items-center p-10 border rounded shadow gap-4 bg-primary text-white'>
+    <div className='flex flex-col md:flex-row justify-center items-center p-10 border rounded shadow gap-4 bg-primary text-white'>
       <div>
         <b>
         Efficiency:

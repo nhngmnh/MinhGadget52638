@@ -7,6 +7,7 @@
     "start": "node server.js",
     "server": "nodemon server"
   },
+  "type":"module",
   "author": "minh",
   "license": "ISC",
   "description": "",

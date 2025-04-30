@@ -67,14 +67,14 @@ const Cart = () => {
   }, [token]);
 
   return token && (
-    <div className="mx-auto p-6">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2">
+    <div className="mx-auto p-1">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-6 border-b pb-1">
         🛒 My Cart
       </h2>
       <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6">
         {cart.map((item, index) => (
           <div
-            className="flex items-center gap-6 p-4 border rounded-lg shadow-md bg-white hover:bg-indigo-100"
+            className="flex sm:w-96 md:w-auto items-center gap-6 p-1 border rounded-lg shadow-md bg-white hover:bg-indigo-100"
             key={index}
           >
             {/* Product Image */}
@@ -86,10 +86,10 @@ const Cart = () => {
 
             {/* Product Details */}
             <div className="flex-1">
-              <p className="text-2xl mb-2">
+              <p className="text-xl mb-1 sm:text-2xl">
                 {item.itemData.name}&nbsp;&nbsp;&nbsp;
                 {(item.status === 'processing')? (
-                  <span className="text-gray-500 text-xs">&#128666; Delivering </span>
+                  <div className="text-gray-500 text-xs">Delivering </div>
                 ) : (item.status === 'shipped' || item.paymentStatus==true) ? (
                   <span className="text-green-600 flex items-center gap-1 text-sm">
                     <FaCheckCircle className="text-green-600 text-xs" /> Completed
@@ -102,7 +102,7 @@ const Cart = () => {
               </p>
               <p className="text-lg font-semibold text-gray-800">{item.name}</p>
               <p className="text-gray-600 text-sm">Quantity: {item.totalItems}</p>
-              <p className="text-gray-700 font-medium mt-2">
+              <p className="text-gray-700 font-medium mt-2 text-sm">
                 💰 Price: <span className="text-primary">${item.totalPrice}</span>
               </p>
               <p className="text-xs text-gray-500 mt-1">

@@ -17,20 +17,22 @@ const Login = () => {
     event.preventDefault()
     try {
       if(state==='Sign Up'){
-        const {data}=await axios.post(backendurl+'/api/user/register',{username,password,email})
+        try {
+          const {data} =await axios.post(backendurl+'/api/user/register',{username,password,email})
         if (data && data.success){
           localStorage.setItem('token',data.token)
           setToken(data.token)
           toast.success("Register successfully")
-        } else {
-          toast.error("không thành công")
-        }
-      } else {
+        } else toast.error(data.message)
+      } catch (error) {
+          toast.error(error.message);
+        } 
+       }else {
         const {data}=await axios.post(backendurl+'/api/user/login',{password,email})
         if (data.success){
           localStorage.setItem('token',data.token)
           setToken(data.token)
-          console.log(data);
+          toast.success("Login successfully !")
           
         } else {
           toast.error(data.message)
