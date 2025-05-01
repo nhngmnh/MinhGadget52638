@@ -47,10 +47,10 @@ const Dashboard = () => {
   {
     dashData.users.map((user, index) => (
       <div className='flex items-center px-6 py-3 gap-3 hover:bg-gray-200' key={index}>
-        <img className='rounded-full w-10' src={user.image} alt='' />
+        <img className='rounded-full w-10 h-10' src={user.image} alt='' />
         <div className='flex-1 text-sm'>
           <p className='text-gray-800 font-medium'>{user.name}</p>
-          <p className='text-gray-700'>{user.email}</p> {/* nếu có email */}
+          <p className='text-gray-700 text-xs md:text-md'>{user.email}</p> {/* nếu có email */}
         </div>
        
       </div>

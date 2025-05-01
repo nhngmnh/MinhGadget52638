@@ -27,7 +27,7 @@ const Comments = () => {
       }
     };
     fetchData();
-  }, [aToken,replies]);
+  }, [aToken]);
 
   const handleReplyClick = (comment) => {
     setCommentBeingReplied(comment);
@@ -37,13 +37,12 @@ const Comments = () => {
   const submitReply = async () => {
     if (commentBeingReplied && replyText.trim()) {
       const result = await replyComment(commentBeingReplied._id, replyText);
-      await createReplyNotification(commentBeingReplied.userId,replyText,commentBeingReplied.productData.name)
+      await createReplyNotification(commentBeingReplied.userId, replyText, commentBeingReplied.productData.name);
       if (result) {
         await getAllReplies();
         setReplyText('');
         setCommentBeingReplied(null);
       }
-      
     }
   };
 
@@ -52,7 +51,7 @@ const Comments = () => {
     if (result) {
       await getAllReplies();
       setSelectedReply(null);
-      setReplyText(''); // ✅ Reset replyText để đóng hộp thoại edit
+      setReplyText('');
     }
   };
 
@@ -68,23 +67,22 @@ const Comments = () => {
     replies.filter((r) => r.commentId === commentId);
 
   return (
-    <div className="w-full max-w-6xl m-5">
-      <p className="mb-3 text-lg font-medium">All Comments</p>
+    <div className="w-full max-w-6xl m-4 sm:m-8">
+      <p className="mb-4 text-lg font-semibold">All Comments</p>
 
-      <div className="bg-white border rounded text-sm max-h-[80vh] min-h-[60vh] overflow-y-scroll">
-        {/* Header Row */}
-        <div className="hidden sm:grid grid-cols-[0.5fr_2fr_3fr_1fr] py-3 px-6 border-b">
+      <div className="bg-white border rounded shadow-sm text-sm max-h-[80vh] min-h-[60vh] overflow-y-scroll">
+        {/* Header Row - hidden on mobile */}
+        <div className="hidden sm:grid grid-cols-[0.5fr_2fr_3fr_1fr] py-3 px-6 border-b bg-gray-100 font-semibold">
           <p>#</p>
           <p>User</p>
           <p>Comment</p>
           <p>Actions</p>
         </div>
 
-        {/* Comment Rows */}
         {comments.map((comment, index) => (
           <div
             key={comment._id}
-            className="flex flex-col sm:grid sm:grid-cols-[0.5fr_2fr_3fr_1fr] gap-2 items-start text-gray-800 py-3 px-6 border hover:bg-primary"
+            className="flex flex-col sm:grid sm:grid-cols-[0.5fr_2fr_3fr_1fr] gap-2 py-3 px-4 border-b"
           >
             {/* Index */}
             <p className="hidden sm:block">{index + 1}</p>
@@ -96,11 +94,16 @@ const Comments = () => {
                 src={comment.userData.image}
                 alt="User Avatar"
               />
-              <p>{comment.userData.name}</p>
+              <p className="text-sm font-medium">{comment.userData.name}</p>
             </div>
 
             {/* Comment Text */}
-            <p className="w-full">{comment.text}</p>
+            <div className="text-sm">
+              <p className="hidden sm:block">{comment.text}</p>
+              <p className="block sm:hidden text-gray-600">
+                <span className="font-medium">{comment.userData.name}:</span> {comment.text}
+              </p>
+            </div>
 
             {/* Actions */}
             <div className="flex gap-2 flex-wrap">
@@ -124,9 +127,9 @@ const Comments = () => {
               </button>
             </div>
 
-            {/* New Reply Input - đặt ngay dưới comment tương ứng */}
+            {/* Reply Input */}
             {commentBeingReplied?._id === comment._id && (
-              <div className="col-span-full ml-4 mt-2 w-full max-w-4xl">
+              <div className="col-span-full mt-2">
                 <textarea
                   className="w-full p-2 border rounded"
                   rows="3"
@@ -151,42 +154,41 @@ const Comments = () => {
               </div>
             )}
 
-            {/* Replies Section */}
+            {/* Replies */}
             {commentWithRepliesShown?._id === comment._id && (
-              <div className="col-span-full ml-4 mt-2 w-full">
+              <div className="col-span-full mt-3 space-y-3">
                 {filteredReplies(comment._id).length > 0 ? (
                   filteredReplies(comment._id).map((reply) => (
                     <div
                       key={reply._id}
-                      className="flex flex-col gap-2 mb-3 border rounded p-2 bg-gray-50"
+                      className="border rounded p-3 bg-gray-50 text-sm"
                     >
-                      <div className="flex items-center gap-2">
-                        <p>Reply from admin:</p>
-                        <p className="text-gray-700">{reply.text}</p>
+                      <div className="flex justify-between items-center">
+                        <p className="text-gray-700">
+                          <span className="font-medium">Admin:</span> {reply.text}
+                        </p>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => {
+                              setSelectedReply(reply._id);
+                              setReplyText(reply.text);
+                            }}
+                            className="text-blue-600"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDeleteReply(reply._id)}
+                            className="text-red-600"
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </div>
 
-                      {/* Edit/Delete buttons */}
-                      <div className="flex gap-2 text-sm">
-                        <button
-                          onClick={() => {
-                            setSelectedReply(reply._id);
-                            setReplyText(reply.text);
-                          }}
-                          className="text-blue-600"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDeleteReply(reply._id)}
-                          className="text-red-600"
-                        >
-                          Delete
-                        </button>
-                      </div>
-
-                      {/* Edit Reply Input */}
+                      {/* Edit box */}
                       {selectedReply === reply._id && (
-                        <div className="mt-2 w-full">
+                        <div className="mt-2">
                           <textarea
                             className="w-full p-2 border rounded"
                             rows="2"
@@ -206,7 +208,7 @@ const Comments = () => {
                     </div>
                   ))
                 ) : (
-                  <p className="text-gray-500">No replies yet.</p>
+                  <p className="text-gray-500 text-sm">No replies yet.</p>
                 )}
               </div>
             )}

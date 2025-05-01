@@ -20,8 +20,6 @@ const DetailProduct = () => {
   const [editing, setEditing] = useState(false);
 
   useEffect(() => {
-    console.log(replies);
-    
     if (prID && products.length > 0) {
       const prInfo = products.find(p => p._id === prID);
       if (prInfo) {
@@ -94,10 +92,10 @@ const DetailProduct = () => {
   return pr && (
     <div>
       <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg w-auto mt-8">
-        <div className="flex">
+        <div className="flex flex-col md:flex-row">
           <img src={pr.image_url} alt="Product" className="w-1/2 h-1/2 rounded-lg" />
-          <div className="ml-6 w-1/2">
-            <h1 className="text-2xl font-bold">{pr.name}</h1>
+          <div className="ml-6 w-full md:w-1/2">
+            <h1 className="text-2xl font-bold mt-3">{pr.name}</h1>
             <p className="text-xl text-gray-700 mt-2">Price: {pr.price}</p>
             <div className="mt-4">
               <label className="block text-gray-700">Quantity:</label>
@@ -141,7 +139,7 @@ const DetailProduct = () => {
 
             <button 
               onClick={handleAddToCart} 
-              className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">
+              className="mt-6 mb-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">
               Add to cart
             </button>
           </div>
@@ -150,7 +148,7 @@ const DetailProduct = () => {
         <div className="mt-6">
           <h2 className="text-xl font-semibold">Comments</h2>
           <div className="mt-2 border-t pt-2">
-            {userData && (
+            {userData ? (
               <div className="mb-4">
                 {editing ? (
                   <div>
@@ -190,7 +188,9 @@ const DetailProduct = () => {
                   </div>
                 )}
               </div>
-            )}
+            ): <div onClick={()=>{navigate('/login'); scrollTo(0,0);}} className='mt-4 mb-6 bg-primary w-40 rounded-lg text-white cursor-pointer transition-transform duration-300 transform hover:scale-110'>
+              <button className='ml-3 mt-2 mb-2' >Login to comment</button>
+              </div>}
             {allComments.length > 0 ? (
               allComments.map((comment) => (
                 <div key={comment._id} className="border-b py-2">

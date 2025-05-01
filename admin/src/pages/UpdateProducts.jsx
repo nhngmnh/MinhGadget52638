@@ -8,7 +8,7 @@ import { AdminContext } from '../context/AdminContext';
 const categories = ['Laptop', 'Smartphone', 'Smartwatch', 'Tablet', 'Accessory', 'PC, Printer'];
 
 const UpdateProduct = () => {
-    const naviagte= useNavigate();
+  const navigate = useNavigate();
   const { backendurl, aToken } = useContext(AdminContext);
   const location = useLocation();
   const prId = location.state?.productId;
@@ -29,7 +29,6 @@ const UpdateProduct = () => {
   const [imagePreview, setImagePreview] = useState('');
   const [loading, setLoading] = useState(true);
 
-  // Fetch product data
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -125,7 +124,7 @@ const UpdateProduct = () => {
         headers: { aToken },
       });
       toast.success('Product updated successfully!');
-      naviagte('/products-list')
+      navigate('/products-list');
     } catch (err) {
       console.error(err);
       toast.error(err.message || 'Failed to update product');
@@ -135,53 +134,62 @@ const UpdateProduct = () => {
   if (loading) return <div className="text-center mt-10">Loading product data...</div>;
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow-md mt-10">
+    <div className="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow-md mt-10 w-full">
       <h2 className="text-2xl font-bold mb-4 text-center">Update Product</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input type="text" name="name" placeholder="Product Name" value={formData.name} onChange={handleInputChange} className="w-full px-4 py-2 border rounded" />
-        <select name="category" value={formData.category} onChange={handleInputChange} className="w-full px-4 py-2 border rounded">
+        <input type="text" name="name" placeholder="Product Name" value={formData.name} onChange={handleInputChange}
+          className="w-full px-4 py-2 border rounded text-sm sm:text-base" />
+
+        <select name="category" value={formData.category} onChange={handleInputChange}
+          className="w-full px-4 py-2 border rounded text-sm sm:text-base">
           <option value="">-- Select Category --</option>
           {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
+            <option key={cat} value={cat}>{cat}</option>
           ))}
         </select>
-        <input type="text" name="brand" placeholder="Brand" value={formData.brand} onChange={handleInputChange} className="w-full px-4 py-2 border rounded" />
-        <textarea name="description" placeholder="Description" value={formData.description} onChange={handleInputChange} className="w-full px-4 py-2 border rounded" />
-        <input type="number" name="price" placeholder="Price" value={formData.price} onChange={handleInputChange} className="w-full px-4 py-2 border rounded" />
-        <input type="number" name="stock_quantity" placeholder="Stock Quantity" value={formData.stock_quantity} onChange={handleInputChange} className="w-full px-4 py-2 border rounded" />
+
+        <input type="text" name="brand" placeholder="Brand" value={formData.brand} onChange={handleInputChange}
+          className="w-full px-4 py-2 border rounded text-sm sm:text-base" />
+
+        <textarea name="description" placeholder="Description" value={formData.description} onChange={handleInputChange}
+          className="w-full px-4 py-2 border rounded text-sm sm:text-base" />
+
+        <input type="number" name="price" placeholder="Price" value={formData.price} onChange={handleInputChange}
+          className="w-full px-4 py-2 border rounded text-sm sm:text-base" />
+
+        <input type="number" name="stock_quantity" placeholder="Stock Quantity" value={formData.stock_quantity} onChange={handleInputChange}
+          className="w-full px-4 py-2 border rounded text-sm sm:text-base" />
 
         <div className="space-y-2">
           <p className="font-semibold">Specifications:</p>
           {specifications.map((spec, index) => (
-            <div key={index} className="flex gap-2">
+            <div key={index} className="flex flex-col sm:flex-row gap-2">
               <input
                 type="text"
                 placeholder="Key"
                 value={spec.key}
                 disabled={!spec.isNew}
                 onChange={(e) => handleSpecKeyChange(index, e.target.value)}
-                className={`flex-1 px-2 py-1 border rounded ${spec.isNew ? '' : 'bg-gray-100 text-gray-500'}`}
+                className={`flex-1 px-2 py-1 border rounded text-sm ${spec.isNew ? '' : 'bg-gray-100 text-gray-500'}`}
               />
               <input
                 type="text"
                 placeholder="Value"
                 value={spec.value}
                 onChange={(e) => handleSpecValueChange(index, e.target.value)}
-                className="flex-1 px-2 py-1 border rounded"
+                className="flex-1 px-2 py-1 border rounded text-sm"
               />
-              <button type="button" onClick={() => handleRemoveSpec(index)} className="text-red-500 hover:text-red-700">
-                X
+              <button type="button" onClick={() => handleRemoveSpec(index)} className="text-red-500 hover:text-red-700 text-sm">
+                Remove
               </button>
             </div>
           ))}
-          <button type="button" onClick={handleAddSpec} className="text-blue-600 underline">
+          <button type="button" onClick={handleAddSpec} className="text-blue-600 underline text-sm">
             + Add Specification
           </button>
         </div>
 
-        {imagePreview || formData.image_url ? (
+        {(imagePreview || formData.image_url) && (
           <div>
             <p className="font-semibold">Preview Image:</p>
             <img
@@ -190,11 +198,13 @@ const UpdateProduct = () => {
               className="w-32 h-32 object-cover rounded border"
             />
           </div>
-        ) : null}
+        )}
 
-        <input type="file" accept="image/*" onChange={handleImageChange} className="w-full" />
+        <input type="file" accept="image/*" onChange={handleImageChange}
+          className="w-full text-sm" />
 
-        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
+        <button type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition text-sm sm:text-base">
           Update Product
         </button>
       </form>

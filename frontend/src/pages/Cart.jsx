@@ -18,7 +18,6 @@ const Cart = () => {
         headers: { token },
       });
       if (response.data) {
-        console.log({ success: true, data: response.data });
         setCart(response.data.cartData);
       }
     } catch (error) {
@@ -74,7 +73,7 @@ const Cart = () => {
       <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6">
         {cart.map((item, index) => (
           <div
-            className="flex sm:w-96 md:w-auto items-center gap-6 p-1 border rounded-lg shadow-md bg-white hover:bg-indigo-100"
+            className="flex flex-col md:flex-row sm:w-96 md:w-auto items-center gap-6 p-2 md:p-3 border rounded-lg shadow-md bg-white hover:bg-indigo-100"
             key={index}
           >
             {/* Product Image */}
@@ -86,7 +85,7 @@ const Cart = () => {
 
             {/* Product Details */}
             <div className="flex-1">
-              <p className="text-xl mb-1 sm:text-2xl">
+              <p className="text-md mb-1 md:text-xl">
                 {item.itemData.name}&nbsp;&nbsp;&nbsp;
                 {(item.status === 'processing')? (
                   <div className="text-gray-500 text-xs">Delivering </div>
@@ -100,10 +99,10 @@ const Cart = () => {
                   </span>
                 )}
               </p>
-              <p className="text-lg font-semibold text-gray-800">{item.name}</p>
+              
               <p className="text-gray-600 text-sm">Quantity: {item.totalItems}</p>
-              <p className="text-gray-700 font-medium mt-2 text-sm">
-                💰 Price: <span className="text-primary">${item.totalPrice}</span>
+              <p className="text-gray-700 font-medium mt-2 text-xs md:text-sm">
+                💰 Price: <span className="text-primary text-xs md:text-sm">${item.totalPrice}</span>
               </p>
               <p className="text-xs text-gray-500 mt-1">
                 🕒 Ordered on:{' '}

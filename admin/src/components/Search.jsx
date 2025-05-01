@@ -20,7 +20,7 @@ const Search = ({ search, setSearch }) => {
   };
 
   return (
-    <div className='flex w-96 rounded bg-white border border-gray-300 h-13'>
+    <div className='flex w-72 md:w-96 rounded bg-white border border-gray-300 h-13'>
       <input
         type='search'
         name='search'

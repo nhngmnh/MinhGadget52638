@@ -1,8 +1,17 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { AdminContext } from '../context/AdminContext'
+import React, { useContext, useEffect, useState } from 'react';
+import { AdminContext } from '../context/AdminContext';
+import { toast } from 'react-toastify';
 
 const AllCarts = () => {
-  const { aToken, carts, getCarts, removeCart, changeCartStatus,notifyChangeStatusCart } = useContext(AdminContext)
+  const {
+    aToken,
+    carts,
+    getCarts,
+    removeCart,
+    changeCartStatus,
+    notifyChangeStatusCart
+  } = useContext(AdminContext);
+
   const [changeCart, setChangeCart] = useState(false);
   const [selectedCart, setSelectedCart] = useState(null);
 
@@ -33,7 +42,7 @@ const AllCarts = () => {
         });
         setChangeCart(prev => !prev);
         setSelectedCart(null);
-        toast.success("Delete successfully")
+        toast.success("Delete successfully");
       } catch (error) {
         console.error('Error deleting cart:', error);
       }
@@ -43,12 +52,10 @@ const AllCarts = () => {
   const handleStatusChange = async (cart, newStatus) => {
     const success = await changeCartStatus(cart._id, newStatus);
     if (success) {
-      // Sau khi cập nhật thành công thì tạo thông báo
       await notifyChangeStatusCart({
         userId: cart.userId,
         text: `The cart (id: #${cart._id}) that has ${cart.totalItems} item(s) of ${cart.itemData.name} was updated to ${newStatus} by admin.`
       });
-  
       setChangeCart(prev => !prev);
     }
   };
@@ -58,8 +65,8 @@ const AllCarts = () => {
       <p className='mb-3 text-lg font-medium'>All Carts</p>
       <div className='bg-white border rounded text-sm max-h-[80vh] min-h-[60vh] overflow-y-scroll'>
 
-        {/* Column headers */}
-        <div className='hidden sm:grid grid-cols-[0.5fr_2fr_2fr_1fr_1fr_2fr] grid-flow-col py-3 px-6 border-b font-semibold text-gray-700'>
+        {/* Header (Desktop only) */}
+        <div className='hidden sm:grid grid-cols-[0.5fr_2fr_2fr_1fr_1fr_2fr] py-3 px-6 border-b font-semibold text-gray-700'>
           <p>#</p>
           <p>Product</p>
           <p>Number of Items</p>
@@ -71,18 +78,38 @@ const AllCarts = () => {
         {/* Cart rows */}
         {
           carts.map((cart, index) =>
-            <div key={cart._id} className='flex flex-wrap justify-between max-sm:gap-2 sm:grid sm:grid-cols-[0.5fr_2fr_2fr_1fr_1fr_2fr] items-center text-gray-800 py-3 px-6 border hover:bg-gray-100'>
-              <p className='max-sm:hidden'>{index + 1}</p>
+            <div
+              key={cart._id}
+              className='border-b py-3 px-6 hover:bg-gray-50 sm:grid sm:grid-cols-[0.5fr_2fr_2fr_1fr_1fr_2fr] flex flex-col gap-2 sm:gap-0'
+            >
+              {/* Index (only desktop) */}
+              <p className='hidden sm:block'>{index + 1}</p>
 
+              {/* Product */}
               <div className='flex items-center gap-2'>
-                <img className='w-8 h-8 rounded-full object-cover' src={cart.itemData.image_url} alt="Product" />
+                <img
+                  className='w-8 h-8 rounded-full object-cover'
+                  src={cart.itemData.image_url}
+                  alt="Product"
+                />
                 <p className='font-medium'>{cart.itemData.name}</p>
               </div>
 
-              <p>{cart.totalItems}</p>
-              <p>{cart.totalPrice} VNĐ</p>
+              {/* Items */}
+              <p>
+                <span className='sm:hidden font-semibold'>Items: </span>
+                {cart.totalItems}
+              </p>
 
+              {/* Price */}
+              <p>
+                <span className='sm:hidden font-semibold'>Price: </span>
+                {cart.totalPrice} VNĐ
+              </p>
+
+              {/* Status */}
               <div>
+                <span className='sm:hidden font-semibold'>Status: </span>
                 <select
                   value={cart.status}
                   onChange={(e) => handleStatusChange(cart, e.target.value)}
@@ -94,7 +121,8 @@ const AllCarts = () => {
                 </select>
               </div>
 
-              <div className='flex gap-2 items-center'>
+              {/* Actions */}
+              <div>
                 <button
                   onClick={() => handleDeleteClick(cart)}
                   className='text-red-500 hover:text-red-700 text-xs underline'
@@ -110,14 +138,13 @@ const AllCarts = () => {
       {/* Delete Confirmation Modal */}
       {selectedCart && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-5 w-96">
+          <div className="bg-white rounded-lg shadow-lg p-5 w-11/12 max-w-md">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
               Delete cart of {selectedCart.itemData.name}?
             </h3>
             <p className="text-gray-700">
               Are you sure you want to delete the cart with <b>{selectedCart.totalItems}</b> item(s)?
             </p>
-
             <div className="flex justify-end mt-4">
               <button
                 onClick={() => setSelectedCart(null)}
@@ -136,7 +163,7 @@ const AllCarts = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
 export default AllCarts;

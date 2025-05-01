@@ -40,9 +40,9 @@ const Navbar = () => {
 
     return (
         <div className='flex items-center justify-between text-sm py-4 mb-5 border-b border-b-gray-400 relative z-50'>
-            <img onClick={() => navigate('/')} className='w-40 cursor-pointer' src={assets.logo} alt="Our logo" />
+            <img onClick={() => navigate('/')} className='w-28 md:w-40 cursor-pointer' src={assets.logo} alt="Our logo" />
 
-            <ul className='hidden md:flex items-start gap-5 font-medium text-sm'>
+            <ul className='hidden md:flex items-start gap-6 font-medium text-sm'>
                 <NavLink className='p-2 hover:bg-gray-100' to='/'><li className='py-1'>Home</li></NavLink>
                 <NavLink className='p-2 hover:bg-gray-100' to='/products'><li className='py-1'>All products</li></NavLink>
                 <NavLink className='p-2 hover:bg-gray-100' to='/about'><li className='py-1'>About</li></NavLink>
@@ -50,7 +50,7 @@ const Navbar = () => {
             </ul>
             <div className='md:block hidden'><SearchEngine className='md:block hidden' search={search} setSearch={setSearch} /></div>
             
-            <img onClick={()=>setShowMenu(true)} className='md:hidden w-6' src={assets.menu_icon} alt=""/>
+            <img onClick={()=>setShowMenu(true)} className='md:hidden w-4' src={assets.menu_icon} alt=""/>
          {/* menu in mobile */}
          <div className={`${showMenu? 'fixed w-full':'h-0 w-0'} md:hidden right-0 bottom-0 z-20 overflow-hidden bg-white transition-all`}>
          <div className='flex items-center justify-between px-5 py-6'>
@@ -66,7 +66,7 @@ const Navbar = () => {
             </ul>
          </div>
 
-            <div className='flex items-center gap-4'>
+            <div className='flex items-center gap-2 md:gap-4'>
                 {/* My Cart icon */}
                 {token && (
                     <div
@@ -74,7 +74,7 @@ const Navbar = () => {
                         className="relative cursor-pointer p-2 rounded-full hover:bg-gray-200 transition"
                         title="My Carts"
                     >
-                        <FaShoppingCart className="text-[22px] text-gray-700 hover:text-blue-500" />
+                        <FaShoppingCart className="text-[22px] text-gray-700 hover:text-blue-500 w-4 md:w-6" />
                         {/* Uncomment nếu muốn hiển thị số lượng sản phẩm
                         <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
                             3
@@ -87,7 +87,7 @@ const Navbar = () => {
                 {token && notifications && (
                     <div className="relative">
                         <FaBell
-                            className="w-6 h-6 cursor-pointer text-gray-700 hover:text-primary transition duration-200"
+                            className="w-4 md:w-6 h-6 cursor-pointer text-gray-700 hover:text-primary transition duration-200"
                             onClick={() => setShowNotification(prev => !prev)}
                         />
                         {notifications && ( 
@@ -133,7 +133,7 @@ const Navbar = () => {
                 {/* Avatar & Menu */}
                 {token ? (
                     <div className='flex items-center gap-2 cursor-pointer group relative'>
-                        <img className='w-10 rounded-full' src={userData.image} alt='' />
+                        <img className='w-7 md:w-10 rounded-full' src={userData.image} alt='' />
                         <div className='absolute top-0 right-0 pt-14 text-base font-medium text-gray-600 hidden group-hover:block'>
                             <div className='min-w-48 round flex flex-col gap-2 p-4 bg-gray-50 font-bold text-black'>
                                 <p onClick={() => navigate('/my-profile')} className='hover:bg-blue-400 hover:text-white px-2 py-2 cursor-pointer'>My Profile</p>

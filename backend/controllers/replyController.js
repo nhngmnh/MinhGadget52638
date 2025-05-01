@@ -26,7 +26,7 @@ const getAllReplies = async(req,res)=>{
     try {
         const data= await replyModel.find({});
         if (!data) {
-           return res.status(204).json({success:true,replies:null})
+           return res.status(200).json({success:true,replies:[]})
         }
         return res.status(200).json({success:true,replies:data})
     } catch (error) {

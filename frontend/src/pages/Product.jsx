@@ -11,7 +11,7 @@ const Product = () => {
   const [showFilterPrice, setShowFilterPrice] = useState(false);
   const [showFilterCategory, setShowFilterCategory] = useState(false);
   const [showFilterBrand, setShowFilterBrand] = useState(false);
-
+  const [showBsl,setShowBsl]=useState(false);
   const [filterPro, setFilterPro] = useState([]);
   const [sortFlag, setSortFlag] = useState(0);
 
@@ -20,17 +20,13 @@ const Product = () => {
 
   const [category, setCategory] = useState(getLocal('category', ''));
   const [brand, setBrand] = useState(getLocal('brand', ''));
-  const [sortOrder, setSortOrder] = useState(getLocal('sortOrder', ''));
-  const [minPrice, setMinPrice] = useState(getLocal('minPrice', ''));
-  const [maxPrice, setMaxPrice] = useState(getLocal('maxPrice', ''));
-
+  const [sortOrder,setSortOrder]=useState('');
+  const [maxPrice,setMaxPrice]=useState(null);
+  const [minPrice,setMinPrice]=useState(null);
   // Lưu vào localStorage khi thay đổi
   useEffect(() => {
     localStorage.setItem('category', category);
     localStorage.setItem('brand', brand);
-    localStorage.setItem('sortOrder', sortOrder);
-    localStorage.setItem('minPrice', minPrice);
-    localStorage.setItem('maxPrice', maxPrice);
   }, [search, category, brand, sortOrder, minPrice, maxPrice]);
 
   // Lấy sản phẩm
@@ -40,27 +36,25 @@ const Product = () => {
         const res = await axios.get(`${backendurl}/api/user/get-products`, {
           params: { query: search, category, brand, minPrice, maxPrice }
         });
-        setFilterPro(res.data.products);
-        setSortFlag(prev => 1 - prev);
+        let fproducts = res.data.products;
+
+        // Sort ngay sau khi fetch
+        if (sortOrder !== "") {
+          fproducts = [...fproducts].sort((a, b) =>
+            sortOrder === "desc"
+              ? new Date(b.release_date) - new Date(a.release_date)
+              : new Date(a.release_date) - new Date(b.release_date)
+          );
+        }
+  
+        setFilterPro(fproducts);
       } catch (error) {
         console.error("Lỗi khi tải sản phẩm:", error);
       }
     };
     fetchData();
-  }, [search, category, brand, minPrice, maxPrice, backendurl]);
+  }, [search, category, brand, minPrice, maxPrice, backendurl,sortOrder]);
 
-  // Sắp xếp theo thời gian
-  useEffect(() => {
-    if (sortOrder !== "") {
-      setFilterPro(prev =>
-        [...prev].sort((a, b) =>
-          sortOrder === "desc"
-            ? new Date(b.release_date) - new Date(a.release_date)
-            : new Date(a.release_date) - new Date(b.release_date)
-        )
-      );
-    }
-  }, [sortFlag, sortOrder]);
 
   const handleCategoryChange = (newCategory) => {
     setCategory(prev => (prev === newCategory ? '' : newCategory));
@@ -74,15 +68,15 @@ const Product = () => {
 
   const handleTimeChange = (newTime) => {
     setSortOrder(prev => (prev === newTime ? '' : newTime));
+    setSortFlag(prev => 1-prev);
     setShowFilterTime(false);
   };
-
   return (
     <div className='flex flex-col'>
       <div className='flex flex-col sm:flex-row gap-5'>
         {/* Category filter */}
         <div>
-          <button className={`py-1 w-36 px-3 border rounded text-sm ${showFilterCategory ? 'bg-primary text-white' : ''}`}
+          <button className={`py-1 w-36 px-3 border rounded text-sm ${showFilterCategory || category ? 'bg-primary text-white' : ''}`}
                   onClick={() => setShowFilterCategory(prev => !prev)}>
             {category ? `Category: ${category}` : 'Select category'}
           </button>
@@ -100,7 +94,7 @@ const Product = () => {
 
         {/* Brand filter */}
         <div>
-          <button className={`py-1 w-36 px-3 border rounded text-sm ${showFilterBrand ? 'bg-primary text-white' : ''}`}
+          <button className={`py-1 w-36 px-3 border rounded text-sm ${showFilterBrand || brand ? 'bg-primary text-white' : ''}`}
                   onClick={() => setShowFilterBrand(prev => !prev)}>
             {brand ? `Brand: ${brand}` : 'Select brand'}
           </button>
@@ -118,7 +112,7 @@ const Product = () => {
 
         {/* Time sort */}
         <div>
-          <button className={`py-1 w-36 px-3 border rounded text-sm ${showFilterTime ? 'bg-primary text-white' : ''}`}
+          <button className={`py-1 w-36 px-3 border rounded text-sm ${showFilterTime || sortOrder? 'bg-primary text-white' : ''}`}
                   onClick={() => setShowFilterTime(prev => !prev)}>
             {sortOrder ? `Time: ${sortOrder}` : 'Sort by time'}
           </button>
@@ -136,9 +130,9 @@ const Product = () => {
 
         {/* Price filter */}
         <div>
-          <button className={`py-1 w-36 px-3 border rounded text-sm ${showFilterPrice ? 'bg-primary text-white' : ''}`}
+          <button className={`py-1 w-36 px-3 border rounded text-sm ${showFilterPrice || (maxPrice || minPrice) ? 'bg-primary text-white' : ''}`}
                   onClick={() => setShowFilterPrice(prev => !prev)}>
-            {minPrice || maxPrice ? `Price: [${minPrice || 0} - ${maxPrice || '∞'}]` : 'Filter price'}
+            {minPrice || maxPrice ? <span className='bg-primary'>Price: [{minPrice || 0} - {maxPrice || '∞'}]</span> : 'Filter price'}
           </button>
           {showFilterPrice && (
             <div className='flex flex-col gap-2 text-sm mt-2 p-3 border rounded'>
@@ -149,19 +143,26 @@ const Product = () => {
             </div>
           )}
         </div>
+        <div>
+          <button className={`py-1 w-36 px-3 border rounded text-sm ${showBsl ? 'bg-primary text-white' : ''}`}
+                  onClick={() => {setShowBsl(prev => !prev)}}>
+            {showBsl ? <span className='bg-primary'>Best seller</span> : 'Best seller'}
+          </button>
+        </div>
+
       </div>
 
       {/* Product Grid */}
       <div className='w-full grid grid-cols-auto gap-4 gap-y-6 mt-6'>
-        {filterPro.map(item => (
-          <div key={item._id}
+        {filterPro.map(item => ( (!showBsl || item.bestseller) &&
+                  <div key={item._id}
                onClick={() => navigate(`/detail/${item._id}`, { replace: true })}
                className='border border-gray-300 p-4 rounded hover:shadow cursor-pointer'>
             <img src={item.image_url} alt={item.name} className='w-full h-40 object-contain mb-2'/>
             <p className='font-semibold'>{item.name}</p>
-            <p>{item.available ?<span className='text-sm text-green-400'>Available</span>  :<span className='text-gray-400'>Not available</span>}</p>
+            <p>{item.available ?<span className='text-sm text-green-400'>Available</span>  :<span className='text-gray-400 text-sm'>Not available</span>}</p>
             <p className='text-sm text-gray-600'>{item.brand}</p>
-            <p className='text-red-600 font-bold'>{item.price} ₫</p>
+            <p className='text-red-600 font-bold mt-4'>{item.price} ₫ <span className='text-purple-600 text-xs'>{item.bestseller?'- best seller':''}</span></p>
           </div>
         ))}
       </div>
