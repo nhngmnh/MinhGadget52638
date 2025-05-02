@@ -3,6 +3,7 @@ import { assets } from '../assets/assets';
 import { useState } from 'react';
 const Banner = () => {
     const images = [
+        assets.banner0,
         assets.banner1,
         assets.banner2,
         assets.banner3,

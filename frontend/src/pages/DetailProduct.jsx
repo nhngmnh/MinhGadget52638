@@ -56,9 +56,10 @@ const DetailProduct = () => {
       toast.error("Login to buy this device !");
     }
     else {
-    const cartData = { prID, quantity };
-    localStorage.setItem('cartData', JSON.stringify(cartData));
-    navigate('/checkout', { state: cartData });}
+      const cartData = { prID, quantity };
+      localStorage.setItem('cartData', JSON.stringify(cartData));
+      navigate('/checkout', { state: cartData });
+    }
   };
 
   const handleCommentSubmit = async () => {
@@ -93,10 +94,10 @@ const DetailProduct = () => {
     <div>
       <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg w-auto mt-8">
         <div className="flex flex-col md:flex-row">
-          <img src={pr.image_url} alt="Product" className="w-1/2 h-1/2 rounded-lg" />
-          <div className="ml-6 w-full md:w-1/2">
-            <h1 className="text-2xl font-bold mt-3">{pr.name}</h1>
-            <p className="text-xl text-gray-700 mt-2">Price: {pr.price}</p>
+          <img src={pr.image_url} alt="Product" className="w-full md:w-1/2 h-auto rounded-lg" />
+          <div className="ml-0 md:ml-6 mt-4 md:mt-0 w-full md:w-1/2">
+            <h1 className="text-xl md:text-3xl font-bold">{pr.name}</h1>
+            <p className="text-md md:text-xl text-gray-700 mt-2">Price: {pr.price} ₫</p>
             <div className="mt-4">
               <label className="block text-gray-700">Quantity:</label>
               <input 
@@ -108,6 +109,14 @@ const DetailProduct = () => {
               />
             </div>
 
+            {/* Mô tả sản phẩm */}
+            {pr.description && (
+              <div className="mt-6">
+                <h2 className="text-xl font-semibold">Description</h2>
+                <p className="mt-2 text-gray-700 whitespace-pre-line">{pr.description}</p>
+              </div>
+            )}
+
             {/* Thông số sản phẩm */}
             <div className="mt-6">
               <h2 className="text-xl font-semibold">Detail Products</h2>
@@ -115,7 +124,7 @@ const DetailProduct = () => {
                 <thead>
                   <tr>
                     <th className="border px-4 py-2 text-left">Thông số</th>
-                    <th className="border px-4 py-2 text-left">Chi tiết</th>
+                    <th className="border px-4 py-2 text-left">Detail</th>
                   </tr>
                 </thead>
                 <tbody>

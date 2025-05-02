@@ -137,28 +137,52 @@ const UpdateProduct = () => {
     <div className="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow-md mt-10 w-full">
       <h2 className="text-2xl font-bold mb-4 text-center">Update Product</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input type="text" name="name" placeholder="Product Name" value={formData.name} onChange={handleInputChange}
-          className="w-full px-4 py-2 border rounded text-sm sm:text-base" />
 
-        <select name="category" value={formData.category} onChange={handleInputChange}
-          className="w-full px-4 py-2 border rounded text-sm sm:text-base">
-          <option value="">-- Select Category --</option>
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>{cat}</option>
-          ))}
-        </select>
+        {[
+          { label: 'Product Name', name: 'name', type: 'text' },
+          { label: 'Brand', name: 'brand', type: 'text' },
+          { label: 'Description', name: 'description', type: 'textarea' },
+          { label: 'Price', name: 'price', type: 'number' },
+          { label: 'Stock Quantity', name: 'stock_quantity', type: 'number' },
+        ].map(({ label, name, type }) => (
+          <div key={name} className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
+            <label htmlFor={name} className="w-full sm:w-40 font-medium">{label}:</label>
+            {type === 'textarea' ? (
+              <textarea
+                id={name}
+                name={name}
+                value={formData[name]}
+                onChange={handleInputChange}
+                className="flex-1 px-4 py-2 border rounded text-sm sm:text-base"
+              />
+            ) : (
+              <input
+                type={type}
+                id={name}
+                name={name}
+                value={formData[name]}
+                onChange={handleInputChange}
+                className="flex-1 px-4 py-2 border rounded text-sm sm:text-base"
+              />
+            )}
+          </div>
+        ))}
 
-        <input type="text" name="brand" placeholder="Brand" value={formData.brand} onChange={handleInputChange}
-          className="w-full px-4 py-2 border rounded text-sm sm:text-base" />
-
-        <textarea name="description" placeholder="Description" value={formData.description} onChange={handleInputChange}
-          className="w-full px-4 py-2 border rounded text-sm sm:text-base" />
-
-        <input type="number" name="price" placeholder="Price" value={formData.price} onChange={handleInputChange}
-          className="w-full px-4 py-2 border rounded text-sm sm:text-base" />
-
-        <input type="number" name="stock_quantity" placeholder="Stock Quantity" value={formData.stock_quantity} onChange={handleInputChange}
-          className="w-full px-4 py-2 border rounded text-sm sm:text-base" />
+        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
+          <label htmlFor="category" className="w-full sm:w-40 font-medium">Category:</label>
+          <select
+            id="category"
+            name="category"
+            value={formData.category}
+            onChange={handleInputChange}
+            className="flex-1 px-4 py-2 border rounded text-sm sm:text-base"
+          >
+            <option value="">-- Select Category --</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
+        </div>
 
         <div className="space-y-2">
           <p className="font-semibold">Specifications:</p>
@@ -200,11 +224,15 @@ const UpdateProduct = () => {
           </div>
         )}
 
-        <input type="file" accept="image/*" onChange={handleImageChange}
-          className="w-full text-sm" />
+        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
+          <label htmlFor="image" className="w-full sm:w-40 font-medium">Upload Image:</label>
+          <input type="file" accept="image/*" onChange={handleImageChange} className="flex-1 text-sm" />
+        </div>
 
-        <button type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition text-sm sm:text-base">
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition text-sm sm:text-base"
+        >
           Update Product
         </button>
       </form>

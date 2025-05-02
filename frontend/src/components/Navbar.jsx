@@ -21,8 +21,6 @@ const Navbar = () => {
         localStorage.removeItem('token');
     }
     const countNewNotifications = () => {
-        console.log(notifications);
-        
         const count = notifications.filter((item) => !item.isRead).length;
         setCountNewNoti(count);
       };

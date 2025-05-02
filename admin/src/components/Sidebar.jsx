@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import Search from './Search'
+import { AdminContext } from '../context/AdminContext'
 
 const Sidebar = ({ isVisible, setSidebarVisible }) => {
+  const {search,setSearch}=useContext(AdminContext)
   const menuItems = [
     { path: '/', label: 'Dashboard' },
     { path: '/all-carts', label: "Customer's Cart" },
@@ -27,7 +29,7 @@ const Sidebar = ({ isVisible, setSidebarVisible }) => {
           X
         </button>
       </div>
-      <div className='md:hidden block mt-10'><Search/></div>
+      <div className='md:hidden block mt-10'><Search search={search} setSearch={setSearch}/></div>
       {/* Sidebar Menu Items */}
       <ul className="text-gray-700 mt-8">
         {menuItems.map((item, index) => (

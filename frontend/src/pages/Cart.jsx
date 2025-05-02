@@ -102,7 +102,7 @@ const Cart = () => {
               
               <p className="text-gray-600 text-sm">Quantity: {item.totalItems}</p>
               <p className="text-gray-700 font-medium mt-2 text-xs md:text-sm">
-                💰 Price: <span className="text-primary text-xs md:text-sm">${item.totalPrice}</span>
+                💰 Price: <span className="text-primary text-xs md:text-sm">{item.totalPrice} ₫ </span>
               </p>
               <p className="text-xs text-gray-500 mt-1">
                 🕒 Ordered on:{' '}
