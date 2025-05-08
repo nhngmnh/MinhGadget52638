@@ -17,8 +17,8 @@ const Login = () => {
                 if (data.success){
                     
                     localStorage.setItem('aToken',data.token)
-                    setAToken(data.token)}
-                
+                    setAToken(data.token)
+                    toast.success("Login successfully !");}
              else {
                 toast.error(data.message);
             console.log(error.headers);

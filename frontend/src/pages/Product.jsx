@@ -14,7 +14,16 @@ const Product = () => {
   const [showBsl,setShowBsl]=useState(false);
   const [filterPro, setFilterPro] = useState([]);
   const [sortFlag, setSortFlag] = useState(0);
-
+  const handleClearFilter = async ()=>{
+    try {
+      localStorage.removeItem('category');
+      localStorage.removeItem('brand');
+      setMaxPrice(null); setMinPrice(null);
+      setSortOrder('');
+    } catch (error) {
+      toast.error("Can't clear filter !")
+    }
+  }
   // Load từ localStorage
   const getLocal = (key, defaultValue) => localStorage.getItem(key) || defaultValue;
 
@@ -149,7 +158,11 @@ const Product = () => {
             {showBsl ? <span className='bg-primary'>Best seller</span> : 'Best seller'}
           </button>
         </div>
-
+        <div>
+          <button className='py-1 w-36 px-3 border rounded text-sm hover:bg-green-500 cursor-pointer'
+                  onClick={() => handleClearFilter()}>
+          </button>
+        </div>
       </div>
 
       {/* Product Grid */}
