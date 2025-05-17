@@ -12,18 +12,23 @@ const Login = () => {
   const [state,setState]=useState('Sign Up');
   const [username, setUsername]=useState('');
   const [password, setPassword]=useState('');
+  const [againPassword, setAgainPassword]=useState('');
   const [email, setEmail]=useState('');
   const onSubmitHandler= async(event)=>{
     event.preventDefault()
     try {
       if(state==='Sign Up'){
         try {
-          const {data} =await axios.post(backendurl+'/api/user/register',{username,password,email})
-        if (data && data.success){
-          localStorage.setItem('token',data.token)
-          setToken(data.token)
-          toast.success("Register successfully")
-        } else toast.error(data.message)
+          if (againPassword!==password) toast.error("Mật khẩu nhập lại không đúng !");
+          else {
+          const {data} =await axios.post(backendurl+'/api/user/register',{username,password,email});
+          if (data && data.success){
+         // localStorage.setItem('token',data.token)
+         // setToken(data.token)
+          toast.success("Kiểm tra email đã đăng ký và xác thực để đăng nhập")
+        } else toast.error(data.message);
+        }
+          
       } catch (error) {
           toast.error(error.message);
         } 
@@ -75,6 +80,10 @@ useEffect(()=>{
         <p>Password</p>
         <input className='border border-zinc-500 rounde w-full p-2 mt-1'type="password" onChange={(e)=>setPassword(e.target.value) }value={password} required/>
       </div>
+     { state==='Sign up' && <div className='w-full'>
+        <p>Password again</p>
+        <input className='border border-zinc-500 rounde w-full p-2 mt-1'type="password" onChange={(e)=>setAgainPassword(e.target.value) }value={againPassword} required/>
+      </div>}
       <button type='submit' className='bg-primary text-white w-full py-2 rounded-md text-base cursor-pointer'>{state==='Sign Up'?"Create Account":"Login"} </button>
       {
       state==="Sign Up"

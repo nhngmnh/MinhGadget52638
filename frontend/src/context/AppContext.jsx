@@ -179,8 +179,12 @@ const AppContextProvider=(props)=>{
         const fetchUserData = async () => {
           if (token) {
             await getUserData();
+            console.log(typeof(token));
+            
           } else {
             setUserData(false);
+            console.log("Không đăng nhập");
+            
           }
         };
       

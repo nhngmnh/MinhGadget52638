@@ -1,5 +1,5 @@
 import express from 'express';
-import { createCart, getProfile, listCart, loginUser, registerUser, getProducts, updateProfile, getMerchantBanks, payCart, callback } from '../controllers/userController.js';
+import { createCart, getProfile, listCart, loginUser, registerUser, getProducts, updateProfile, getMerchantBanks, payCart, callback, verify } from '../controllers/userController.js';
 import authUser from '../middlewares/authUser.js';
 import upload from '../middlewares/multer.js';
 import { cancelOrder, detailProduct } from '../controllers/productController.js';
@@ -33,4 +33,5 @@ userRouter.post('/ask-groq',askGroq)
 userRouter.post('/ask-and-save-groq',authUser,handleChat)
 userRouter.post('/delete-conversation',authUser,handleDeleteChatHistory)
 userRouter.get('/get-conversation',authUser,getConversation)
+userRouter.get('/verify',verify)
 export default userRouter;
