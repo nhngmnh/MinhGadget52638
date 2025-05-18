@@ -11,12 +11,13 @@ import axios from 'axios'
 import moment from 'moment';
 import { addPendingUser, getPendingUser, removePendingUser } from '../utils/pendingUsers.js'
 import { sendEmail } from '../utils/sendEmail.js'
+import { addPendingForgot, removePendingForgot } from '../utils/pendingForgot.js'
 const registerUser = async (req,res) =>{
 try {
    
     const {username,email,password}=req.body 
     const data= await userModel.findOne({email});
-    if (data) return res.status(404).json({success:false,message:"Tài khoản email đã tồn tại !"})
+    if (data) return res.json({success:false,message:"Tài khoản email đã tồn tại !"})
     if (!username || !email || !password){
         return res.json({success:false,message:"Missing Details"}) // missing sth
     }
@@ -43,7 +44,7 @@ try {
 
   // Gửi email
   const verifyLink = `${process.env.FE_URL}/verify?tokenGmail=${tokenGmail}`;
-  await sendEmail(email, 'Xác thực tài khoản', `Nhấn vào đây để xác thực: ${verifyLink}`);
+  await sendEmail(email, 'Xác thực tài khoản trên website MinhGadget', `Nhấn vào đây để xác thực: ${verifyLink}`);
 
   return res.json({success:true, message:"Vui lòng kiểm tra email để xác thực"});
     
@@ -84,6 +85,61 @@ const verify = async (req,res) =>{
         return res.json({success:false,message:"Lỗi xác thực"});
     }
 }
+//api for forgot password
+const forgotPassword = async (req,res)=>{
+    try {
+        const email=req.body.email
+        if (!email) return res.json({success:false,message:"Không tìm thấy email"})
+        const userData= await userModel.findOne({email}).select('-password');
+    
+        if (!userData) return res.json({success:false,message:"Không tồn tại email người dùng"});
+         const user_encode=jwt.sign({userId:userData._id},process.env.JWT_SECRET)
+         const verifyLink = `${process.env.FE_URL}/changePassword?user=${user_encode}&email=${email}`;
+        await sendEmail(email, 'Bạn đã thao tác đổi mật khẩu của tài khoản sử dụng email này trên website MinhGadget', `Nhấn vào đây để thao tác đổi mật khẩu: ${verifyLink}`);
+        addPendingForgot(email);
+        return res.json({succcess:true,message:"Check email để xác thực thay đổi mật khẩu"})
+    } catch (error) {
+        console.log(error);
+        return res.json({success:false,message:"Lỗi server!"});
+    }
+}
+const verifyChangePassword = async (req, res) => {
+  try {
+    const { userId, password } = req.body;
+    if (!userId || !password) {
+      return res.json({ success: false, message: "Không hợp lệ" });
+    }
+
+    let decoded;
+    try {
+      decoded = jwt.verify(userId, process.env.JWT_SECRET);
+    } catch (err) {
+      return res.json({ success: false, message: "Token không hợp lệ hoặc đã hết hạn" });
+    }
+
+    const realUserId = decoded.userId;
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    //console.log(decoded);
+    
+    //console.log(realUserId);
+    
+    const user = await userModel.findByIdAndUpdate(realUserId, { password: hashedPassword });
+
+    if (!user) {
+      return res.json({ success: false, message: "Không có user thỏa mãn!" });
+    }
+
+    removePendingForgot(user.email);
+
+    return res.json({ success: true, message: "Đổi mật khẩu thành công!" });
+  } catch (error) {
+    console.error(error);
+    return res.json({ success: false, message: "Lỗi server!" });
+  }
+};
+
 //API for user login
 const loginUser=async(req,res)=>{
 try {
@@ -424,5 +480,10 @@ const callback = async (req, res) => {
 };
 
 export {
-    registerUser,loginUser,getProfile,updateProfile,listCart,cancelOrder,createCart,getProducts,getMerchantBanks,payCart,callback,verify
+    registerUser,
+    loginUser,getProfile,updateProfile,
+    listCart,cancelOrder,createCart,
+    getProducts,getMerchantBanks,
+    payCart,callback,verify,
+    forgotPassword,verifyChangePassword,
 }

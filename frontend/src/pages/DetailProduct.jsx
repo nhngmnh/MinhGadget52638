@@ -54,6 +54,7 @@ const DetailProduct = () => {
   const handleAddToCart = () => {
     if (!token){
       toast.error("Login to buy this device !");
+      navigate('/login')
     }
     else {
       const cartData = { prID, quantity };

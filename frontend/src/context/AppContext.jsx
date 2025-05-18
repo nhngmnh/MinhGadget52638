@@ -141,6 +141,14 @@ const AppContextProvider=(props)=>{
             console.log(error);
         }
     };
+    const sendChangePassword = async (email) =>{
+        try {
+            await axios.post(backendurl+'/api/user/forgot-password',{email});
+        } catch (error) {
+            console.log(error);
+            toast.error(error.message);
+        }
+    }
     const value={
         search,
         setSearch,
@@ -157,7 +165,8 @@ const AppContextProvider=(props)=>{
         comments, getComments, setComments,
         getNotifications, notifications,
         markAllAsRead,markOneAsRead,
-        clearMessages,addMessages,setMessages,messages,getMessages
+        clearMessages,addMessages,setMessages,messages,getMessages,
+        sendChangePassword
     }
     
     useEffect(() => {
