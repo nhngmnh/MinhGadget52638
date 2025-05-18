@@ -91,7 +91,7 @@ const Product = () => {
           </button>
           {showFilterCategory && (
             <div className='flex flex-col gap-2 text-sm mt-1'>
-              {['Laptop', 'Smartphone', 'Tablet', 'Pc, Printer', 'Smartwatch', 'Accessory'].map(cat => (
+              {['Laptop', 'Smartphone', 'Tablet', 'PcPrinter', 'Smartwatch', 'Accessory'].map(cat => (
                 <p key={cat} onClick={() => handleCategoryChange(cat)}
                    className={`w-36 pl-3 py-1.5 border rounded cursor-pointer hover:bg-primary hover:text-white ${category === cat ? "bg-indigo-200 text-black" : ""}`}>
                   {cat}
