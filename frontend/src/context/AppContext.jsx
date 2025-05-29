@@ -149,6 +149,15 @@ const AppContextProvider=(props)=>{
             toast.error(error.message);
         }
     }
+    const deleteUser = async()=>{
+        try {
+            await axios.post(backendurl+'/api/user/delete-user',{},{headers:{token}});
+            toast.success("Delete user successfully. Let's navigate to home page without sign in")
+        } catch (error) {
+            console.log(error);
+            toast.error(error.message);
+        }
+    }
     const value={
         search,
         setSearch,
@@ -166,7 +175,8 @@ const AppContextProvider=(props)=>{
         getNotifications, notifications,
         markAllAsRead,markOneAsRead,
         clearMessages,addMessages,setMessages,messages,getMessages,
-        sendChangePassword
+        sendChangePassword,
+        deleteUser
     }
     
     useEffect(() => {

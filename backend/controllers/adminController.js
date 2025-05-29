@@ -57,7 +57,7 @@ const adminDashboard = async(req,res)=>{
         const comments=await commentModel.find({})
         const products=await productModel.find({})
         const carts=await cartModel.find({})
-        const users = await userModel.find({}, '_id image name email');
+        const users = await userModel.find({}, '_id image name email phone address');
         const dashData={
             qcomments:comments.length,
             qproducts:products.length,

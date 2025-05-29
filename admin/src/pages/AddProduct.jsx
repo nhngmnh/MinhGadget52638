@@ -90,7 +90,7 @@ const AddProduct = () => {
       <div className='px-8 py-8 bg-white border rounded w-full max-w-4xl max-h-[80vh] overflow-y-scroll'>
         <div className='flex items-center gap-4 mb-8 text-gray-700'>
           <label htmlFor='product-img'>
-            <img className='w-16 bg-gray-100 rounded-full cursor-pointer' src={productImg ? URL.createObjectURL(productImg) : assets.upload_area} alt="" />
+            <img className='w-16 bg-gray-100 rounded-full cursor-pointer' src={productImg ? URL.createObjectURL(productImg) : assets.upload_product} alt="" />
           </label>
           <input onChange={(e) => setProductImg(e.target.files[0])} type='file' id='product-img' hidden />
           <p>Upload product<br />image</p>

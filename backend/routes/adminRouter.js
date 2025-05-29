@@ -7,6 +7,7 @@ import { getAllComments } from '../controllers/commentController.js';
 import { changeBestsellerStatus, detailProduct, updateProduct } from '../controllers/productController.js';
 import { editReply, getAllReplies, removeReply, replyComment } from '../controllers/replyController.js';
 import { createNotification, deleteNotification, getAllNotifications } from '../controllers/notificationController.js';
+import { deleteUser } from '../controllers/userController.js';
 const adminRouter= express.Router();
 adminRouter.post('/add-product',upload.single('image'),authAdmin,addProduct);
 adminRouter.get('/all-products',authAdmin,getProducts);
@@ -27,5 +28,6 @@ adminRouter.get('/get-product/:prId',authAdmin,detailProduct)
 adminRouter.post('/change-cart-status',authAdmin,changeStatus)
 adminRouter.post('/create-notification',authAdmin,createNotification)
 adminRouter.post('/delete-notification',authAdmin,deleteNotification)
-adminRouter.get('/get-all-notifications',authAdmin,getAllNotifications)
+adminRouter.get('/get-all-notifications',authAdmin,getAllNotifications),
+adminRouter.post('/delete-user',authAdmin,deleteUser)
 export default adminRouter

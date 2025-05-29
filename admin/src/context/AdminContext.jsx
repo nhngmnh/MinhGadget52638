@@ -210,6 +210,16 @@ const AdminContextProvider=(props)=>{
           toast.error('Error sending notification');
         }
       };
+
+    const deleteUser = async (userId)=>{
+        try {
+            await axios.post(backendurl+'/api/admin/delete-user',{userId},{headers:{aToken}});
+            toast.success("Delete user successfully!");
+        } catch (error) {
+            console.log(error);
+            toast.error(error.message)
+        }
+    }
     const value={
         aToken,setAToken,
         backendurl,products,setProducts,
@@ -221,7 +231,8 @@ const AdminContextProvider=(props)=>{
         changeBestsellerStatus,
         replies,setReplies,getAllReplies,
         replyComment,deleteReply,editReply,changeCartStatus,
-        notifyChangeStatusCart,createReplyNotification
+        notifyChangeStatusCart,createReplyNotification,
+        deleteUser
     }
 
     return (

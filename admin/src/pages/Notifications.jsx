@@ -9,9 +9,11 @@ const Notifications = () => {
   const [notifications, setNotifications] = useState([])
   const [selectedNotification, setSelectedNotification] = useState(null)
   const [confirmDelete, setConfirmDelete] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchAllNotifications = async () => {
+      setLoading(true)
       try {
         const res = await axios.get(`${backendurl}/api/admin/get-all-notifications`, {
           headers: { aToken }
@@ -20,6 +22,8 @@ const Notifications = () => {
       } catch (error) {
         console.error(error)
         toast.error(error.message)
+      } finally {
+        setLoading(false)
       }
     }
 
@@ -49,7 +53,9 @@ const Notifications = () => {
       <h2 className='text-xl sm:text-2xl font-semibold mb-4'>Admin: All User Notifications</h2>
 
       {
-        notifications.length === 0 ? (
+        loading ? (
+          <p className="text-gray-600">Loading notifications...</p>
+        ) : notifications.length === 0 ? (
           <p className="text-gray-600">No notifications available.</p>
         ) : (
           notifications.map((n, index) => (

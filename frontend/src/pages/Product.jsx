@@ -6,7 +6,8 @@ import axios from 'axios';
 const Product = () => {
   const navigate = useNavigate();
   const { backendurl,search} = useContext(AppContext);
-
+  // Load từ localStorage
+  const getLocal = (key, defaultValue) => localStorage.getItem(key) || defaultValue;
   const [showFilterTime, setShowFilterTime] = useState(false);
   const [showFilterPrice, setShowFilterPrice] = useState(false);
   const [showFilterCategory, setShowFilterCategory] = useState(false);
@@ -14,29 +15,31 @@ const Product = () => {
   const [showBsl,setShowBsl]=useState(false);
   const [filterPro, setFilterPro] = useState([]);
   const [sortFlag, setSortFlag] = useState(0);
-  const handleClearFilter = async ()=>{
-    try {
-      localStorage.removeItem('category');
-      localStorage.removeItem('brand');
-      setMaxPrice(null); setMinPrice(null);
-      setSortOrder('');
-    } catch (error) {
-      toast.error("Can't clear filter !")
-    }
-  }
-  // Load từ localStorage
-  const getLocal = (key, defaultValue) => localStorage.getItem(key) || defaultValue;
-
   const [category, setCategory] = useState(getLocal('category', ''));
   const [brand, setBrand] = useState(getLocal('brand', ''));
   const [sortOrder,setSortOrder]=useState('');
   const [maxPrice,setMaxPrice]=useState(null);
   const [minPrice,setMinPrice]=useState(null);
+  const handleClearFilter = async ()=>{
+    try {
+      localStorage.removeItem('category'); setCategory('');
+      setShowFilterCategory(false);
+      localStorage.removeItem('brand'); setBrand(''); setShowFilterBrand(false);
+      setShowBsl(false);
+      setMaxPrice(null); setMinPrice(null);setShowFilterPrice(false);
+      setSortOrder(''); setShowFilterTime(false);
+    } catch (error) {
+      toast.error("Can't clear filter !")
+    }
+  }
+  
+
+  
   // Lưu vào localStorage khi thay đổi
   useEffect(() => {
     localStorage.setItem('category', category);
     localStorage.setItem('brand', brand);
-  }, [search, category, brand, sortOrder, minPrice, maxPrice]);
+  }, [search, category, brand, sortOrder, minPrice, maxPrice,showBsl,showFilterBrand,showFilterCategory]);
 
   // Lấy sản phẩm
   useEffect(() => {
@@ -161,6 +164,7 @@ const Product = () => {
         <div>
           <button className='py-1 w-36 px-3 border rounded text-sm hover:bg-green-500 cursor-pointer'
                   onClick={() => handleClearFilter()}>
+                    Clear filter
           </button>
         </div>
       </div>

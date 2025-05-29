@@ -1,5 +1,5 @@
 import express from 'express';
-import { createCart, getProfile, listCart, loginUser, registerUser, getProducts, updateProfile, getMerchantBanks, payCart, callback, verify, forgotPassword, verifyChangePassword } from '../controllers/userController.js';
+import { createCart, getProfile, listCart, loginUser, registerUser, getProducts, updateProfile, getMerchantBanks, payCart, callback, verify, forgotPassword, verifyChangePassword, deleteUser } from '../controllers/userController.js';
 import authUser from '../middlewares/authUser.js';
 import upload from '../middlewares/multer.js';
 import { cancelOrder, detailProduct } from '../controllers/productController.js';
@@ -36,4 +36,5 @@ userRouter.get('/get-conversation',authUser,getConversation)
 userRouter.get('/verify',verify)
 userRouter.post('/forgot-password',forgotPassword)
 userRouter.post('/verify-change-password',verifyChangePassword);
+userRouter.post('/delete-user',authUser,deleteUser)
 export default userRouter;

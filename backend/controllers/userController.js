@@ -103,6 +103,17 @@ const forgotPassword = async (req,res)=>{
         return res.json({success:false,message:"Lỗi server!"});
     }
 }
+const deleteUser = async (req,res)=>{
+    try {
+        const {userId}=req.body
+        if (!userId) return res.json({success:false,message:"user id not found !"});
+        await userModel.findByIdAndDelete(userId);
+        return res.json({success:true,message:"Delete user successfully !"})
+    } catch (error) {
+        console.log(error);
+        return res.json({success:false,message:"Server error!"})
+    }
+}
 const verifyChangePassword = async (req, res) => {
   try {
     const { userId, password } = req.body;
@@ -250,7 +261,8 @@ const createCart = async (req, res) => {
         if (!itemData || !userData) {
             return res.status(404).json({ success: false, message: "Item not found" });
         }
-        if (totalItems>itemData.stock_quantity || totalItems>20 ) {return res.status(404).json({ success: false, message:"Max quantity is 20 products per cart"})}
+        if (totalItems>itemData.stock_quantity) {return res.status(404).json({ success: false, message:"Out of stock!"})};
+        if (totalItems>20) {return res.status(404).json({ success: false, message:"Your cart can not exceed 20 products!"})}
         // Tính ngày giao hàng đúng cách
         const today = new Date();
         const deliveryDate = new Date();
@@ -486,4 +498,5 @@ export {
     getProducts,getMerchantBanks,
     payCart,callback,verify,
     forgotPassword,verifyChangePassword,
+    deleteUser
 }
