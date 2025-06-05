@@ -6,6 +6,7 @@ import cartModel from '../models/cartModel.js';
 import jwt from 'jsonwebtoken'
 import {v2 as cloudinary} from "cloudinary"
 import commentModel from '../models/commentModel.js';
+import { exportProductsToMarkdown } from '../utils/writingProductData.js';
 // api add product
 const addProduct = async (req, res) => {
     try { 
@@ -43,7 +44,7 @@ const addProduct = async (req, res) => {
 
         const newProduct = new productModel(productData);
         await newProduct.save();
-
+        await exportProductsToMarkdown(productData)
         res.json({ success: true, message: "Product added successfully",data:newProduct});
         
     } catch (error) {

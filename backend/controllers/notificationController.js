@@ -32,19 +32,26 @@ const deleteNotification = async(req,res) =>{
     }
 }
 const getNewNotification = async (req, res) => {
-    try {
-      const { userId } = req.body;
-  
-      const notifications = await notificationModel.find({ userId })
-        .sort({ createdAt: -1 }) // Mới nhất trước
-        .limit(10);
-  
-      return res.status(200).json({success:true, data:notifications});
-    } catch (error) {
-      console.error('Error getting notifications:', error);
-      return res.status(500).json({ error: 'Internal server error' });
+  try {
+    const { userId } = req.body;
+    if (!userId) {
+      return res.status(400).json({ success: false, message: 'Missing userId' });
     }
+
+    const notifications = await notificationModel.find({ userId })
+      .sort({ createdAt: -1 })
+      .limit(10);
+
+    return res.status(200).json({
+      success: true,
+      data: Array.isArray(notifications) ? notifications : [],
+    });
+  } catch (error) {
+    console.error('Error getting notifications:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error' });
   }
+};
+
   const markOneAsRead = async (req, res) => {
     try {
       const { notificationId } = req.body;
@@ -123,8 +130,8 @@ const getNewNotification = async (req, res) => {
         const  userId  = req.body.userId; 
         if (!userId) return res.status(400).json({success:false,message:"userId undefined"})
         const notifications = await notificationModel.find({ userId }).sort({ createdAt: -1 }).limit(15);
-        if (!notifications || notifications.length === 0) return res.status(200).json({ success: true, data: [] });
-        return res.status(200).json({ success: true, data: notifications });
+        if (!notifications || notifications.length === 0) return res.json({ success: true, data: [] });
+        return res.json({ success: true, data: notifications });
     } catch (error) {
         console.error('Error getting notifications:', error);
         return res.status(500).json({ success: false, message: 'Failed to get notifications' });

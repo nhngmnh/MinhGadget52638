@@ -15,9 +15,9 @@ const AppContextProvider=(props)=>{
     const [comments,setComments]=useState([])
     const [notifications,setNotifications]=useState(null)
     const [messages, setMessages] = useState([]);
-    const addMessages = async(newMsgs) => {
+    const addMessages = async(newMsgs,chatbotNumber) => {
         try {
-            const a = await axios.post(backendurl+'/api/user/ask-and-save-groq',{message: newMsgs},{headers:{token}});
+            const a = await axios.post(backendurl+`/api/user/ask-and-save-groq${chatbotNumber}`,{message: newMsgs},{headers:{token}});
             if (!a) toast.error("Can't send message");
             setMessages(a.data.data);
         } catch (error) {
@@ -25,9 +25,9 @@ const AppContextProvider=(props)=>{
             toast.error(error.message)
         }
       };
-    const getMessages = async()=>{
+    const getMessages = async(chatbotNumber)=>{
         try {
-            const x= await axios.get(backendurl+'/api/user/get-conversation',{headers:{token}});
+            const x= await axios.get(backendurl+`/api/user/get-conversation${chatbotNumber}`,{headers:{token}});
             if (!x || !x.data) toast.error("AI chat is now not available !")
             setMessages(x.data.data)  
         } catch (error) {
@@ -35,14 +35,14 @@ const AppContextProvider=(props)=>{
             toast.error(error.message)
         }
     }
-    const clearMessages= async()=>{
+    const clearMessages= async(chatbotNumber)=>{
         try {
-            await axios.post(backendurl+'/api/user/delete-conversation',{},{headers:{token}})
-            await getMessages();
+            await axios.post(backendurl+`/api/user/delete-conversation${chatbotNumber}`,{},{headers:{token}})
+            await getMessages(chatbotNumber);
             toast.success("Delete messages successfully")
         } catch (error) {
             console.log(error);
-            toast.error("Can't delete message");
+            toast.error(error.message);
         }
     }
     const getComments = async ()=>{

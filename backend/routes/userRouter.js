@@ -7,6 +7,7 @@ import { createComment, getCommentsByProduct, getCommentsByUser, updateComment }
 import { getAllReplies, getReplyByUser } from '../controllers/replyController.js';
 import { getNotificationsByUser, markAllAsRead, markOneAsRead } from '../controllers/notificationController.js';
 import { askGroq, getConversation, handleChat, handleDeleteChatHistory } from '../controllers/chatbotController.js';
+import { getConversation2, handleChat2, handleDeleteChatHistory2 } from '../controllers/chatbot2Controller.js';
 
 const userRouter = express.Router();
 userRouter.post('/register', registerUser)
@@ -30,11 +31,14 @@ userRouter.get('/bank',authUser,getMerchantBanks);
 userRouter.post('/pay-cart',authUser,payCart)
 userRouter.post('/callback',callback)
 userRouter.post('/ask-groq',askGroq)
-userRouter.post('/ask-and-save-groq',authUser,handleChat)
-userRouter.post('/delete-conversation',authUser,handleDeleteChatHistory)
-userRouter.get('/get-conversation',authUser,getConversation)
+userRouter.post('/ask-and-save-groq1',authUser,handleChat)
+userRouter.post('/delete-conversation1',authUser,handleDeleteChatHistory)
+userRouter.get('/get-conversation1',authUser,getConversation)
 userRouter.get('/verify',verify)
 userRouter.post('/forgot-password',forgotPassword)
 userRouter.post('/verify-change-password',verifyChangePassword);
 userRouter.post('/delete-user',authUser,deleteUser)
+userRouter.post('/delete-conversation2',authUser,handleDeleteChatHistory2)
+userRouter.get('/get-conversation2',authUser,getConversation2)
+userRouter.post('/ask-and-save-groq2',authUser,handleChat2)
 export default userRouter;

@@ -5,24 +5,37 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 export default function ChatbotPopup() {
-  const { messages, addMessages, getMessages, clearMessages,token } = useContext(AppContext);
+  const {
+    messages,
+    addMessages,
+    getMessages,
+    clearMessages,
+    token,
+  } = useContext(AppContext);
+
+  const [chatbotNumber, setChatbotNumber] = useState(2);
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const chatEndRef = useRef(null);
-  const navigate=useNavigate();
-  const handlelogintochat = ()=>{
-    toast.warn("Log in or sign up to chat with our AI assistant !");
+  const navigate = useNavigate();
+
+  const handlelogintochat = () => {
+    toast.warn('Log in or sign up to chat with our AI assistant!');
     navigate('/login');
-  }
+  };
+
   const handleSend = async () => {
     if (!input.trim()) return;
-    await addMessages(input.trim());
+    setLoading(true);
+    await addMessages(input.trim(), chatbotNumber);
     setInput('');
+    setLoading(false);
   };
 
   const handleClear = () => {
-    clearMessages();
+     clearMessages(chatbotNumber);
     setShowConfirm(false);
   };
 
@@ -31,12 +44,22 @@ export default function ChatbotPopup() {
   };
 
   useEffect(() => {
-    getMessages();
-  }, []);
+    const fetchMessages = async () => {
+      setLoading(true);
+      await getMessages(chatbotNumber);
+      setLoading(false);
+    };
+    fetchMessages();
+  }, [chatbotNumber]);
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, loading]);
+
+  const chatbotOptions = [
+    { label: 'Query', value: 1 },
+    { label: 'Thinking', value: 2 },
+  ];
 
   return token ? (
     <div className="fixed bottom-4 right-4 z-50">
@@ -70,7 +93,7 @@ export default function ChatbotPopup() {
               className="flex-1 overflow-y-auto p-3 bg-gray-50"
               style={{
                 scrollbarWidth: 'thin',
-                scrollbarColor: '#cbd5e0 #edf2f7', // thumb #cbd5e0 (gray-300), track #edf2f7 (gray-100)
+                scrollbarColor: '#cbd5e0 #edf2f7',
               }}
             >
               <div className="flex flex-col space-y-2">
@@ -86,6 +109,14 @@ export default function ChatbotPopup() {
                     {msg.text}
                   </div>
                 ))}
+
+                {/* Typing indicator */}
+                {loading && (
+                  <div className="bg-gray-200 text-gray-500 px-3 py-2 rounded-lg text-sm self-start animate-pulse max-w-[90%]">
+                    Đang trả lời...
+                  </div>
+                )}
+
                 <div ref={chatEndRef} />
               </div>
             </div>
@@ -99,13 +130,32 @@ export default function ChatbotPopup() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 placeholder="Nhập tin nhắn..."
+                disabled={loading}
               />
               <button
                 onClick={handleSend}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                disabled={loading}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
               >
                 Gửi
               </button>
+            </div>
+
+            {/* Bot Selector (under input) */}
+            <div className="border-t px-3 py-2 flex justify-center gap-2 bg-gray-50">
+              {chatbotOptions.map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() => setChatbotNumber(opt.value)}
+                  className={`px-3 py-1 text-sm rounded-full border ${
+                    chatbotNumber === opt.value
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-white text-gray-700 hover:bg-blue-100'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
             </div>
 
             {/* Confirm Modal */}
@@ -146,10 +196,13 @@ export default function ChatbotPopup() {
     </div>
   ) : (
     <div
-    className="fixed bottom-4 right-4 z-50 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 cursor-pointer"
-    onClick={()=>{handlelogintochat(); scrollTo(0,0);}}
-  >
-    Chat with bot 🤖
-  </div>
-  )
+      className="fixed bottom-4 right-4 z-50 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 cursor-pointer"
+      onClick={() => {
+        handlelogintochat();
+        scrollTo(0, 0);
+      }}
+    >
+      Chat with bot 🤖
+    </div>
+  );
 }

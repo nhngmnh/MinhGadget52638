@@ -29,7 +29,7 @@ const Navbar = () => {
     useEffect(() => {
         const fetchData = async () => {
           if (token) {
-            await getNotifications(); // đợi dữ liệu cập nhật
+            await getNotifications(); 
             countNewNotifications();  // sau đó mới đếm
           }
         };
