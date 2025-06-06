@@ -113,10 +113,7 @@ Important:
       model: groq.model,
       messages: tempMessages
     });
-
     let assistantReply = completion.choices[0].message.content;
-
-    // Parse query from response
     const match = assistantReply.match(
       /productModel\.find\(([\s\S]*?)\)(?:\.select\(([\s\S]*?)\))?(?:\.sort\(([\s\S]*?)\))?(?:\.limit\((\d+)\))?/
     );
@@ -173,7 +170,7 @@ Important:
 
   } catch (error) {
     console.error('Chat error:', error);
-    return res.status(500).json({ success: false, message: 'Internal server error' });
+    return res.json({ success: false, message: 'Internal server error' });
   }
 };
 
@@ -190,7 +187,7 @@ const handleDeleteChatHistory = async (req, res) => {
     const result = await conversationModel.findOneAndDelete({ userId });
 
     if (!result) {
-      return res.status(404).json({ success: false, message: 'User chat history not found' });
+      return res.json({ success: true, message: 'oke' });
     }
 
     // Trả về thông báo thành công

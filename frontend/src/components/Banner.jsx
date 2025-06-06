@@ -9,6 +9,9 @@ const Banner = () => {
         assets.banner3,
       ];
     
+
+
+      
       const [currentIndex, setCurrentIndex] = useState(0);
     
       const nextSlide = () => {

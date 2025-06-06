@@ -34,8 +34,8 @@ export default function ChatbotPopup() {
     setLoading(false);
   };
 
-  const handleClear = () => {
-     clearMessages(chatbotNumber);
+  const handleClear = async () => {
+     await clearMessages(chatbotNumber);
     setShowConfirm(false);
   };
 
